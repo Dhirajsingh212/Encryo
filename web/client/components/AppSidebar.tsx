@@ -16,6 +16,7 @@ import {
   Map,
   MoreHorizontal,
   PieChart,
+  PlusCircleIcon,
   Send,
   Settings2,
   Share,
@@ -62,93 +63,6 @@ const data = {
     email: 'm@example.com',
     avatar: '/avatars/shadcn.jpg'
   },
-  navMain: [
-    {
-      title: 'Playground',
-      url: '#',
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '#'
-        },
-        {
-          title: 'Starred',
-          url: '#'
-        },
-        {
-          title: 'Settings',
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#'
-        },
-        {
-          title: 'Explorer',
-          url: '#'
-        },
-        {
-          title: 'Quantum',
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#'
-        },
-        {
-          title: 'Get Started',
-          url: '#'
-        },
-        {
-          title: 'Tutorials',
-          url: '#'
-        },
-        {
-          title: 'Changelog',
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2,
-      items: [
-        {
-          title: 'General',
-          url: '#'
-        },
-        {
-          title: 'Team',
-          url: '#'
-        },
-        {
-          title: 'Billing',
-          url: '#'
-        },
-        {
-          title: 'Limits',
-          url: '#'
-        }
-      ]
-    }
-  ],
   navSecondary: [
     {
       title: 'Support',
@@ -187,12 +101,12 @@ export default function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size='lg' asChild>
-              <a href='#'>
-                <div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
+              <a href='/'>
+                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-violet-600 text-sidebar-primary-foreground'>
                   <Command className='size-4' />
                 </div>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>Acme Inc</span>
+                  <span className='truncate font-semibold'>Encyro</span>
                   <span className='truncate text-xs'>Enterprise</span>
                 </div>
               </a>
@@ -201,46 +115,6 @@ export default function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
-          <SidebarMenu>
-            {data.navMain.map(item => (
-              <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                  {item.items?.length ? (
-                    <>
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuAction className='data-[state=open]:rotate-90'>
-                          <ChevronRight />
-                          <span className='sr-only'>Toggle</span>
-                        </SidebarMenuAction>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {item.items?.map(subItem => (
-                            <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton asChild>
-                                <a href={subItem.url}>
-                                  <span>{subItem.title}</span>
-                                </a>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    </>
-                  ) : null}
-                </SidebarMenuItem>
-              </Collapsible>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarMenu>
@@ -264,17 +138,17 @@ export default function AppSidebar() {
                     side='bottom'
                     align='end'
                   >
-                    <DropdownMenuItem>
-                      <Folder className='text-muted-foreground' />
+                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                      <Folder className='mr-2 size-4' />
                       <span>View Project</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Share className='text-muted-foreground' />
+                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                      <Share className='mr-2 size-4' />
                       <span>Share Project</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <Trash2 className='text-muted-foreground' />
+                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                      <Trash2 className='mr-2 size-4' />
                       <span>Delete Project</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -283,27 +157,11 @@ export default function AppSidebar() {
             ))}
             <SidebarMenuItem>
               <SidebarMenuButton>
-                <MoreHorizontal />
-                <span>More</span>
+                <PlusCircleIcon />
+                <span>Add</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-        </SidebarGroup>
-        <SidebarGroup className='mt-auto'>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {data.navSecondary.map(item => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild size='sm'>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
@@ -355,29 +213,29 @@ export default function AppSidebar() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Sparkles />
+                  <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                    <Sparkles className='mr-2 size-4' />
                     Upgrade to Pro
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <BadgeCheck />
+                  <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                    <BadgeCheck className='mr-2 size-4' />
                     Account
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard />
+                  <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                    <CreditCard className='mr-2 size-4' />
                     Billing
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Bell />
+                  <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                    <Bell className='mr-2 size-4' />
                     Notifications
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut />
+                <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                  <LogOut className='mr-2 size-4' />
                   Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>

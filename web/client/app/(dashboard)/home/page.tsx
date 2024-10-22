@@ -1,38 +1,16 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
+import { Input } from '@/components/ui/input'
 
 const Page = () => {
   return (
-    <>
-      <header className='flex h-16 shrink-0 items-center gap-2'>
-        <div className='flex items-center gap-2 px-4'>
-          <SidebarTrigger className='-ml-1' />
-          <Separator orientation='vertical' className='mr-2 h-4' />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className='hidden md:block'>
-                <BreadcrumbLink href='#'>
-                  Building Your Application
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className='hidden md:block' />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div>lorem1000</div>
-    </>
+    <div className='px-4'>
+      <p className='pb-4 text-2xl font-bold'>Add your api keys:</p>
+      <div className='grid grid-cols-2 gap-4'>
+        <Input
+          placeholder='API KEY'
+          className='rounded-none border-2 border-violet-600 dark:bg-violet-950'
+        />
+      </div>
+    </div>
   )
 }
 
