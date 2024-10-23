@@ -12,12 +12,26 @@ model User {
   email            String  @unique
   clerkUserId      String  @unique
   
-  firstName   String?
-  lastName    String?
-  imageUrl    String?
-  bio         String?
+  firstName        String?
+  lastName         String?
+  imageUrl         String?
+  bio              String?
   
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  projects         Project[] 
 }
 
+model Project {
+  id               String   @id @default(cuid())
+  name             String
+  slug             String   @unique
+  deployed         Boolean
+  link             String?  
+  userId           String   
+  user             User     @relation(fields: [userId], references: [id])
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}

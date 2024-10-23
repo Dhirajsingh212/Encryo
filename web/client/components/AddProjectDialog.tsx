@@ -1,4 +1,5 @@
 'use client'
+import { addProjectToUser } from '@/actions/project'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,6 +11,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { showToast } from '@/toast'
+import { useAuth } from '@clerk/nextjs'
 import { PlusCircleIcon } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
@@ -20,13 +23,44 @@ export default function ProjectDialog() {
   const [slug, setSlug] = useState<string>('')
   const [isDeployed, setIsDeployed] = useState<string>('no')
   const [liveLink, setLiveLink] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { theme } = useTheme()
+  const { userId } = useAuth()
+  console.log(userId)
 
   useEffect(() => {
     setSlug(slugify(projectName, { lower: true, strict: true }))
   }, [projectName])
 
-  const submitHandler = () => {}
+  const submitHandler = async () => {
+    try {
+      setIsLoading(true)
+      if (!userId) {
+        showToast('error', 'User not logged In', theme)
+        return
+      }
+      const response = await addProjectToUser({
+        userId: userId,
+        name: projectName,
+        slug,
+        deployed: isDeployed === 'yes' ? true : false
+      })
+      if (response) {
+        showToast('success', 'Project created.', theme)
+        setProjectName('')
+        setIsDeployed('no')
+        setLiveLink('')
+        setSlug('')
+      } else {
+        throw new Error('Something went wrong')
+      }
+    } catch (err) {
+      console.log(err)
+      showToast('error', 'Failed to create', theme)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Dialog>
@@ -100,7 +134,7 @@ export default function ProjectDialog() {
             </div>
           )}
         </div>
-        <Button type='submit' onClick={submitHandler}>
+        <Button disabled={isLoading} type='submit' onClick={submitHandler}>
           Save Project
         </Button>
       </DialogContent>
