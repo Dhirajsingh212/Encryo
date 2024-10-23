@@ -6,13 +6,13 @@ import { Key, PlusCircleIcon, Search, User } from 'lucide-react'
 const Page = () => {
   return (
     <div className=''>
-      <Tabs defaultValue='account' className='w-full px-4'>
+      <Tabs defaultValue='account' className='w-full sm:px-4'>
         <TabsList className='mb-4 w-full justify-start border-b bg-inherit pb-4'>
           <TabsTrigger value='account'>Secrets</TabsTrigger>
           <TabsTrigger value='password'>Access</TabsTrigger>
         </TabsList>
-        <TabsContent value='account' className='flex flex-col gap-4 px-4'>
-          <div className='flex flex-row justify-between gap-2'>
+        <TabsContent value='account' className='flex flex-col gap-4 sm:px-4'>
+          <div className='flex flex-col gap-2 md:flex-row md:justify-between'>
             <p className='text-xl font-semibold'>{`Active(5)`}</p>
             <div className='flex flex-row gap-4'>
               <div className='relative'>
@@ -28,7 +28,7 @@ const Page = () => {
               </Button>
             </div>
           </div>
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
             <div className='relative'>
               <User className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />
               <Input

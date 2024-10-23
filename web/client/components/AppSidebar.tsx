@@ -31,6 +31,7 @@ import {
   Share,
   Trash2
 } from 'lucide-react'
+import AddProjectDialog from './AddProjectDialog'
 
 const data = {
   user: {
@@ -132,8 +133,7 @@ export default function AppSidebar() {
             ))}
             <SidebarMenuItem>
               <SidebarMenuButton>
-                <PlusCircleIcon />
-                <span>Add</span>
+                <AddProjectDialog></AddProjectDialog>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
