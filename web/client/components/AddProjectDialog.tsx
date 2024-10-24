@@ -16,8 +16,9 @@ import { showToast } from '@/toast'
 import { useAuth } from '@clerk/nextjs'
 import { PlusCircleIcon } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import slugify from 'slugify'
+import IconSuggestionInput from './IconSuggestionInput'
 
 export default function ProjectDialog() {
   const [projectName, setProjectName] = useState<string>('')
@@ -81,7 +82,10 @@ export default function ProjectDialog() {
           <span>Add</span>
         </div>
       </DialogTrigger>
-      <DialogContent className='w-[280px] rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'>
+      <DialogContent
+        style={{ zIndex: 100 }}
+        className='max-h-[90vh] w-[280px] overflow-y-auto rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'
+      >
         <DialogHeader>
           <DialogTitle>Add New Project</DialogTitle>
         </DialogHeader>
@@ -110,6 +114,7 @@ export default function ProjectDialog() {
               className='col-span-3'
             />
           </div>
+
           <div className='grid grid-cols-4 items-center gap-4'>
             <Label className='text-right'>Deployed</Label>
             <RadioGroup
@@ -141,6 +146,16 @@ export default function ProjectDialog() {
               />
             </div>
           )}
+          <div className='grid grid-cols-4 items-center gap-4'>
+            <Label htmlFor='slug' className='text-right'>
+              Icon
+            </Label>
+            <div className='col-span-3'>
+              <Suspense fallback={<div>Loading....</div>}>
+                <IconSuggestionInput />
+              </Suspense>
+            </div>
+          </div>
         </div>
         <Button disabled={isLoading} type='submit' onClick={submitHandler}>
           Save Project

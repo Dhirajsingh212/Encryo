@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
+
   images: {
-    domains: ['i.pinimg.com'] // Replace with your actual hostname
+    domains: ['i.pinimg.com']
   }
 }
 
