@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { validateLink } from '@/lib/common'
 import { showToast } from '@/toast'
 import { useAuth } from '@clerk/nextjs'
 import { PlusCircleIcon } from 'lucide-react'
@@ -26,7 +27,6 @@ export default function ProjectDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { theme } = useTheme()
   const { userId } = useAuth()
-  console.log(userId)
 
   useEffect(() => {
     setSlug(slugify(projectName, { lower: true, strict: true }))
@@ -37,6 +37,14 @@ export default function ProjectDialog() {
       setIsLoading(true)
       if (!userId) {
         showToast('error', 'User not logged In', theme)
+        return
+      }
+      if (isDeployed === 'yes' && !validateLink(liveLink)) {
+        showToast('error', 'Link not valid', theme)
+        return
+      }
+      if (!projectName.trim()) {
+        showToast('error', 'Project name is required', theme)
         return
       }
       const response = await addProjectToUser({
@@ -56,7 +64,7 @@ export default function ProjectDialog() {
       }
     } catch (err) {
       console.log(err)
-      showToast('error', 'Failed to create', theme)
+      showToast('error', 'Project already exists', theme)
     } finally {
       setIsLoading(false)
     }

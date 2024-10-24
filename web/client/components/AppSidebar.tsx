@@ -1,5 +1,3 @@
-'use client'
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar'
+import { auth } from '@clerk/nextjs/server'
 import {
   Command,
   Folder,
@@ -32,6 +31,7 @@ import {
   Trash2
 } from 'lucide-react'
 import AddProjectDialog from './AddProjectDialog'
+import { getProjectsByUserId } from '@/actions/project'
 
 const data = {
   user: {
@@ -70,7 +70,15 @@ const data = {
   ]
 }
 
-export default function AppSidebar() {
+export default async function AppSidebar() {
+  const { userId } = await auth()
+
+  if (!userId) {
+    return null
+  }
+
+  const userProjects = await getProjectsByUserId(userId)
+
   return (
     <Sidebar variant='inset'>
       <SidebarHeader>
@@ -94,43 +102,43 @@ export default function AppSidebar() {
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarMenu>
-            {data.projects.map(item => (
-              <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url}>
-                    <item.icon />
-                    <span>{item.name}</span>
-                  </a>
-                </SidebarMenuButton>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuAction showOnHover>
-                      <MoreHorizontal />
-                      <span className='sr-only'>More</span>
-                    </SidebarMenuAction>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className='w-48'
-                    side='bottom'
-                    align='end'
-                  >
-                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                      <Folder className='mr-2 size-4' />
-                      <span>View Project</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                      <Share className='mr-2 size-4' />
-                      <span>Share Project</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                      <Trash2 className='mr-2 size-4' />
-                      <span>Delete Project</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </SidebarMenuItem>
-            ))}
+            {userProjects &&
+              userProjects.map(item => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.slug}>
+                      <span>{item.name}</span>
+                    </a>
+                  </SidebarMenuButton>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction showOnHover>
+                        <MoreHorizontal />
+                        <span className='sr-only'>More</span>
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      className='w-48'
+                      side='bottom'
+                      align='end'
+                    >
+                      <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                        <Folder className='mr-2 size-4' />
+                        <span>View Project</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                        <Share className='mr-2 size-4' />
+                        <span>Share Project</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                        <Trash2 className='mr-2 size-4' />
+                        <span>Delete Project</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </SidebarMenuItem>
+              ))}
             <SidebarMenuItem>
               <SidebarMenuButton>
                 <AddProjectDialog></AddProjectDialog>
