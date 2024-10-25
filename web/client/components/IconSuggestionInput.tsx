@@ -69,7 +69,7 @@ const IconSuggestionInput = ({
                     setOpen(false)
                     setSuggestions([])
                   }}
-                  className='flex cursor-pointer flex-row items-center gap-2 p-2 text-sm hover:bg-gray-400 dark:hover:bg-slate-700'
+                  className='flex cursor-pointer flex-row items-center gap-2 p-2 text-sm text-white hover:bg-gray-400 dark:hover:bg-slate-700'
                 >
                   {IconValComp && <IconValComp />}
                   {tag}
