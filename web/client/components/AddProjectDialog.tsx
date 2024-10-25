@@ -23,6 +23,7 @@ import IconSuggestionInput from './IconSuggestionInput'
 export default function ProjectDialog() {
   const [projectName, setProjectName] = useState<string>('')
   const [slug, setSlug] = useState<string>('')
+  const [iconText, setIconText] = useState<string>('')
   const [isDeployed, setIsDeployed] = useState<string>('no')
   const [liveLink, setLiveLink] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -48,10 +49,16 @@ export default function ProjectDialog() {
         showToast('error', 'Project name is required', theme)
         return
       }
+      if (!iconText.trim()) {
+        showToast('error', 'Icon is required', theme)
+        return
+      }
+
       const response = await addProjectToUser({
         userId: userId,
         name: projectName,
         slug,
+        icon: iconText,
         deployed: isDeployed === 'yes' ? true : false
       })
       if (response) {
@@ -59,6 +66,7 @@ export default function ProjectDialog() {
         setProjectName('')
         setIsDeployed('no')
         setLiveLink('')
+        setIconText('')
         setSlug('')
       } else {
         throw new Error('Something went wrong')
@@ -146,13 +154,13 @@ export default function ProjectDialog() {
               />
             </div>
           )}
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='slug' className='text-right'>
+          <div className='grid grid-cols-4 items-start gap-4'>
+            <Label htmlFor='slug' className='pt-2 text-right'>
               Icon
             </Label>
             <div className='col-span-3'>
               <Suspense fallback={<div>Loading....</div>}>
-                <IconSuggestionInput />
+                <IconSuggestionInput text={iconText} setText={setIconText} />
               </Suspense>
             </div>
           </div>

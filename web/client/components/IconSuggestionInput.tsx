@@ -1,46 +1,85 @@
 'use client'
-
-import * as LucideIcons from 'lucide-react'
+import Fuse from 'fuse.js'
+import * as FaIcons from 'react-icons/fa'
+import * as MdIcons from 'react-icons/md'
 import { useEffect, useState } from 'react'
+import { useDebounce } from 'use-debounce'
 import { Input } from './ui/input'
-import { ScrollArea } from './ui/scroll-area'
 import { Separator } from './ui/separator'
+import { cn } from '@/lib/utils'
 
-const allIcons: string[] = Object.keys(LucideIcons)
+const allIconsObject: any = { ...FaIcons, ...MdIcons }
+const allIcons = Object.keys(allIconsObject)
 
-console.log(allIcons)
+const fuse = new Fuse(allIcons, {
+  threshold: 0.3
+})
 
-const IconSuggestionInput = () => {
+const IconSuggestionInput = ({
+  text,
+  setText
+}: {
+  text: string
+  setText: (e: string) => void
+}) => {
   const [open, setOpen] = useState<boolean>(false)
-  const [text, setText] = useState<string>('')
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [searchText] = useDebounce(text, 400)
+  const IconComp = allIconsObject[searchText] || null
+
+  useEffect(() => {
+    const filterSuggestions = searchText
+      ? fuse.search(searchText).map(result => result.item)
+      : allIcons.slice(0, 10)
+    setSuggestions(filterSuggestions)
+  }, [searchText])
 
   return (
     <>
-      <Input
-        value={text}
-        onChange={e => {
-          setText(e.target.value)
-        }}
-        placeholder='Search Icons..'
-      />
-      <ScrollArea className='mt-2 h-40 rounded-md border bg-gray-700 dark:bg-slate-950'>
-        {allIcons.slice(0, 10).map((tag: string, index: number) => {
-          const IconComponent = (LucideIcons as any)[tag]
+      <div className='flex flex-row items-center gap-2'>
+        <Input
+          value={text}
+          onChange={e => {
+            setOpen(true)
+            setText(e.target.value)
+          }}
+          placeholder='Search Icons..'
+        />
+        {IconComp && (
+          <IconComp className='size-8 rounded-full border border-slate-50 p-1 shadow-xl' />
+        )}
+      </div>
+      {suggestions.length > 0 && (
+        <div
+          className={cn(
+            'mt-2 max-h-40 overflow-y-scroll rounded-md border bg-gray-700 dark:bg-slate-950',
+            {
+              hidden: open === false
+            }
+          )}
+        >
+          {suggestions.map((tag: string) => {
+            const IconValComp = allIconsObject[tag]
 
-          console.log(IconComponent.$$typeof)
-          return (
-            <div key={tag}>
-              <div className='flex flex-row items-center gap-2 p-2 text-sm hover:bg-gray-400 dark:hover:bg-slate-700'>
-                {IconComponent.render ? (
-                  <IconComponent className='size-4' />
-                ) : null}
-                {tag}
+            return (
+              <div key={tag}>
+                <div
+                  onClick={() => {
+                    setText(tag)
+                    setOpen(false)
+                    setSuggestions([])
+                  }}
+                  className='flex cursor-pointer flex-row items-center gap-2 p-2 text-sm hover:bg-gray-400 dark:hover:bg-slate-700'
+                >
+                  {IconValComp && <IconValComp />}
+                  {tag}
+                </div>
+                <Separator />
               </div>
-              <Separator className='' />
-            </div>
-          )
-        })}
-      </ScrollArea>
+            )
+          })}
+        </div>
+      )}
     </>
   )
 }

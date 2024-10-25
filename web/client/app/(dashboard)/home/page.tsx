@@ -1,12 +1,7 @@
-import IconSuggestionInput from '@/components/IconSuggestionInput'
 import React from 'react'
 
-const HomePage = () => {
-  return (
-    <div>
-      <IconSuggestionInput />
-    </div>
-  )
+const Page = () => {
+  return <div>Page</div>
 }
 
-export default HomePage
+export default Page

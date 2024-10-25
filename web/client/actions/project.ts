@@ -7,11 +7,13 @@ export async function addProjectToUser({
   userId,
   deployed,
   name,
+  icon,
   slug
 }: {
   userId: string
   deployed: boolean
   name: string
+  icon: string
   slug: string
 }) {
   try {
@@ -31,6 +33,7 @@ export async function addProjectToUser({
         userId: userDetails?.id,
         deployed,
         name,
+        icon,
         slug
       }
     })
@@ -55,7 +58,8 @@ export async function getProjectsByUserId(userId: string) {
       },
       select: {
         name: true,
-        slug: true
+        slug: true,
+        icon: true
       },
       orderBy: {
         createdAt: 'asc'

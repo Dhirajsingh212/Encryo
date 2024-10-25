@@ -30,6 +30,7 @@ model Project {
   deployed         Boolean
   link             String?  
   userId           String   
+  icon             String
   user             User     @relation(fields: [userId], references: [id])
 
   createdAt        DateTime @default(now())
