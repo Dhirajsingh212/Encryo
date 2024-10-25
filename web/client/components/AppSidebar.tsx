@@ -34,6 +34,7 @@ import AddProjectDialog from './AddProjectDialog'
 import { getProjectsByUserId } from '@/actions/project'
 import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
+import Link from 'next/link'
 
 const data = {
   user: {
@@ -130,12 +131,13 @@ export default async function AppSidebar() {
                         align='end'
                       >
                         <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                          <Folder className='mr-2 size-4' />
-                          <span>View Project</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                          <Share className='mr-2 size-4' />
-                          <span>Share Project</span>
+                          <Link
+                            className='flex flex-row'
+                            href={`/home/${item.slug}`}
+                          >
+                            <Folder className='mr-2 size-4' />
+                            <span>View Project</span>
+                          </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
