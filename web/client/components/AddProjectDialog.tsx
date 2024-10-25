@@ -59,6 +59,7 @@ export default function ProjectDialog() {
         name: projectName,
         slug,
         icon: iconText,
+        link: liveLink,
         deployed: isDeployed === 'yes' ? true : false
       })
       if (response) {

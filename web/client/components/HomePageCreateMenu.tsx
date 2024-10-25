@@ -5,6 +5,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
+import AddEnvDialog from './AddEnvDialog'
 
 const HomePageCreateMenu = () => {
   return (
@@ -15,9 +16,7 @@ const HomePageCreateMenu = () => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-[200px]'>
-        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-          Add env
-        </DropdownMenuItem>
+        <AddEnvDialog />
         <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
           Export envs
         </DropdownMenuItem>

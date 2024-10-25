@@ -90,7 +90,7 @@ export default async function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size='lg' asChild>
-              <a href='/'>
+              <Link href='/'>
                 <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-violet-600 text-sidebar-primary-foreground'>
                   <Command className='size-4' />
                 </div>
@@ -98,7 +98,7 @@ export default async function AppSidebar() {
                   <span className='truncate font-semibold'>Encyro</span>
                   <span className='truncate text-xs'>Enterprise</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -113,10 +113,10 @@ export default async function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton asChild>
-                      <a href={`/home/${item.slug}`}>
+                      <Link href={`/home/${item.slug}`}>
                         {IconComp && <IconComp />}
                         <span>{item.name}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
