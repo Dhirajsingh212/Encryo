@@ -1,10 +1,7 @@
-import { FaPlusSquare } from 'react-icons/fa'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { auth } from '@clerk/nextjs/server'
 import { getPublicKey } from '@/actions/user'
+import { auth } from '@clerk/nextjs/server'
 import GenKeyButton from './GenKeyButton'
-import PrivateKeyInput from './PrivateKeyInput'
+import { Input } from './ui/input'
 
 const SettingsComp = async () => {
   const { userId } = auth()
@@ -17,13 +14,17 @@ const SettingsComp = async () => {
     <div className='flex flex-col gap-4'>
       <div className='flex flex-row items-center justify-between'>
         <p className='text-xl font-bold'>Your keys</p>
-        <GenKeyButton userDetails={userDetails} />
+        {(!userDetails ||
+          !userDetails.publicKey ||
+          !userDetails.privateKey) && <GenKeyButton />}
       </div>
       <div>
-        {(!userDetails || !userDetails.publicKey) && (
+        {(!userDetails ||
+          !userDetails.publicKey ||
+          !userDetails.privateKey) && (
           <p className='flex flex-row justify-center'>No keys found</p>
         )}
-        {userDetails && userDetails.publicKey && (
+        {userDetails && userDetails.publicKey && userDetails.privateKey && (
           <div className='flex flex-row gap-2'>
             <Input
               placeholder='Public key'
@@ -31,7 +32,12 @@ const SettingsComp = async () => {
               value={userDetails?.publicKey || ''}
               disabled
             />
-            <PrivateKeyInput />
+            <Input
+              placeholder='Private key'
+              className='bg-card dark:bg-neutral-900'
+              disabled
+              value={userDetails?.privateKey || ''}
+            />
           </div>
         )}
       </div>

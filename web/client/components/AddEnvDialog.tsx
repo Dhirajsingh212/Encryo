@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
+import { showToast } from '@/toast'
+import { useTheme } from 'next-themes'
 
 export default function Component() {
   const [open, setOpen] = useState(false)
@@ -21,6 +23,8 @@ export default function Component() {
     null
   )
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { theme } = useTheme()
 
   const parseEnv = () => {
     setError(null)
@@ -50,6 +54,17 @@ export default function Component() {
       setError(
         err instanceof Error ? err.message : 'An error occurred while parsing'
       )
+    }
+  }
+
+  const submitHandler = async () => {
+    try {
+      setIsLoading(true)
+    } catch (err) {
+      console.log(err)
+      showToast('error', JSON.stringify(err), theme)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -91,6 +106,13 @@ export default function Component() {
             </pre>
           </div>
         )}
+        <div className='flex flex-row justify-end'>
+          <Button
+            disabled={Object.keys(parsedEnv || {}).length === 0 || isLoading}
+          >
+            Save
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   )

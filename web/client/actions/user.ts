@@ -10,7 +10,8 @@ export async function getPublicKey(userId: string) {
         clerkUserId: userId
       },
       select: {
-        publicKey: true
+        publicKey: true,
+        privateKey: true
       }
     })
     return userDetails
@@ -20,14 +21,19 @@ export async function getPublicKey(userId: string) {
   }
 }
 
-export async function setPulbicKey(userId: string, publicKey: string) {
+export async function setPulbicKey(
+  userId: string,
+  publicKey: string,
+  privateKey: string
+) {
   try {
     await prisma.user.update({
       where: {
         clerkUserId: userId
       },
       data: {
-        publicKey
+        publicKey,
+        privateKey
       }
     })
     revalidatePath('/home(.*)')
