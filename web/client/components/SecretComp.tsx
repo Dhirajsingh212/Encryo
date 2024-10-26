@@ -11,6 +11,7 @@ const SecretComp = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
       <div className='flex flex-col gap-2 md:flex-row md:justify-between'>
         <p className='text-xl font-semibold'>{`Active(${projectDetails ? projectDetails.envs.length : 0})`}</p>
         <div className='flex flex-row justify-end gap-4'>
+          <HomePageCreateMenu />
           <div className='relative'>
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400' />
             <Input
@@ -18,7 +19,6 @@ const SecretComp = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
               className='border-2 bg-card pl-10 pr-4 dark:border-input dark:bg-neutral-900'
             />
           </div>
-          <HomePageCreateMenu />
         </div>
       </div>
       <div className='flex flex-col gap-4'>
@@ -31,7 +31,7 @@ const SecretComp = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
             return (
               <div
                 key={index}
-                className='flex flex-col items-center gap-4 py-2 md:flex-row'
+                className='flex flex-col items-center gap-2 py-2 md:flex-row'
               >
                 <div className='relative w-full'>
                   <User className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />

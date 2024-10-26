@@ -2,6 +2,7 @@
 
 import { decryptData, encryptData } from '@/lib/key'
 import prisma from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
 
 export async function saveEnvs(
   projectSlug: string,
@@ -46,6 +47,8 @@ export async function saveEnvs(
         })
       })
     )
+
+    revalidatePath('/home(.*)')
 
     return true
   } catch (err) {
