@@ -17,7 +17,7 @@ const SettingsComp = async () => {
     <div className='flex flex-col gap-4'>
       <div className='flex flex-row items-center justify-between'>
         <p className='text-xl font-bold'>Your keys</p>
-        {(!userDetails || !userDetails.publicKey) && <GenKeyButton />}
+        <GenKeyButton userDetails={userDetails} />
       </div>
       <div>
         {(!userDetails || !userDetails.publicKey) && (
