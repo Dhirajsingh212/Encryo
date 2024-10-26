@@ -21,7 +21,7 @@ const SecretComp = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-1'>
         {projectDetails &&
           projectDetails.envs &&
           projectDetails.envs.length === 0 && <p>No envs found.</p>}
