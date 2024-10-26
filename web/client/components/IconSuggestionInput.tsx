@@ -38,6 +38,7 @@ const IconSuggestionInput = ({
     <>
       <div className='flex flex-row items-center gap-2'>
         <Input
+          className='border-gray-800'
           value={text}
           onChange={e => {
             setOpen(true)
@@ -52,7 +53,7 @@ const IconSuggestionInput = ({
       {suggestions.length > 0 && (
         <div
           className={cn(
-            'mt-2 max-h-40 overflow-y-scroll rounded-md border bg-gray-700 dark:bg-slate-950',
+            'mt-2 max-h-40 overflow-y-scroll rounded-md border border-gray-700 bg-gray-800 dark:bg-slate-950',
             {
               hidden: open === false
             }
@@ -69,12 +70,12 @@ const IconSuggestionInput = ({
                     setOpen(false)
                     setSuggestions([])
                   }}
-                  className='flex cursor-pointer flex-row items-center gap-2 p-2 text-sm text-white hover:bg-gray-400 dark:hover:bg-slate-700'
+                  className='flex cursor-pointer flex-row items-center gap-2 p-2 text-sm text-white hover:bg-gray-600 dark:hover:bg-slate-700'
                 >
                   {IconValComp && <IconValComp />}
                   {tag}
                 </div>
-                <Separator />
+                <Separator className='bg-card-foreground dark:bg-gray-800' />
               </div>
             )
           })}

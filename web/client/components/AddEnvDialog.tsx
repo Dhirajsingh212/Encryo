@@ -90,7 +90,7 @@ export default function Component() {
       <DialogTrigger className='w-full rounded-sm px-2 py-1 text-start text-sm hover:bg-violet-600 hover:text-white'>
         Add Envs
       </DialogTrigger>
-      <DialogContent className='w-full bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white max-lg:max-h-[90%] max-lg:overflow-auto max-sm:w-[280px] max-sm:overflow-x-scroll max-sm:rounded-lg sm:max-w-[425px] md:max-w-[600px] lg:max-h-full lg:max-w-[800px] xl:max-w-[1000px]'>
+      <DialogContent className='w-full border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white max-lg:max-h-[90%] max-lg:overflow-auto max-sm:w-[280px] max-sm:overflow-x-scroll max-sm:rounded-lg sm:max-w-[425px] md:max-w-[600px] lg:max-h-full lg:max-w-[800px] xl:max-w-[1000px]'>
         <DialogHeader>
           <DialogTitle>Parse ENV Variables</DialogTitle>
           <DialogDescription>
@@ -102,7 +102,7 @@ export default function Component() {
             placeholder='Paste your ENV variables here...'
             value={envInput}
             onChange={e => setEnvInput(e.target.value)}
-            className='h-40 w-full resize-none'
+            className='h-40 w-full resize-none border-gray-800'
           />
           <Button onClick={parseEnv} className='w-full sm:w-auto'>
             Parse

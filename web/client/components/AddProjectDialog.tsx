@@ -93,7 +93,7 @@ export default function ProjectDialog() {
       </DialogTrigger>
       <DialogContent
         style={{ zIndex: 100 }}
-        className='max-h-[90vh] w-[280px] overflow-y-auto rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'
+        className='max-h-[90vh] w-[280px] overflow-y-auto rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'
       >
         <DialogHeader>
           <DialogTitle>Add New Project</DialogTitle>
@@ -108,7 +108,7 @@ export default function ProjectDialog() {
               placeholder='Name of the project'
               value={projectName}
               onChange={e => setProjectName(e.target.value)}
-              className='col-span-3'
+              className='col-span-3 border-gray-800'
             />
           </div>
           <div className='grid grid-cols-4 items-center gap-4'>
@@ -120,7 +120,7 @@ export default function ProjectDialog() {
               placeholder='slug'
               value={slug}
               readOnly
-              className='col-span-3'
+              className='col-span-3 border-gray-800'
             />
           </div>
 
@@ -151,7 +151,7 @@ export default function ProjectDialog() {
                 id='liveLink'
                 value={liveLink}
                 onChange={e => setLiveLink(e.target.value)}
-                className='col-span-3'
+                className='col-span-3 border-gray-800'
               />
             </div>
           )}
