@@ -15,3 +15,10 @@ export interface Form {
 export interface UserForms {
   forms: Form[]
 }
+
+export interface ProjectDetails {
+  envs: {
+    value: string
+    name: string
+  }[]
+}
