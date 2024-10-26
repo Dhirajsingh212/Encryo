@@ -1,4 +1,5 @@
 import HomePageCreateMenu from '@/components/HomePageCreateMenu'
+import SettingsComp from '@/components/SettingsComp'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Key, Search, User } from 'lucide-react'
@@ -10,6 +11,7 @@ const Page = () => {
         <TabsList className='mb-4 w-full justify-start border-b bg-inherit pb-4'>
           <TabsTrigger value='account'>Secrets</TabsTrigger>
           <TabsTrigger value='password'>Access</TabsTrigger>
+          <TabsTrigger value='setting'>Setting</TabsTrigger>
         </TabsList>
         <TabsContent value='account' className='flex flex-col gap-4 sm:px-4'>
           <div className='flex flex-col gap-2 md:flex-row md:justify-between'>
@@ -46,6 +48,9 @@ const Page = () => {
         </TabsContent>
         <TabsContent value='password' className='px-4'>
           Change your password here.
+        </TabsContent>
+        <TabsContent value='setting' className='px-4'>
+          <SettingsComp />
         </TabsContent>
       </Tabs>
     </div>
