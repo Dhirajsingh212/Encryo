@@ -60,26 +60,29 @@ export default function Component() {
       )
     }
   }
-
   const submitHandler = async () => {
     try {
       setIsLoading(true)
       const slug = path.split('/')[2]
+
       if (!parsedEnv) {
         showToast('error', 'Envs cannot be empty', theme)
         return
       }
+
       const response = await saveEnvs(slug, parsedEnv)
+
       if (response) {
-        showToast('success', 'env saved', theme)
+        showToast('success', 'Environment variables saved successfully.', theme)
         setEnvInput('')
         setParsedEnv(null)
       } else {
-        throw new Error('Genereate public key first')
+        throw new Error('Generate public key first')
       }
     } catch (err) {
-      console.log(err)
-      showToast('error', JSON.stringify(err), theme)
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
     } finally {
       setIsLoading(false)
     }

@@ -10,16 +10,10 @@ export async function saveEnvs(
 ) {
   try {
     const projectDetails = await prisma.project.findFirst({
-      where: {
-        slug: projectSlug
-      },
+      where: { slug: projectSlug },
       select: {
         id: true,
-        user: {
-          select: {
-            publicKey: true
-          }
-        }
+        user: { select: { publicKey: true } }
       }
     })
 
@@ -28,7 +22,7 @@ export async function saveEnvs(
       !projectDetails.id ||
       !projectDetails.user.publicKey
     ) {
-      return false
+      throw new Error('Project not found or missing public key')
     }
 
     await Promise.all(
@@ -49,11 +43,13 @@ export async function saveEnvs(
     )
 
     revalidatePath('/home(.*)')
-
     return true
   } catch (err) {
-    console.log(err)
-    return false
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : 'Failed to save environment variables'
+    throw new Error(errorMessage)
   }
 }
 

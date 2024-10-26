@@ -7,8 +7,13 @@ import {
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
 import AddEnvDialog from './AddEnvDialog'
 import { ExportEnvsDialog } from './ExportEnvsDialog'
+import { ProjectDetails } from '@/types/types'
 
-const HomePageCreateMenu = () => {
+const HomePageCreateMenu = ({
+  projectDetails
+}: {
+  projectDetails: ProjectDetails | null
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -18,7 +23,7 @@ const HomePageCreateMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-[200px]'>
         <AddEnvDialog />
-        <ExportEnvsDialog />
+        {projectDetails && <ExportEnvsDialog projectDetails={projectDetails} />}
 
         <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
           Edit env

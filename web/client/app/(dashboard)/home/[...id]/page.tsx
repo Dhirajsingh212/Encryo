@@ -20,7 +20,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <TabsTrigger value='setting'>Setting</TabsTrigger>
         </TabsList>
         <TabsContent value='account' className='flex flex-col gap-4 sm:px-4'>
-          {projectDetails && <SecretComp projectDetails={projectDetails} />}
+          <SecretComp projectDetails={projectDetails} />
         </TabsContent>
         <TabsContent value='password' className='px-4'>
           Change your password here.

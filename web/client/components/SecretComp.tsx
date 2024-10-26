@@ -5,13 +5,17 @@ import { ProjectDetails } from '@/types/types'
 import { Key, Search, User } from 'lucide-react'
 import { FaTrash } from 'react-icons/fa'
 
-const SecretComp = ({ projectDetails }: { projectDetails: ProjectDetails }) => {
+const SecretComp = ({
+  projectDetails
+}: {
+  projectDetails: ProjectDetails | null
+}) => {
   return (
     <>
       <div className='flex flex-col gap-2 md:flex-row md:justify-between'>
         <p className='text-xl font-semibold'>{`Active(${projectDetails ? projectDetails.envs.length : 0})`}</p>
         <div className='flex flex-row justify-end gap-4'>
-          <HomePageCreateMenu />
+          <HomePageCreateMenu projectDetails={projectDetails} />
           <div className='relative'>
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400' />
             <Input
