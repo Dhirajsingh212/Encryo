@@ -1,10 +1,18 @@
+import { getEnvsByProjectSlug } from '@/actions/saveEnvs'
 import HomePageCreateMenu from '@/components/HomePageCreateMenu'
 import SettingsComp from '@/components/SettingsComp'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { auth } from '@clerk/nextjs/server'
 import { Key, Search, User } from 'lucide-react'
 
-const Page = () => {
+const Page = async ({ params }: { params: { id: string[] } }) => {
+  const { userId } = auth()
+  if (!userId) {
+    return
+  }
+  const projectDetails = await getEnvsByProjectSlug(params.id[0], userId)
+
   return (
     <div className=''>
       <Tabs defaultValue='account' className='w-full sm:px-4'>
@@ -27,23 +35,36 @@ const Page = () => {
               <HomePageCreateMenu />
             </div>
           </div>
-          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-            <div className='relative'>
-              <User className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />
-              <Input
-                disabled
-                placeholder='Name'
-                className='border-2 bg-card pl-10 pr-4 dark:border-input dark:bg-neutral-900'
-              />
-            </div>
-            <div className='relative'>
-              <Key className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />
-              <Input
-                disabled
-                placeholder='API KEY'
-                className='border-2 bg-card pl-10 pr-4 dark:border-input dark:bg-neutral-900'
-              />
-            </div>
+          <div>
+            {projectDetails &&
+              projectDetails.envs &&
+              projectDetails.envs.map((pairs, index) => {
+                return (
+                  <div
+                    key={index}
+                    className='grid grid-cols-1 gap-4 md:grid-cols-2'
+                  >
+                    <div className='relative'>
+                      <User className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />
+                      <Input
+                        disabled
+                        placeholder='Name'
+                        value={pairs.name}
+                        className='border-2 bg-card pl-10 pr-4 dark:border-input dark:bg-neutral-900'
+                      />
+                    </div>
+                    <div className='relative'>
+                      <Key className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />
+                      <Input
+                        disabled
+                        placeholder='API KEY'
+                        value={pairs.value}
+                        className='border-2 bg-card pl-10 pr-4 dark:border-input dark:bg-neutral-900'
+                      />
+                    </div>
+                  </div>
+                )
+              })}
           </div>
         </TabsContent>
         <TabsContent value='password' className='px-4'>

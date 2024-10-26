@@ -15,6 +15,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import { showToast } from '@/toast'
 import { useTheme } from 'next-themes'
+import { saveEnvs } from '@/actions/saveEnvs'
+import { usePathname } from 'next/navigation'
+import { parse } from 'path'
 
 export default function Component() {
   const [open, setOpen] = useState(false)
@@ -25,6 +28,7 @@ export default function Component() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { theme } = useTheme()
+  const path = usePathname()
 
   const parseEnv = () => {
     setError(null)
@@ -60,6 +64,19 @@ export default function Component() {
   const submitHandler = async () => {
     try {
       setIsLoading(true)
+      const slug = path.split('/')[2]
+      if (!parsedEnv) {
+        showToast('error', 'Envs cannot be empty', theme)
+        return
+      }
+      const response = await saveEnvs(slug, parsedEnv)
+      if (response) {
+        showToast('success', 'env saved', theme)
+        setEnvInput('')
+        setParsedEnv(null)
+      } else {
+        throw new Error('Genereate public key first')
+      }
     } catch (err) {
       console.log(err)
       showToast('error', JSON.stringify(err), theme)
@@ -108,6 +125,7 @@ export default function Component() {
         )}
         <div className='flex flex-row justify-end'>
           <Button
+            onClick={submitHandler}
             disabled={Object.keys(parsedEnv || {}).length === 0 || isLoading}
           >
             Save
