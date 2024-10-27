@@ -23,7 +23,7 @@ const HomePageCreateMenu = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-[200px]'>
         <AddEnvDialog />
-        <Separator />
+        <Separator className="my-2"/>
         {projectDetails && <ExportEnvsDialog projectDetails={projectDetails} />}
       </DropdownMenuContent>
     </DropdownMenu>
