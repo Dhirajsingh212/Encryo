@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { showToast } from '@/toast'
 import { Envs, ProjectDetails } from '@/types/types'
-import { Key, Search, User } from 'lucide-react'
+import { Key, Pencil, Search, User } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { FaTrash } from 'react-icons/fa'
@@ -113,6 +113,9 @@ const SecretComp = ({
                   className='mt-2 w-full md:mt-0 md:w-10'
                 >
                   <FaTrash />
+                </Button>
+                <Button variant='outline'>
+                  <Pencil className='size-3' />
                 </Button>
               </div>
             )
