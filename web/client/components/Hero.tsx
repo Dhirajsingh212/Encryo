@@ -1,14 +1,8 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import Safari from '@/components/ui/safari'
-import {
-  Cog6ToothIcon,
-  RocketLaunchIcon,
-  ShieldCheckIcon
-} from '@heroicons/react/24/outline'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import FeatureCard from './FeatureCard'
 import FeaturesComp from './Features'
 
 const Hero = () => {
