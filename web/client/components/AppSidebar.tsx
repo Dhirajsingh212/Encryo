@@ -132,7 +132,7 @@ export default async function AppSidebar() {
                       >
                         <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
                           <Link
-                            className='flex flex-row'
+                            className='flex w-full flex-row'
                             href={`/home/${item.slug}`}
                           >
                             <Folder className='mr-2 size-4' />

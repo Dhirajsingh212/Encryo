@@ -127,3 +127,46 @@ export async function deleteEnvById(id: string) {
     throw new Error(errorMessage)
   }
 }
+
+export async function udpateEnvById(
+  userId: string,
+  id: string,
+  name: string,
+  value: string
+) {
+  try {
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: userId
+      },
+      select: {
+        publicKey: true
+      }
+    })
+
+    if (!userDetails || !userDetails.publicKey) {
+      throw new Error('User not found or missing public key')
+    }
+
+    const encryptedValue = await encryptData(value, userDetails.publicKey || '')
+
+    await prisma.env.update({
+      where: {
+        id: id
+      },
+      data: {
+        name,
+        value: encryptedValue
+      }
+    })
+
+    revalidatePath('/home(.*)')
+    return true
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : 'Failed to save environment variables'
+    throw new Error(errorMessage)
+  }
+}

@@ -24,10 +24,6 @@ const HomePageCreateMenu = ({
       <DropdownMenuContent className='w-[200px]'>
         <AddEnvDialog />
         {projectDetails && <ExportEnvsDialog projectDetails={projectDetails} />}
-
-        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-          Edit env
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

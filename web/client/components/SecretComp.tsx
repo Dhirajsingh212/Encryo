@@ -10,6 +10,7 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { FaTrash } from 'react-icons/fa'
 import { useDebounce } from 'use-debounce'
+import EnvInputComp from './EnvInputComp'
 
 const SecretComp = ({
   projectDetails
@@ -59,66 +60,7 @@ const SecretComp = ({
         {filteredEnv && filteredEnv.length === 0 && <p>No envs found.</p>}
         {filteredEnv &&
           filteredEnv.map((pairs, index) => {
-            return (
-              <div
-                key={index}
-                className='flex flex-col items-center gap-2 py-2 md:flex-row'
-              >
-                <div className='relative w-full'>
-                  <User className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />
-                  <Input
-                    disabled
-                    placeholder='Name'
-                    value={pairs.name}
-                    className='w-full border-2 bg-card pl-10 pr-4 dark:border-input dark:bg-neutral-900'
-                  />
-                </div>
-                <div className='relative w-full'>
-                  <Key className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400' />
-                  <Input
-                    disabled
-                    placeholder='API KEY'
-                    value={pairs.value}
-                    className='w-full border-2 bg-card pl-10 pr-4 dark:border-input dark:bg-neutral-900'
-                  />
-                </div>
-                <Button
-                  disabled={isLoading}
-                  onClick={async () => {
-                    try {
-                      setIsLoading(true)
-                      if (!pairs.id) {
-                        showToast('error', 'Id must be provided', theme)
-                        return
-                      }
-
-                      const response = await deleteEnvById(pairs.id)
-
-                      if (response) {
-                        showToast('success', 'Deleted.', theme)
-                      } else {
-                        throw new Error('Something went wrong')
-                      }
-                    } catch (err) {
-                      const errorMessage =
-                        err instanceof Error
-                          ? err.message
-                          : 'An unexpected error occurred'
-                      showToast('error', errorMessage, theme)
-                    } finally {
-                      setIsLoading(false)
-                    }
-                  }}
-                  variant='destructive'
-                  className='mt-2 w-full md:mt-0 md:w-10'
-                >
-                  <FaTrash />
-                </Button>
-                <Button variant='outline'>
-                  <Pencil className='size-3' />
-                </Button>
-              </div>
-            )
+            return <EnvInputComp key={index} pairs={pairs} index={index} />
           })}
       </div>
     </>
