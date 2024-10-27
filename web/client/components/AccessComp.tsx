@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Check, ChevronsUpDown, Plus, Trash2 } from 'lucide-react'
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
@@ -10,13 +9,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-
-const users = [
-  { email: 'alice@example.com' },
-  { email: 'bob@example.com' },
-  { email: 'charlie@example.com' },
-  { email: 'david@example.com' },
-]
 
 type ProjectUser = {
   email: string
@@ -28,6 +20,12 @@ export default function AccessComp() {
   const [value, setValue] = useState("")
   const [projectUsers, setProjectUsers] = useState<ProjectUser[]>([])
   const [selectedAccess, setSelectedAccess] = useState<'read' | 'write'>('read')
+  const users = [
+    { email: 'alice@example.com' },
+    { email: 'bob@example.com' },
+    { email: 'charlie@example.com' },
+    { email: 'david@example.com' },
+  ]
 
   const addUser = () => {
     if (value && !projectUsers.some(user => user.email === value)) {
@@ -57,9 +55,7 @@ export default function AccessComp() {
                 aria-expanded={open}
                 className="w-[300px] justify-between"
               >
-                {value
-                  ? users.find((user) => user.email === value)?.email
-                  : "Select user..."}
+                {value || "Select user..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -71,8 +67,8 @@ export default function AccessComp() {
                   {users.map((user) => (
                     <CommandItem
                       key={user.email}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue)
+                      onSelect={() => {
+                        setValue(user.email)
                         setOpen(false)
                       }}
                     >

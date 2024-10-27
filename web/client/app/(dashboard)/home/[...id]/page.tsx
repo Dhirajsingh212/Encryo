@@ -3,7 +3,7 @@ import SecretComp from '@/components/SecretComp'
 import SettingsComp from '@/components/SettingsComp'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { auth } from '@clerk/nextjs/server'
-import { AccessComp } from '@/components/AccessComp'
+import AccessComp from '@/components/AccessComp'
 import { getAllUserDetails } from '@/actions/user'
 
 const Page = async ({ params }: { params: { id: string[] } }) => {
@@ -28,7 +28,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <SecretComp projectDetails={projectDetails} />
         </TabsContent>
         <TabsContent value='password' className='px-4'>
-          {allUserDetails && <AccessComp userEmails={allUserDetails} />}
+          {allUserDetails && <AccessComp />}
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
           <SettingsComp />
