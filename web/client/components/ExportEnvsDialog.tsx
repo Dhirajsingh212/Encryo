@@ -36,9 +36,9 @@ export function ExportEnvsDialog({
       <DialogTrigger className='w-full rounded-sm px-2 py-1 text-start text-sm hover:bg-violet-600 hover:text-white'>
         Export envs
       </DialogTrigger>
-      <DialogContent className='h-[580px] max-w-[280px] rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:max-h-full sm:w-full sm:max-w-[425px]'>
+      <DialogContent className='max-w-[280px] rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full sm:max-w-[425px]'>
         <div className='grid gap-4 py-4'>
-          <div className='flex flex-col gap-4 overflow-x-scroll rounded-lg bg-slate-800 p-4'>
+          <div className='custom-scrollbar flex h-[500px] flex-col gap-4 overflow-scroll rounded-lg bg-slate-800 p-4'>
             {projectDetails &&
               projectDetails.envs &&
               projectDetails.envs.map((pairs, index) => (

@@ -20,5 +20,6 @@ export interface ProjectDetails {
   envs: {
     value: string
     name: string
+    id: string
   }[]
 }

@@ -1,8 +1,13 @@
+'use client'
+import { deleteEnvById } from '@/actions/saveEnvs'
 import HomePageCreateMenu from '@/components/HomePageCreateMenu'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { showToast } from '@/toast'
 import { ProjectDetails } from '@/types/types'
 import { Key, Search, User } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { useState } from 'react'
 import { FaTrash } from 'react-icons/fa'
 
 const SecretComp = ({
@@ -10,6 +15,9 @@ const SecretComp = ({
 }: {
   projectDetails: ProjectDetails | null
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { theme } = useTheme()
+
   return (
     <>
       <div className='flex flex-col gap-2 md:flex-row md:justify-between'>
@@ -56,6 +64,32 @@ const SecretComp = ({
                   />
                 </div>
                 <Button
+                  disabled={isLoading}
+                  onClick={async () => {
+                    try {
+                      setIsLoading(true)
+                      if (!pairs.id) {
+                        showToast('error', 'Id must be provided', theme)
+                        return
+                      }
+
+                      const response = await deleteEnvById(pairs.id)
+
+                      if (response) {
+                        showToast('success', 'Deleted.', theme)
+                      } else {
+                        throw new Error('Something went wrong')
+                      }
+                    } catch (err) {
+                      const errorMessage =
+                        err instanceof Error
+                          ? err.message
+                          : 'An unexpected error occurred'
+                      showToast('error', errorMessage, theme)
+                    } finally {
+                      setIsLoading(false)
+                    }
+                  }}
                   variant='destructive'
                   className='mt-2 w-full md:mt-0 md:w-10'
                 >

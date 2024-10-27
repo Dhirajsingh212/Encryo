@@ -73,7 +73,8 @@ export async function getEnvsByProjectSlug(slug: string, userId: string) {
         envs: {
           select: {
             name: true,
-            value: true
+            value: true,
+            id: true
           }
         }
       }
@@ -103,5 +104,26 @@ export async function getEnvsByProjectSlug(slug: string, userId: string) {
   } catch (err) {
     console.error(err)
     return null
+  }
+}
+
+export async function deleteEnvById(id: string) {
+  try {
+    if (!id) {
+      throw new Error('Id must be provided')
+    }
+    await prisma.env.deleteMany({
+      where: {
+        id
+      }
+    })
+    revalidatePath('/home(.*)')
+    return true
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : 'Failed to save environment variables'
+    throw new Error(errorMessage)
   }
 }
