@@ -1,6 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { saveEnvs } from '@/actions/saveEnvs'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,15 +11,12 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertCircle } from 'lucide-react'
 import { showToast } from '@/toast'
+import { AlertCircle } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { saveEnvs } from '@/actions/saveEnvs'
 import { usePathname } from 'next/navigation'
-import { parse } from 'path'
+import { useState } from 'react'
 
 export default function Component() {
   const [open, setOpen] = useState(false)
@@ -93,7 +92,7 @@ export default function Component() {
       <DialogTrigger className='w-full rounded-sm px-2 py-1 text-start text-sm hover:bg-violet-600 hover:text-white'>
         Add Envs
       </DialogTrigger>
-      <DialogContent className='w-full border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white max-lg:max-h-[90%] max-lg:overflow-auto max-sm:w-[280px] max-sm:overflow-x-scroll max-sm:rounded-lg sm:max-w-[425px] md:max-w-[600px] lg:max-h-full lg:max-w-[800px] xl:max-w-[1000px]'>
+      <DialogContent className='w-full border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white max-lg:max-h-[90%] max-lg:overflow-auto max-sm:w-[280px] max-sm:overflow-x-scroll max-sm:rounded-lg sm:max-w-[425px] md:max-w-[600px] lg:h-[90%] lg:max-w-[800px] xl:max-w-[1000px]'>
         <DialogHeader>
           <DialogTitle>Parse ENV Variables</DialogTitle>
           <DialogDescription>

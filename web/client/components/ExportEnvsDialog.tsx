@@ -38,7 +38,7 @@ export function ExportEnvsDialog({
       </DialogTrigger>
       <DialogContent className='max-w-[280px] rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full sm:max-w-[425px]'>
         <div className='grid gap-4 py-4'>
-          <div className='custom-scrollbar flex h-[500px] flex-col gap-4 overflow-scroll rounded-lg bg-slate-800 p-4'>
+          <div className='custom-scrollbar flex h-[400px] flex-col gap-4 overflow-scroll rounded-lg bg-slate-800 p-4'>
             {projectDetails &&
               projectDetails.envs &&
               projectDetails.envs.map((pairs, index) => (

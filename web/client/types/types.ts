@@ -17,9 +17,11 @@ export interface UserForms {
 }
 
 export interface ProjectDetails {
-  envs: {
-    value: string
-    name: string
-    id: string
-  }[]
+  envs: Envs[]
+}
+
+export interface Envs {
+  value: string
+  name: string
+  id: string
 }
