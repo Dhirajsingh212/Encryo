@@ -1,19 +1,15 @@
 'use client'
-import { Envs } from '@/types/types'
-import { Key, Pencil, User } from 'lucide-react'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
-import { showToast } from '@/toast'
 import { deleteEnvById, udpateEnvById } from '@/actions/saveEnvs'
-import { FaTrash } from 'react-icons/fa'
+import { showToast } from '@/toast'
+import { Envs } from '@/types/types'
+import { useAuth } from '@clerk/nextjs'
+import { Key, Pencil, User } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
-import {
-  AiFillCheckCircle,
-  AiFillCheckSquare,
-  AiOutlineCloseCircle
-} from 'react-icons/ai'
-import { useAuth } from '@clerk/nextjs'
+import { AiFillCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai'
+import { FaTrash } from 'react-icons/fa'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
 
 const EnvInputComp = ({ pairs, index }: { pairs: Envs; index: number }) => {
   const { theme } = useTheme()

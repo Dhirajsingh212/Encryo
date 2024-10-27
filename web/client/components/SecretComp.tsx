@@ -1,14 +1,9 @@
 'use client'
-import { deleteEnvById } from '@/actions/saveEnvs'
 import HomePageCreateMenu from '@/components/HomePageCreateMenu'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { showToast } from '@/toast'
 import { Envs, ProjectDetails } from '@/types/types'
-import { Key, Pencil, Search, User } from 'lucide-react'
-import { useTheme } from 'next-themes'
+import { Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { FaTrash } from 'react-icons/fa'
 import { useDebounce } from 'use-debounce'
 import EnvInputComp from './EnvInputComp'
 
@@ -17,8 +12,6 @@ const SecretComp = ({
 }: {
   projectDetails: ProjectDetails | null
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const { theme } = useTheme()
   const [text, setText] = useState<string>('')
   const [filteredEnv, setFilteredEnv] = useState<Envs[]>(
     projectDetails ? projectDetails.envs : []

@@ -1,3 +1,4 @@
+import { getProjectsByUserId } from '@/actions/project'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,11 +31,10 @@ import {
   Share,
   Trash2
 } from 'lucide-react'
-import AddProjectDialog from './AddProjectDialog'
-import { getProjectsByUserId } from '@/actions/project'
+import Link from 'next/link'
 import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
-import Link from 'next/link'
+import AddProjectDialog from './AddProjectDialog'
 
 const data = {
   user: {

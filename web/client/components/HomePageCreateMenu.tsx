@@ -1,13 +1,13 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { ProjectDetails } from '@/types/types'
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
 import AddEnvDialog from './AddEnvDialog'
 import { ExportEnvsDialog } from './ExportEnvsDialog'
-import { ProjectDetails } from '@/types/types'
+import { Separator } from './ui/separator'
 
 const HomePageCreateMenu = ({
   projectDetails
@@ -23,6 +23,7 @@ const HomePageCreateMenu = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-[200px]'>
         <AddEnvDialog />
+        <Separator />
         {projectDetails && <ExportEnvsDialog projectDetails={projectDetails} />}
       </DropdownMenuContent>
     </DropdownMenu>
