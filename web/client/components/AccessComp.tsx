@@ -45,17 +45,11 @@ type ProjectUser = {
   access: 'read' | 'write'
 }
 
-export default function AccessComp() {
+export default function AccessComp({ users }: { users: { email: string }[] }) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
   const [projectUsers, setProjectUsers] = useState<ProjectUser[]>([])
   const [selectedAccess, setSelectedAccess] = useState<'read' | 'write'>('read')
-  const users = [
-    { email: 'alice@example.com' },
-    { email: 'bob@example.com' },
-    { email: 'charlie@example.com' },
-    { email: 'david@example.com' }
-  ]
 
   const addUser = () => {
     if (value && !projectUsers.some(user => user.email === value)) {
@@ -82,18 +76,20 @@ export default function AccessComp() {
       </CardHeader>
       <CardContent>
         <div className='mb-4 flex flex-col gap-4 md:flex-row md:space-x-2'>
-          <div className='flex flex-row gap-2'>
+          <div className='flex flex-col gap-2 md:flex-row'>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant='outline'
                   role='combobox'
                   aria-expanded={open}
-                  className='w-[110px] justify-between md:w-[300px]'
+                  className='w-full justify-between md:w-[300px]'
                 >
-                  {value
-                    ? users.find(user => user.email === value)?.email
-                    : 'Select framework...'}
+                  <p className='flex-wrap break-words'>
+                    {value
+                      ? users.find(user => user.email === value)?.email
+                      : 'Select framework...'}
+                  </p>
                   <ChevronsUpDown className='ml-1 h-4 w-4 shrink-0 opacity-50 md:ml-2' />
                 </Button>
               </PopoverTrigger>
@@ -132,7 +128,7 @@ export default function AccessComp() {
                 setSelectedAccess(value)
               }
             >
-              <SelectTrigger className='w-[120px]'>
+              <SelectTrigger className='w-full md:w-[120px]'>
                 <SelectValue placeholder='Access' />
               </SelectTrigger>
               <SelectContent>
@@ -145,20 +141,21 @@ export default function AccessComp() {
             <Plus className='mr-2 h-4 w-4' /> Add User
           </Button>
         </div>
-        <Table className='custom-scrollbar w-full overflow-x-scroll'>
-          <TableHeader>
-            <TableRow>
-              <TableHead>User Email</TableHead>
-              <TableHead>Access Level</TableHead>
-              <TableHead className='w-[100px]'>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          {projectUsers.length === 0 && (
-            <p className='flex w-full flex-row justify-start py-4'>
-              No users added
-            </p>
-          )}
-          {projectUsers.length > 0 && (
+        {projectUsers.length === 0 && (
+          <p className='flex w-full flex-row justify-start py-4'>
+            No users added
+          </p>
+        )}
+        {projectUsers.length > 0 && (
+          <Table className='custom-scrollbar w-full overflow-x-scroll'>
+            <TableHeader>
+              <TableRow>
+                <TableHead>User Email</TableHead>
+                <TableHead>Access Level</TableHead>
+                <TableHead className='w-[100px]'>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+
             <TableBody>
               {projectUsers.map(user => (
                 <TableRow key={user.email}>
@@ -176,8 +173,8 @@ export default function AccessComp() {
                 </TableRow>
               ))}
             </TableBody>
-          )}
-        </Table>
+          </Table>
+        )}
       </CardContent>
     </Card>
   )

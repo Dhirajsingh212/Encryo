@@ -28,7 +28,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <SecretComp projectDetails={projectDetails} />
         </TabsContent>
         <TabsContent value='password' className='px-4'>
-          {allUserDetails && <AccessComp />}
+          {allUserDetails && <AccessComp users={allUserDetails} />}
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
           <SettingsComp />
