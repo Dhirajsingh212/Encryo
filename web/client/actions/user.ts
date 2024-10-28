@@ -44,16 +44,16 @@ export async function setPulbicKey(
   }
 }
 
-export async function getAllUserDetails(){
+export async function getAllUserDetails() {
   try {
     const userDetails = await prisma.user.findMany({
-      select:{
-        email:true
+      select: {
+        email: true
       }
     })
     return userDetails
-  }catch (err) {
+  } catch (err) {
     console.log(err)
-    return null;
+    return null
   }
 }

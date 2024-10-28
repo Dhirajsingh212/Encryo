@@ -12,7 +12,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
     return
   }
   const projectDetails = await getEnvsByProjectSlug(params.id[0], userId)
-  const allUserDetails = await getAllUserDetails();
+  const allUserDetails = await getAllUserDetails()
 
   console.log(allUserDetails)
 
