@@ -2,7 +2,7 @@ import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
 
-import { UpdateUser, createUser } from '@/actions/index'
+import { createUser, UpdateUser } from '@/actions/index'
 import { User } from '@prisma/client'
 
 export async function POST(req: Request) {
