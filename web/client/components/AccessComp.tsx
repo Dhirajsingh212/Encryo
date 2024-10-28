@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronsUpDown, Plus, Trash2 } from 'lucide-react'
+import { Check, ChevronsUpDown, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput
+  CommandInput,
+  CommandItem,
+  CommandList
 } from '@/components/ui/command'
 import {
   Popover,
@@ -36,6 +38,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { cn } from '@/lib/utils'
 
 type ProjectUser = {
   email: string
@@ -88,15 +91,38 @@ export default function AccessComp() {
                   aria-expanded={open}
                   className='w-[110px] justify-between md:w-[300px]'
                 >
-                  {value || 'Select user'}
+                  {value
+                    ? users.find(user => user.email === value)?.email
+                    : 'Select framework...'}
                   <ChevronsUpDown className='ml-1 h-4 w-4 shrink-0 opacity-50 md:ml-2' />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className='w-[300px] p-0'>
                 <Command>
                   <CommandInput placeholder='Search user...' />
-                  <CommandEmpty>No user found.</CommandEmpty>
-                  <CommandGroup></CommandGroup>
+                  <CommandList>
+                    <CommandEmpty>No user found.</CommandEmpty>
+                    <CommandGroup>
+                      {users.map(user => (
+                        <CommandItem
+                          key={user.email}
+                          value={user.email}
+                          onSelect={currentValue => {
+                            setValue(currentValue === value ? '' : currentValue)
+                            setOpen(false)
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              value === user.email ? 'opacity-100' : 'opacity-0'
+                            )}
+                          />
+                          {user.email}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
                 </Command>
               </PopoverContent>
             </Popover>
