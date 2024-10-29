@@ -1,4 +1,7 @@
-import { getProjectsByUserId } from '@/actions/project'
+import {
+  getProjectsByUserId,
+  getSharedProjectByUserId
+} from '@/actions/project'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -83,6 +86,7 @@ export default async function AppSidebar() {
   }
 
   const userProjects = await getProjectsByUserId(userId)
+  const sharedProjects = await getSharedProjectByUserId(userId)
 
   return (
     <Sidebar variant='inset'>
@@ -159,49 +163,50 @@ export default async function AppSidebar() {
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Shared projects</SidebarGroupLabel>
           <SidebarMenu>
-            {data.projects.map(item => (
-              <SidebarMenuItem key={item.name}>
+            {sharedProjects && sharedProjects.length === 0 && (
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href={item.url}>
-                    <item.icon />
-                    <span>{item.name}</span>
-                  </a>
+                  <span>No records found</span>
                 </SidebarMenuButton>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuAction showOnHover>
-                      <MoreHorizontal />
-                      <span className='sr-only'>More</span>
-                    </SidebarMenuAction>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className='w-48'
-                    side='bottom'
-                    align='end'
-                  >
-                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                      <Folder className='mr-2 size-4' />
-                      <span>View Project</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                      <Share className='mr-2 size-4' />
-                      <span>Share Project</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                      <Trash2 className='mr-2 size-4' />
-                      <span>Delete Project</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
               </SidebarMenuItem>
-            ))}
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <PlusCircleIcon />
-                <span>Add</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            )}
+            {sharedProjects &&
+              sharedProjects.map(item => {
+                const IconComp = allIconsObject[item.project.icon]
+                return (
+                  <SidebarMenuItem key={item.project.name}>
+                    <SidebarMenuButton asChild>
+                      <Link href={`/home/${item.project.slug}`}>
+                        {IconComp && <IconComp />}
+                        <span>{item.project.name}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction showOnHover>
+                          <MoreHorizontal />
+                          <span className='sr-only'>More</span>
+                        </SidebarMenuAction>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className='w-48'
+                        side='bottom'
+                        align='end'
+                      >
+                        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                          <Link
+                            className='flex w-full flex-row'
+                            href={`/home/${item.project.slug}`}
+                          >
+                            <Folder className='mr-2 size-4' />
+                            <span>View Project</span>
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </SidebarMenuItem>
+                )
+              })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

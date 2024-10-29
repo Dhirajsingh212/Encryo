@@ -23,6 +23,8 @@ model User {
   updatedAt        DateTime @updatedAt
 
   projects         Project[] 
+  sharedProjects    Shared[] @relation("SharedWith")
+  sharedByProjects  Shared[] @relation("SharedBy")
 }
 
 model Project {
@@ -39,6 +41,7 @@ model Project {
   updatedAt        DateTime @updatedAt
 
   envs             Env[]   
+  sharedWith       Shared[]
 }
 
 model Env {
@@ -50,4 +53,21 @@ model Env {
   project          Project   @relation(fields: [projectId], references: [id])
 
   createdAt        DateTime @default(now())
+}
+
+model Shared {
+  id              String     @id @default(cuid())
+  projectId       String
+  userIdFrom      String   
+  emailIdTo       String   
+  isAccepted      Boolean    @default(false)
+  privilege       Privilege 
+  project         Project    @relation(fields: [projectId], references: [id])
+  userFrom        User       @relation("SharedBy", fields: [userIdFrom], references: [clerkUserId])
+  userTo          User       @relation("SharedWith", fields: [emailIdTo], references: [email])
+  createdAt       DateTime   @default(now())
+}
+
+enum Privilege {
+  READ
 }

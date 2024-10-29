@@ -76,3 +76,33 @@ export async function getProjectsByUserId(userId: string) {
     return null
   }
 }
+
+export async function getSharedProjectByUserId(userId: string) {
+  try {
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: userId
+      }
+    })
+    const sharedProjects = await prisma.shared.findMany({
+      where: {
+        emailIdTo: userDetails?.email
+      },
+      select: {
+        project: {
+          select: {
+            name: true,
+            createdAt: true,
+            slug: true,
+            link: true,
+            icon: true
+          }
+        }
+      }
+    })
+    return sharedProjects
+  } catch (err) {
+    console.log(err)
+    return null
+  }
+}

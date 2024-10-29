@@ -48,7 +48,8 @@ export async function getAllUserDetails() {
   try {
     const userDetails = await prisma.user.findMany({
       select: {
-        email: true
+        email: true,
+        clerkUserId: true
       }
     })
     return userDetails

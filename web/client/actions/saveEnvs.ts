@@ -70,6 +70,7 @@ export async function getEnvsByProjectSlug(slug: string, userId: string) {
         slug: slug
       },
       select: {
+        id: true,
         envs: {
           select: {
             name: true,

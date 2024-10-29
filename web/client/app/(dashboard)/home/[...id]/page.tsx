@@ -1,10 +1,11 @@
 import { getEnvsByProjectSlug } from '@/actions/saveEnvs'
+import { getSharedUserByProjectSlug } from '@/actions/shared'
+import { getAllUserDetails } from '@/actions/user'
+import AccessComp from '@/components/AccessComp'
 import SecretComp from '@/components/SecretComp'
 import SettingsComp from '@/components/SettingsComp'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { auth } from '@clerk/nextjs/server'
-import AccessComp from '@/components/AccessComp'
-import { getAllUserDetails } from '@/actions/user'
 
 const Page = async ({ params }: { params: { id: string[] } }) => {
   const { userId } = auth()
@@ -13,8 +14,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   }
   const projectDetails = await getEnvsByProjectSlug(params.id[0], userId)
   const allUserDetails = await getAllUserDetails()
-
-  console.log(allUserDetails)
+  const sharedUserDetails = await getSharedUserByProjectSlug(params.id[0])
 
   return (
     <div className=''>
@@ -28,7 +28,13 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <SecretComp projectDetails={projectDetails} />
         </TabsContent>
         <TabsContent value='password' className='px-4'>
-          {allUserDetails && <AccessComp users={allUserDetails} />}
+          {allUserDetails && projectDetails && sharedUserDetails && (
+            <AccessComp
+              users={allUserDetails}
+              projectId={projectDetails.id}
+              projectUsers={sharedUserDetails}
+            />
+          )}
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
           <SettingsComp />

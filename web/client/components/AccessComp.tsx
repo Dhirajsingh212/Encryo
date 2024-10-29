@@ -1,8 +1,17 @@
 'use client'
 
-import { useState } from 'react'
-import { Check, ChevronsUpDown, Plus, Trash2 } from 'lucide-react'
+import {
+  addSharedUserToDB,
+  removeSharedUserFromProject
+} from '@/actions/shared'
 import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 import {
   Command,
   CommandEmpty,
@@ -16,13 +25,6 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -39,31 +41,77 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
+import { showToast } from '@/toast'
+import { useAuth } from '@clerk/nextjs'
+import { Check, ChevronsUpDown, Plus, Trash2 } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { useState } from 'react'
 
 type ProjectUser = {
-  email: string
-  access: 'read' | 'write'
+  privilege: 'READ' | 'WRITE'
+  userTo: {
+    email: string
+  }
 }
 
-export default function AccessComp({ users }: { users: { email: string }[] }) {
+export default function AccessComp({
+  users,
+  projectId,
+  projectUsers
+}: {
+  users: { email: string; clerkUserId: string }[]
+  projectId: string
+  projectUsers: ProjectUser[]
+}) {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('')
-  const [projectUsers, setProjectUsers] = useState<ProjectUser[]>([])
-  const [selectedAccess, setSelectedAccess] = useState<'read' | 'write'>('read')
+  const [value, setValue] = useState<string>('')
+  const { userId } = useAuth()
+  const [selectedAccess, setSelectedAccess] = useState<'read'>('read')
+  const { theme } = useTheme()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const addUser = () => {
-    if (value && !projectUsers.some(user => user.email === value)) {
-      setProjectUsers([
-        ...projectUsers,
-        { email: value, access: selectedAccess }
-      ])
-      setValue('')
-      setSelectedAccess('read')
+  const addUser = async () => {
+    try {
+      setIsLoading(true)
+      if (!userId) {
+        showToast('error', 'User not loggedIn', theme)
+        return
+      }
+
+      if (value && !projectUsers.some(user => user.userTo.email === value)) {
+        await addSharedUserToDB({
+          fromUserId: userId,
+          toUserId: value,
+          projectId: projectId,
+          privilege: selectedAccess
+        })
+        setValue('')
+        setSelectedAccess('read')
+        showToast('success', 'user added successfully', theme)
+      } else {
+        throw new Error('Same user cannot be added twice')
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const removeUser = (email: string) => {
-    setProjectUsers(projectUsers.filter(user => user.email !== email))
+  const removeUser = async (email: string) => {
+    try {
+      setIsLoading(true)
+      await removeSharedUserFromProject(email, projectId)
+      showToast('success', 'user removed successfully', theme)
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -99,24 +147,32 @@ export default function AccessComp({ users }: { users: { email: string }[] }) {
                   <CommandList>
                     <CommandEmpty>No user found.</CommandEmpty>
                     <CommandGroup>
-                      {users.map(user => (
-                        <CommandItem
-                          key={user.email}
-                          value={user.email}
-                          onSelect={currentValue => {
-                            setValue(currentValue === value ? '' : currentValue)
-                            setOpen(false)
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              'mr-2 h-4 w-4',
-                              value === user.email ? 'opacity-100' : 'opacity-0'
-                            )}
-                          />
-                          {user.email}
-                        </CommandItem>
-                      ))}
+                      {users.map(user => {
+                        if (user.clerkUserId !== userId) {
+                          return (
+                            <CommandItem
+                              key={user.email}
+                              value={user.email}
+                              onSelect={currentValue => {
+                                setValue(
+                                  currentValue === value ? '' : currentValue
+                                )
+                                setOpen(false)
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  value === user.email
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {user.email}
+                            </CommandItem>
+                          )
+                        }
+                      })}
                     </CommandGroup>
                   </CommandList>
                 </Command>
@@ -124,20 +180,17 @@ export default function AccessComp({ users }: { users: { email: string }[] }) {
             </Popover>
             <Select
               value={selectedAccess}
-              onValueChange={(value: 'read' | 'write') =>
-                setSelectedAccess(value)
-              }
+              onValueChange={(value: 'read') => setSelectedAccess(value)}
             >
               <SelectTrigger className='w-full md:w-[120px]'>
                 <SelectValue placeholder='Access' />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='read'>Read</SelectItem>
-                <SelectItem value='write'>Write</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={addUser}>
+          <Button onClick={addUser} disabled={isLoading}>
             <Plus className='mr-2 h-4 w-4' /> Add User
           </Button>
         </div>
@@ -157,15 +210,16 @@ export default function AccessComp({ users }: { users: { email: string }[] }) {
             </TableHeader>
 
             <TableBody>
-              {projectUsers.map(user => (
-                <TableRow key={user.email}>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell className='capitalize'>{user.access}</TableCell>
+              {projectUsers.map((user: ProjectUser) => (
+                <TableRow key={user.userTo.email}>
+                  <TableCell>{user.userTo.email}</TableCell>
+                  <TableCell className='capitalize'>{user.privilege}</TableCell>
                   <TableCell>
                     <Button
+                      disabled={isLoading}
                       variant='ghost'
                       size='sm'
-                      onClick={() => removeUser(user.email)}
+                      onClick={() => removeUser(user.userTo.email)}
                     >
                       <Trash2 className='h-4 w-4' />
                     </Button>

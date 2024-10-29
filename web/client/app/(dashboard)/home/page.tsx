@@ -15,6 +15,11 @@ export default async function Component() {
     <div className='container mx-auto px-2 sm:px-4'>
       <h1 className='mb-6 text-center text-3xl font-bold'>Your Projects</h1>
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+        {projects && projects.length === 0 && (
+          <p className='flex flex-row justify-start pt-4 text-xl font-bold text-violet-600'>
+            No project created yet.
+          </p>
+        )}
         {projects &&
           projects.map((project, index) => (
             <div
