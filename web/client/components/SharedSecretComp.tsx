@@ -1,8 +1,8 @@
 'use client'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Envs, ProjectDetails } from '@/types/types'

@@ -24,57 +24,13 @@ import { auth } from '@clerk/nextjs/server'
 import {
   Command,
   Folder,
-  Frame,
-  LifeBuoy,
-  Map,
   MoreHorizontal,
-  PieChart,
-  PlusCircleIcon,
-  Send,
-  Share,
   Trash2
 } from 'lucide-react'
 import Link from 'next/link'
 import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
 import AddProjectDialog from './AddProjectDialog'
-
-const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg'
-  },
-  navSecondary: [
-    {
-      title: 'Support',
-      url: '#',
-      icon: LifeBuoy
-    },
-    {
-      title: 'Feedback',
-      url: '#',
-      icon: Send
-    }
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '/home/Design',
-      icon: Frame
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '/home/Sales',
-      icon: PieChart
-    },
-    {
-      name: 'Travel',
-      url: '/home/Travel',
-      icon: Map
-    }
-  ]
-}
 
 const allIconsObject: any = { ...FaIcons, ...MdIcons }
 
