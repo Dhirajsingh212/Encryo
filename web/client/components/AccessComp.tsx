@@ -46,6 +46,7 @@ import { useAuth } from '@clerk/nextjs'
 import { Check, ChevronsUpDown, Plus, Trash2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
+import { AccessAlertDialog } from './AccessAlertDialog'
 
 type ProjectUser = {
   privilege: 'READ' | 'WRITE'
@@ -190,9 +191,10 @@ export default function AccessComp({
               </SelectContent>
             </Select>
           </div>
-          <Button onClick={addUser} disabled={isLoading}>
+          <AccessAlertDialog addUser={addUser} isLoading={isLoading} />
+          {/* <Button onClick={addUser} disabled={isLoading}>
             <Plus className='mr-2 h-4 w-4' /> Add User
-          </Button>
+          </Button> */}
         </div>
         {projectUsers.length === 0 && (
           <p className='flex w-full flex-row justify-start py-4'>
