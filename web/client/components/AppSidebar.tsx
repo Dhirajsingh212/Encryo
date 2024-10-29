@@ -176,7 +176,7 @@ export default async function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.project.name}>
                     <SidebarMenuButton asChild>
-                      <Link href={`/home/${item.project.slug}`}>
+                      <Link href={`/shared/${item.project.slug}`}>
                         {IconComp && <IconComp />}
                         <span>{item.project.name}</span>
                       </Link>
@@ -196,7 +196,7 @@ export default async function AppSidebar() {
                         <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
                           <Link
                             className='flex w-full flex-row'
-                            href={`/home/${item.project.slug}`}
+                            href={`/shared/${item.project.slug}`}
                           >
                             <Folder className='mr-2 size-4' />
                             <span>View Project</span>

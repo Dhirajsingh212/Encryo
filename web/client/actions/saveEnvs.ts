@@ -108,6 +108,76 @@ export async function getEnvsByProjectSlug(slug: string, userId: string) {
   }
 }
 
+export async function getSharedEnvsByProjectSlug(slug: string, userId: string) {
+  try {
+    const sharedUserDetail = await prisma.user.findFirst({
+      where: {
+        clerkUserId: userId
+      }
+    })
+
+    const toUserIdDetails = await prisma.shared.findFirst({
+      where: {
+        emailIdTo: sharedUserDetail?.email
+      },
+      select: {
+        userIdFrom: true
+      }
+    })
+
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: toUserIdDetails?.userIdFrom
+      }
+    })
+
+    if (!userDetails || !userDetails.privateKey) {
+      throw new Error('User details or private key not found.')
+    }
+
+    const projectDetails = await prisma.project.findFirst({
+      where: {
+        slug: slug
+      },
+      select: {
+        id: true,
+        envs: {
+          select: {
+            name: true,
+            value: true,
+            id: true
+          }
+        }
+      }
+    })
+
+    if (!projectDetails || !projectDetails.envs) {
+      throw new Error('Project details or environment variables not found.')
+    }
+
+    const decryptedEnvs = await Promise.all(
+      projectDetails.envs.map(async pair => {
+        const decryptedValue = await decryptData(
+          pair.value,
+          userDetails.privateKey!
+        )
+        return {
+          ...pair,
+          value: decryptedValue
+        }
+      })
+    )
+
+    return {
+      ...projectDetails,
+      envs: decryptedEnvs
+    }
+  } catch (err) {
+    console.error(err)
+    return null
+  }
+}
+
 export async function deleteEnvById(id: string) {
   try {
     if (!id) {
