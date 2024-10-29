@@ -46,7 +46,7 @@ model Project {
 
 model Env {
   id               String   @id @default(cuid())
-  name             String   @unique
+  name             String   
   value            String
   projectId        String   
 
