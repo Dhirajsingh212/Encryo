@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from '@/lib/prisma'
+import { pusherServer } from '@/pusher/pusherServer'
 import { revalidatePath } from 'next/cache'
 
 export async function addSharedUserToDB({
@@ -23,6 +24,31 @@ export async function addSharedUserToDB({
         privilege: 'READ'
       }
     })
+
+    const toUserDetails = await prisma.user.findFirst({
+      where: {
+        email: toUserId
+      }
+    })
+
+    const fromUserDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: fromUserId
+      }
+    })
+
+    await prisma.notification.create({
+      data: {
+        message: `${fromUserDetails?.firstName} ${fromUserDetails?.lastName} Added you to their project`,
+        userId: toUserDetails?.clerkUserId || ''
+      }
+    })
+
+    await pusherServer.trigger(
+      `${toUserDetails?.clerkUserId}`,
+      `${toUserDetails?.clerkUserId}`,
+      `${fromUserDetails?.firstName}  ${fromUserDetails?.lastName} Added you to their project`
+    )
     revalidatePath('/home(.*)')
     return true
   } catch (err) {

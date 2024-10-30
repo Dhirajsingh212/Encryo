@@ -43,7 +43,7 @@ import {
 import { cn } from '@/lib/utils'
 import { showToast } from '@/toast'
 import { useAuth } from '@clerk/nextjs'
-import { Check, ChevronsUpDown, Plus, Trash2 } from 'lucide-react'
+import { Check, ChevronsUpDown, Trash2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import { AccessAlertDialog } from './AccessAlertDialog'

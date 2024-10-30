@@ -25,6 +25,8 @@ model User {
   projects         Project[] 
   sharedProjects    Shared[] @relation("SharedWith")
   sharedByProjects  Shared[] @relation("SharedBy")
+  
+  notifications     Notification[]
 }
 
 model Project {
@@ -65,7 +67,19 @@ model Shared {
   project         Project    @relation(fields: [projectId], references: [id])
   userFrom        User       @relation("SharedBy", fields: [userIdFrom], references: [clerkUserId])
   userTo          User       @relation("SharedWith", fields: [emailIdTo], references: [email])
+  
   createdAt       DateTime   @default(now())
+}
+
+model Notification {
+  id              String     @id @default(cuid())
+  userId          String
+  message         String
+  isRead          Boolean    @default(false)
+  
+  createdAt       DateTime   @default(now())
+  
+  user            User       @relation(fields: [userId], references: [clerkUserId])
 }
 
 enum Privilege {

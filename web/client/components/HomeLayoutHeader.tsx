@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { UserButton } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
+import NotificationDropDown from './NotificationDropDown'
 
 const HomeLayoutHeader = () => {
   const path = usePathname()
@@ -47,7 +48,8 @@ const HomeLayoutHeader = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className='flex flex-row items-center'>
+      <div className='flex flex-row items-center gap-2'>
+        <NotificationDropDown />
         <ThemeToggle />
         <UserButton />
       </div>
