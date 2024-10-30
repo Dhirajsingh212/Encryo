@@ -64,7 +64,8 @@ export async function getProjectsByUserId(userId: string) {
         slug: true,
         icon: true,
         link: true,
-        createdAt: true
+        createdAt: true,
+        id: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -104,5 +105,33 @@ export async function getSharedProjectByUserId(userId: string) {
   } catch (err) {
     console.log(err)
     return null
+  }
+}
+export async function deleteProjectById(projectId: string, userId: string) {
+  try {
+    await prisma.$transaction(async prisma => {
+      await prisma.shared.deleteMany({
+        where: {
+          userIdFrom: userId,
+          projectId
+        }
+      })
+      await prisma.env.deleteMany({
+        where: {
+          projectId: projectId
+        }
+      })
+      await prisma.project.deleteMany({
+        where: {
+          id: projectId
+        }
+      })
+    })
+
+    revalidatePath('/home(.*)')
+    return true
+  } catch (err) {
+    console.log(err)
+    return false
   }
 }

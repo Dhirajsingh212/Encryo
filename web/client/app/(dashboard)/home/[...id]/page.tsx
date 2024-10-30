@@ -16,6 +16,16 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   const allUserDetails = await getAllUserDetails()
   const sharedUserDetails = await getSharedUserByProjectSlug(params.id[0])
 
+  if (!projectDetails || !allUserDetails || !sharedUserDetails) {
+    return (
+      <>
+        <p className='flex flex-row justify-center text-xl text-violet-600'>
+          Project not found.
+        </p>
+      </>
+    )
+  }
+
   return (
     <div className=''>
       <Tabs defaultValue='account' className='w-full sm:px-4'>

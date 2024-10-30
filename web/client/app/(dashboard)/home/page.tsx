@@ -1,7 +1,8 @@
 import { getProjectsByUserId } from '@/actions/project'
+import DeleteProjectDialog from '@/components/DeleteProjectDialog'
 import { Card, CardContent } from '@/components/ui/card'
 import { auth } from '@clerk/nextjs/server'
-import { ExternalLink } from 'lucide-react'
+import { EllipsisVertical, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function Component() {
@@ -24,15 +25,21 @@ export default async function Component() {
           projects.map((project, index) => (
             <div
               key={index}
-              className='transform transition-transform duration-300 hover:scale-105'
+              className='group transform transition-transform duration-300 hover:scale-105'
             >
               <Card className='min-h-40 overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 transition-shadow duration-300 hover:shadow-lg'>
                 <CardContent className='p-6'>
-                  <Link href={`/home/${project.slug}`}>
-                    <h2 className='mb-2 text-2xl font-semibold text-primary'>
-                      {project.name}
-                    </h2>
-                  </Link>
+                  <div className='flex flex-row justify-between'>
+                    <Link href={`/home/${project.slug}`}>
+                      <h2 className='mb-2 line-clamp-1 flex-wrap break-words text-2xl font-semibold text-primary'>
+                        {project.name}
+                      </h2>
+                    </Link>
+                    <DeleteProjectDialog
+                      projectId={project.id}
+                      userId={userId}
+                    />
+                  </div>
                   <p className='mb-4 text-muted-foreground'>
                     Created on:{' '}
                     {new Date(project.createdAt).toLocaleDateString()}

@@ -54,6 +54,11 @@ export default function ProjectDialog() {
         return
       }
 
+      if (projectName.length > 100) {
+        showToast('error', 'Max 100 characters for project name', theme)
+        return
+      }
+
       const response = await addProjectToUser({
         userId: userId,
         name: projectName,

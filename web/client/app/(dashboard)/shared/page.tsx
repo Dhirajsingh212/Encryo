@@ -31,7 +31,7 @@ export default async function Component() {
               <Card className='min-h-40 overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 transition-shadow duration-300 hover:shadow-lg'>
                 <CardContent className='p-6'>
                   <Link href={`/shared/${element.project.slug}`}>
-                    <h2 className='mb-2 text-2xl font-semibold text-primary'>
+                    <h2 className='mb-2 line-clamp-1 flex-wrap break-words text-2xl font-semibold text-primary'>
                       {element.project.name}
                     </h2>
                   </Link>

@@ -39,8 +39,8 @@ const HomeLayoutHeader = () => {
             )}
             <BreadcrumbItem>
               {pathLength >= 3 && (
-                <BreadcrumbPage className='capitalize'>
-                  {path.split('/')[2]}
+                <BreadcrumbPage className='flex-wrap break-words capitalize'>
+                  {path.split('/')[2].slice(0, 100)}
                 </BreadcrumbPage>
               )}
             </BreadcrumbItem>
