@@ -12,35 +12,50 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { showToast } from '@/toast'
+import { useTheme } from 'next-themes'
+import { usePathname } from 'next/navigation'
+import { addServicesData } from '@/actions/service'
 
 interface Service {
-  id: number
+  id: string
   name: string
-  apiKey: string
-  expiryDate: string
   link: string
+  value: string
+  expDate: string
 }
 
-export default function ServiceComp() {
-  const [services, setServices] = useState<Service[]>([])
+export default function ServiceComp({ services }: { services: Service[] }) {
   const [newService, setNewService] = useState<Omit<Service, 'id'>>({
     name: '',
-    apiKey: '',
-    expiryDate: '',
+    value: '',
+    expDate: '',
     link: ''
   })
+  const { theme } = useTheme()
+  const path = usePathname()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setNewService(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Simulating saving to a database by adding to the state
-    const serviceWithId = { ...newService, id: Date.now() }
-    setServices(prev => [...prev, serviceWithId])
-    setNewService({ name: '', apiKey: '', expiryDate: '', link: '' })
+    try {
+      await addServicesData({
+        projectSlug: path.split('/')[2],
+        name: newService.name,
+        apiKey: newService.value,
+        expDate: newService.expDate,
+        link: newService.link
+      })
+      showToast('success', 'Service add successfully', theme)
+      setNewService({ name: '', value: '', expDate: '', link: '' })
+    } catch (err) {
+      console.log(err)
+      showToast('error', 'Something went wrong', theme)
+    }
   }
 
   return (
@@ -52,11 +67,11 @@ export default function ServiceComp() {
           <DialogTrigger asChild>
             <Button className='mb-4'>Add New Service</Button>
           </DialogTrigger>
-          <DialogContent className='border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white'>
+          <DialogContent className='w-[280px] rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'>
             <DialogHeader>
               <DialogTitle>Add New Service</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className='space-y-4'>
+            <form onSubmit={handleSubmit} className='flex flex-col space-y-4'>
               <div>
                 <Label htmlFor='name'>Service Name</Label>
                 <Input
@@ -69,23 +84,23 @@ export default function ServiceComp() {
                 />
               </div>
               <div>
-                <Label htmlFor='apiKey'>API Key</Label>
+                <Label htmlFor='value'>API Key</Label>
                 <Input
-                  id='apiKey'
-                  name='apiKey'
-                  value={newService.apiKey}
+                  id='value'
+                  name='value'
+                  value={newService.value}
                   onChange={handleInputChange}
                   required
                   className='border-slate-800'
                 />
               </div>
               <div>
-                <Label htmlFor='expiryDate'>Expiry Date</Label>
+                <Label htmlFor='expDate'>Expiry Date</Label>
                 <Input
-                  id='expiryDate'
-                  name='expiryDate'
+                  id='expDate'
+                  name='expDate'
                   type='date'
-                  value={newService.expiryDate}
+                  value={newService.expDate}
                   onChange={handleInputChange}
                   required
                   className='border-slate-800'
@@ -103,7 +118,9 @@ export default function ServiceComp() {
                   className='border-slate-800'
                 />
               </div>
-              <Button type='submit'>Save Service</Button>
+              <Button type='submit' className='self-end'>
+                Save Service
+              </Button>
             </form>
           </DialogContent>
         </Dialog>
@@ -119,10 +136,10 @@ export default function ServiceComp() {
             <CardContent>
               <p>
                 <span className='text-sm font-bold'>API Key:</span>{' '}
-                {service.apiKey}
+                <span className='flex-wrap break-words'>{service.value}</span>
               </p>
               <p>
-                <strong>Expiry Date:</strong> {service.expiryDate}
+                <strong>Expiry Date:</strong> {service.expDate}
               </p>
               <p>
                 <strong>Link:</strong>{' '}

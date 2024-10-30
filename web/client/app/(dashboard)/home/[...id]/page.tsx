@@ -1,4 +1,5 @@
 import { getEnvsByProjectSlug } from '@/actions/saveEnvs'
+import { getServicesDataByProjectSlug } from '@/actions/service'
 import { getSharedUserByProjectSlug } from '@/actions/shared'
 import { getAllUserDetails } from '@/actions/user'
 import AccessComp from '@/components/AccessComp'
@@ -16,8 +17,14 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   const projectDetails = await getEnvsByProjectSlug(params.id[0], userId)
   const allUserDetails = await getAllUserDetails()
   const sharedUserDetails = await getSharedUserByProjectSlug(params.id[0])
+  const serviceDetails = await getServicesDataByProjectSlug(params.id[0])
 
-  if (!projectDetails || !allUserDetails || !sharedUserDetails) {
+  if (
+    !projectDetails ||
+    !allUserDetails ||
+    !sharedUserDetails ||
+    !serviceDetails
+  ) {
     return (
       <>
         <p className='flex flex-row justify-center text-xl text-violet-600'>
@@ -40,7 +47,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <SecretComp projectDetails={projectDetails} />
         </TabsContent>
         <TabsContent value='services' className='flex flex-col gap-4 sm:px-4'>
-          <ServiceComp />
+          <ServiceComp services={serviceDetails} />
         </TabsContent>
         <TabsContent value='password' className='px-4'>
           {allUserDetails && projectDetails && sharedUserDetails && (
