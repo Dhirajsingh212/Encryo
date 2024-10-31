@@ -16,6 +16,7 @@ import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import { Separator } from './ui/separator'
 import { deleteServiceById } from '@/actions/service'
+import ServiceCompEditDialog from './ServiceCompEditDialog'
 
 const ServiceCard = ({ service }: { service: Service }) => {
   const [copied, setCopied] = useState(false)
@@ -31,38 +32,41 @@ const ServiceCard = ({ service }: { service: Service }) => {
 
   const deleteHandler = async () => {
     try {
+      setIsLoading(true)
       await deleteServiceById(service.id)
       showToast('success', 'deleted successfully', theme)
     } catch (err) {
       console.log(err)
       showToast('error', 'something went wrong', theme)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <Card>
+    <Card className='bg-card'>
       <CardHeader>
         <div className='flex flex-row justify-between'>
           <CardTitle className='text-xl capitalize'>{service.name}</CardTitle>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <EllipsisVertical className='size-4' />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                onClick={deleteHandler}
-                className='focus:bg-violet-600 focus:text-white'
-              >
-                <Trash className='mr-2 size-4' />
-                Delete
-              </DropdownMenuItem>
-              <Separator />
-              <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                <Pen className='mr-2 size-4' />
-                Edit
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className='flex flex-row items-center gap-1'>
+            <ServiceCompEditDialog services={service} />
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <EllipsisVertical className='size-4' />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  disabled={isLoading}
+                  onClick={deleteHandler}
+                  className='focus:bg-violet-600 focus:text-white'
+                >
+                  <Trash className='mr-2 size-4' />
+                  Delete
+                </DropdownMenuItem>
+                <Separator />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

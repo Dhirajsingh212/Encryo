@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <div className='min-h-screen w-full bg-gradient-to-br from-gray-100 to-gray-200 text-gray-900 transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white'>
+      <div className='min-h-screen w-full bg-gradient-to-br from-violet-100 to-green-100 text-gray-900 transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white'>
         <main className='relative min-h-screen w-full overflow-hidden p-4'>
           <div
             className='pointer-events-none absolute inset-0 opacity-50 transition-opacity duration-300 dark:opacity-100'
