@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { addServicesData } from '@/actions/service'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -13,17 +12,11 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { showToast } from '@/toast'
+import { Service } from '@/types/types'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
-import { addServicesData } from '@/actions/service'
-
-interface Service {
-  id: string
-  name: string
-  link: string
-  value: string
-  expDate: string
-}
+import { useState } from 'react'
+import ServiceCard from './ServiceCard'
 
 export default function ServiceComp({ services }: { services: Service[] }) {
   const [newService, setNewService] = useState<Omit<Service, 'id'>>({
@@ -129,31 +122,7 @@ export default function ServiceComp({ services }: { services: Service[] }) {
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
         {services.length === 0 && <p>No records found.</p>}
         {services.map(service => (
-          <Card key={service.id}>
-            <CardHeader>
-              <CardTitle className='text-xl'>{service.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                <span className='text-sm font-bold'>API Key:</span>{' '}
-                <span className='flex-wrap break-words'>{service.value}</span>
-              </p>
-              <p>
-                <strong>Expiry Date:</strong> {service.expDate}
-              </p>
-              <p>
-                <strong>Link:</strong>{' '}
-                <a
-                  href={service.link}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='flex-wrap break-words text-blue-500 hover:underline'
-                >
-                  {service.link}
-                </a>
-              </p>
-            </CardContent>
-          </Card>
+          <ServiceCard key={service.id} service={service} />
         ))}
       </div>
     </div>

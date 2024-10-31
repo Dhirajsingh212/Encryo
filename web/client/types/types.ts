@@ -25,3 +25,11 @@ export interface Envs {
   name: string
   id: string
 }
+
+export interface Service {
+  id: string
+  name: string
+  link: string
+  value: string
+  expDate: string
+}
