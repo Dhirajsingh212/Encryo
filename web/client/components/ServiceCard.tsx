@@ -12,7 +12,14 @@ import {
 import { Input } from '@/components/ui/input'
 import { showToast } from '@/toast'
 import { Service } from '@/types/types'
-import { CircleCheck, Copy, EllipsisVertical, Trash } from 'lucide-react'
+import {
+  CircleCheck,
+  Copy,
+  ExternalLink,
+  Key,
+  MoreVertical,
+  Trash
+} from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import ServiceCompEditDialog from './ServiceCompEditDialog'
@@ -43,21 +50,26 @@ const ServiceCard = ({ service }: { service: Service }) => {
   }
 
   return (
-    <Card className='bg-card'>
-      <CardHeader>
-        <div className='flex flex-row justify-between'>
-          <CardTitle className='text-xl capitalize'>{service.name}</CardTitle>
-          <div className='flex flex-row items-center gap-1'>
+    <Card className='overflow-hidden bg-card transition-all hover:shadow-lg'>
+      <CardHeader className='space-y-0 pb-4'>
+        <div className='flex items-center justify-between'>
+          <CardTitle className='flex items-center gap-2 text-xl'>
+            <span className='capitalize'>{service.name}</span>
+          </CardTitle>
+          <div className='flex items-center gap-2'>
             <ServiceCompEditDialog services={service} />
             <DropdownMenu>
-              <DropdownMenuTrigger>
-                <EllipsisVertical className='size-4' />
+              <DropdownMenuTrigger asChild>
+                <Button variant='ghost' size='icon' className='h-8 w-8'>
+                  <MoreVertical className='size-4' />
+                  <span className='sr-only'>Open menu</span>
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align='end'>
                 <DropdownMenuItem
                   disabled={isLoading}
                   onClick={deleteHandler}
-                  className='focus:bg-violet-600 focus:text-white'
+                  className='text-destructive focus:bg-destructive focus:text-destructive-foreground'
                 >
                   <Trash className='mr-2 size-4' />
                   Delete
@@ -67,39 +79,52 @@ const ServiceCard = ({ service }: { service: Service }) => {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <p>
-          <span className='text-sm font-bold'>API Key:</span>
-          <div className='relative my-2'>
-            <Input value={service.value} disabled className='pr-16' />
+      <CardContent className='space-y-4'>
+        <div className='space-y-2'>
+          <div className='flex items-center gap-2 text-sm font-medium text-muted-foreground'>
+            <Key className='size-4' />
+            API Key
+          </div>
+          <div className='relative'>
+            <Input
+              value={service.value}
+              disabled
+              className='pr-16 font-mono text-sm'
+            />
             <Button
-              variant='outline'
-              onClick={() => handleCopy(service.value)}
-              className='absolute right-0 top-1/2 flex -translate-y-1/2 transform items-center gap-1'
+              variant='ghost'
               size='sm'
+              onClick={() => handleCopy(service.value)}
+              className='absolute right-0 top-1/2 -translate-y-1/2 hover:bg-transparent'
             >
               {!copied ? (
-                <Copy className='h-4 w-4' />
+                <Copy className='size-4' />
               ) : (
-                <CircleCheck className='h-4 w-4' />
+                <CircleCheck className='size-4 text-green-500' />
               )}
+              <span className='sr-only'>Copy API key</span>
             </Button>
           </div>
-        </p>
-        <p>
-          <strong>Expiry Date:</strong> {service.expDate}
-        </p>
-        <p>
-          <strong>Link:</strong>{' '}
-          <a
-            href={service.link}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='flex-wrap break-words text-blue-500 hover:underline'
-          >
-            {service.link}
-          </a>
-        </p>
+        </div>
+
+        <div className='flex flex-col gap-2 rounded-lg bg-muted p-3'>
+          <div className='flex items-center justify-between gap-2'>
+            <span className='text-sm font-medium'>Expiry Date</span>
+            <span className='text-sm tabular-nums'>{service.expDate}</span>
+          </div>
+          <div className='flex items-center justify-between gap-2'>
+            <span className='text-sm font-medium'>Service Link</span>
+            <a
+              href={service.link}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='flex items-center gap-1 text-sm text-primary hover:underline'
+            >
+              Visit
+              <ExternalLink className='size-3' />
+            </a>
+          </div>
+        </div>
       </CardContent>
     </Card>
   )
