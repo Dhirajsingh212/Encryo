@@ -75,3 +75,18 @@ export async function getServicesDataByProjectSlug(projectSlug: string) {
     return null
   }
 }
+
+export async function deleteServiceById(serviceId: string) {
+  try {
+    await prisma.service.deleteMany({
+      where: {
+        id: serviceId
+      }
+    })
+    revalidatePath('/home(.*)')
+    return true
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}

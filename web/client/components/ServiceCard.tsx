@@ -2,15 +2,24 @@
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { showToast } from '@/toast'
 import { Service } from '@/types/types'
-import { CircleCheck, Copy } from 'lucide-react'
+import { CircleCheck, Copy, EllipsisVertical, Pen, Trash } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
+import { Separator } from './ui/separator'
+import { deleteServiceById } from '@/actions/service'
 
 const ServiceCard = ({ service }: { service: Service }) => {
   const [copied, setCopied] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { theme } = useTheme()
 
   const handleCopy = (value: string) => {
@@ -20,10 +29,41 @@ const ServiceCard = ({ service }: { service: Service }) => {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const deleteHandler = async () => {
+    try {
+      await deleteServiceById(service.id)
+      showToast('success', 'deleted successfully', theme)
+    } catch (err) {
+      console.log(err)
+      showToast('error', 'something went wrong', theme)
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className='text-xl capitalize'>{service.name}</CardTitle>
+        <div className='flex flex-row justify-between'>
+          <CardTitle className='text-xl capitalize'>{service.name}</CardTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <EllipsisVertical className='size-4' />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                onClick={deleteHandler}
+                className='focus:bg-violet-600 focus:text-white'
+              >
+                <Trash className='mr-2 size-4' />
+                Delete
+              </DropdownMenuItem>
+              <Separator />
+              <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                <Pen className='mr-2 size-4' />
+                Edit
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </CardHeader>
       <CardContent>
         <p>
@@ -33,7 +73,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
             <Button
               variant='outline'
               onClick={() => handleCopy(service.value)}
-              className='absolute right-1 top-1/2 flex -translate-y-1/2 transform items-center gap-1'
+              className='absolute right-0 top-1/2 flex -translate-y-1/2 transform items-center gap-1'
               size='sm'
             >
               {!copied ? (
