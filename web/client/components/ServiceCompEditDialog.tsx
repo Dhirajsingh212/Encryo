@@ -1,5 +1,6 @@
 'use client'
 
+import { updateServiceData } from '@/actions/service'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -14,6 +15,7 @@ import { showToast } from '@/toast'
 import { Service } from '@/types/types'
 import { SquarePen } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 export default function ServiceCompEditDialog({
@@ -28,6 +30,7 @@ export default function ServiceCompEditDialog({
     link: services.link
   })
   const { theme } = useTheme()
+  const path = usePathname()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -37,8 +40,15 @@ export default function ServiceCompEditDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      await updateServiceData({
+        projectSlug: path.split('/')[2],
+        name: newService.name,
+        value: newService.value,
+        expDate: newService.expDate,
+        link: newService.link,
+        serviceId: services.id
+      })
       showToast('success', 'Service updated successfully', theme)
-      setNewService({ name: '', value: '', expDate: '', link: '' })
     } catch (err) {
       console.log(err)
       showToast('error', 'Something went wrong', theme)

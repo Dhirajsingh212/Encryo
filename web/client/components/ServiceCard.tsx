@@ -1,5 +1,6 @@
 'use client'
 
+import { deleteServiceById } from '@/actions/service'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -11,11 +12,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { showToast } from '@/toast'
 import { Service } from '@/types/types'
-import { CircleCheck, Copy, EllipsisVertical, Pen, Trash } from 'lucide-react'
+import { CircleCheck, Copy, EllipsisVertical, Trash } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
-import { Separator } from './ui/separator'
-import { deleteServiceById } from '@/actions/service'
 import ServiceCompEditDialog from './ServiceCompEditDialog'
 
 const ServiceCard = ({ service }: { service: Service }) => {
@@ -63,7 +62,6 @@ const ServiceCard = ({ service }: { service: Service }) => {
                   <Trash className='mr-2 size-4' />
                   Delete
                 </DropdownMenuItem>
-                <Separator />
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
