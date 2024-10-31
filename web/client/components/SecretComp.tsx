@@ -6,6 +6,7 @@ import { Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'use-debounce'
 import EnvInputComp from './EnvInputComp'
+import { PaginationComponent } from './PaginationComponent'
 
 const SecretComp = ({
   projectDetails
@@ -13,6 +14,8 @@ const SecretComp = ({
   projectDetails: ProjectDetails | null
 }) => {
   const [text, setText] = useState<string>('')
+  const [start, setStart] = useState<number>(0)
+  const [end, setEnd] = useState<number>(10)
   const [filteredEnv, setFilteredEnv] = useState<Envs[]>(
     projectDetails ? projectDetails.envs : []
   )
@@ -52,9 +55,18 @@ const SecretComp = ({
       <div className='flex flex-col gap-1'>
         {filteredEnv && filteredEnv.length === 0 && <p>No envs found.</p>}
         {filteredEnv &&
-          filteredEnv.map((pairs, index) => {
+          filteredEnv.slice(start, end).map((pairs, index) => {
             return <EnvInputComp key={index} pairs={pairs} index={index} />
           })}
+      </div>
+      <div className='px-4 py-4'>
+        <PaginationComponent
+          start={start}
+          end={end}
+          setStart={setStart}
+          setEnd={setEnd}
+          contentSize={filteredEnv.length}
+        />
       </div>
     </>
   )
