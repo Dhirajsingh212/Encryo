@@ -1,8 +1,8 @@
 'use client'
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Envs, ProjectDetails } from '@/types/types'
@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { AiOutlineMenuUnfold } from 'react-icons/ai'
 import { useDebounce } from 'use-debounce'
 import { ExportEnvsDialog } from './ExportEnvsDialog'
+import { PaginationComponent } from './PaginationComponent'
 
 const SharedSecretComp = ({
   projectDetails
@@ -21,6 +22,8 @@ const SharedSecretComp = ({
   const [filteredEnv, setFilteredEnv] = useState<Envs[]>(
     projectDetails ? projectDetails.envs : []
   )
+  const [start, setStart] = useState<number>(0)
+  const [end, setEnd] = useState<number>(20)
   const [searchText] = useDebounce(text, 400)
 
   useEffect(() => {
@@ -68,7 +71,7 @@ const SharedSecretComp = ({
       <div className='flex flex-col gap-1'>
         {filteredEnv && filteredEnv.length === 0 && <p>No envs found.</p>}
         {filteredEnv &&
-          filteredEnv.map((pairs, index) => {
+          filteredEnv.slice(start, end).map((pairs, index) => {
             return (
               <div
                 key={index}
@@ -95,6 +98,15 @@ const SharedSecretComp = ({
               </div>
             )
           })}
+      </div>
+      <div>
+        <PaginationComponent
+          start={start}
+          end={end}
+          setStart={setStart}
+          setEnd={setEnd}
+          contentSize={filteredEnv.length}
+        />
       </div>
     </>
   )

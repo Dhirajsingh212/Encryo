@@ -2,7 +2,7 @@ import { getProjectsByUserId } from '@/actions/project'
 import DeleteProjectDialog from '@/components/DeleteProjectDialog'
 import { Card, CardContent } from '@/components/ui/card'
 import { auth } from '@clerk/nextjs/server'
-import { EllipsisVertical, ExternalLink } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function Component() {

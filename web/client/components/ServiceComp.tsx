@@ -126,7 +126,7 @@ export default function ServiceComp({ services }: { services: Service[] }) {
 
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
           {services.length === 0 && <p>No records found.</p>}
-          {services.map(service => (
+          {services.slice(start, end).map(service => (
             <ServiceCard key={service.id} service={service} />
           ))}
         </div>
