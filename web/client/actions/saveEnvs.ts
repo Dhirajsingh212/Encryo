@@ -183,11 +183,15 @@ export async function deleteEnvById(id: string) {
     if (!id) {
       throw new Error('Id must be provided')
     }
-    await prisma.env.deleteMany({
+
+    console.log(id)
+
+    await prisma.env.delete({
       where: {
         id
       }
     })
+
     revalidatePath('/home(.*)')
     return true
   } catch (err) {

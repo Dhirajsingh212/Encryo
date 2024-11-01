@@ -15,7 +15,7 @@ const SecretComp = ({
 }) => {
   const [text, setText] = useState<string>('')
   const [start, setStart] = useState<number>(0)
-  const [end, setEnd] = useState<number>(10)
+  const [end, setEnd] = useState<number>(20)
   const [filteredEnv, setFilteredEnv] = useState<Envs[]>(
     projectDetails ? projectDetails.envs : []
   )
@@ -52,11 +52,11 @@ const SecretComp = ({
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-1'>
+      <div className='flex min-h-screen flex-col gap-1'>
         {filteredEnv && filteredEnv.length === 0 && <p>No envs found.</p>}
         {filteredEnv &&
           filteredEnv.slice(start, end).map((pairs, index) => {
-            return <EnvInputComp key={index} pairs={pairs} index={index} />
+            return <EnvInputComp key={pairs.id} pairs={pairs} index={index} />
           })}
       </div>
       <div className='px-4 py-4'>

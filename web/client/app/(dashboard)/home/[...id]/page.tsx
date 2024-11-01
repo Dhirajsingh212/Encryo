@@ -11,9 +11,11 @@ import { auth } from '@clerk/nextjs/server'
 
 const Page = async ({ params }: { params: { id: string[] } }) => {
   const { userId } = auth()
+
   if (!userId) {
     return
   }
+  
   const projectDetails = await getEnvsByProjectSlug(params.id[0], userId)
   const allUserDetails = await getAllUserDetails()
   const sharedUserDetails = await getSharedUserByProjectSlug(params.id[0])

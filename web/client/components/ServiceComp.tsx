@@ -17,6 +17,7 @@ import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import ServiceCard from './ServiceCard'
+import { PaginationComponent } from './PaginationComponent'
 
 export default function ServiceComp({ services }: { services: Service[] }) {
   const [newService, setNewService] = useState<Omit<Service, 'id'>>({
@@ -25,6 +26,9 @@ export default function ServiceComp({ services }: { services: Service[] }) {
     expDate: '',
     link: ''
   })
+  const [start, setStart] = useState<number>(0)
+  const [end, setEnd] = useState<number>(20)
+
   const { theme } = useTheme()
   const path = usePathname()
 
@@ -52,79 +56,90 @@ export default function ServiceComp({ services }: { services: Service[] }) {
   }
 
   return (
-    <div className='pb-4'>
-      <div className='flex flex-row justify-between'>
-        <h1 className='mb-4 text-2xl font-bold'>Service Manager</h1>
+    <>
+      <div className='min-h-screen pb-4'>
+        <div className='flex flex-row justify-between'>
+          <h1 className='mb-4 text-2xl font-bold'>Service Manager</h1>
 
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className='mb-4'>Add New Service</Button>
-          </DialogTrigger>
-          <DialogContent className='w-[280px] rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'>
-            <DialogHeader>
-              <DialogTitle>Add New Service</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className='flex flex-col space-y-4'>
-              <div>
-                <Label htmlFor='name'>Service Name</Label>
-                <Input
-                  id='name'
-                  name='name'
-                  value={newService.name}
-                  onChange={handleInputChange}
-                  required
-                  className='border-slate-800'
-                />
-              </div>
-              <div>
-                <Label htmlFor='value'>API Key</Label>
-                <Input
-                  id='value'
-                  name='value'
-                  value={newService.value}
-                  onChange={handleInputChange}
-                  required
-                  className='border-slate-800'
-                />
-              </div>
-              <div>
-                <Label htmlFor='expDate'>Expiry Date</Label>
-                <Input
-                  id='expDate'
-                  name='expDate'
-                  type='date'
-                  value={newService.expDate}
-                  onChange={handleInputChange}
-                  required
-                  className='border-slate-800'
-                />
-              </div>
-              <div>
-                <Label htmlFor='link'>Link</Label>
-                <Input
-                  id='link'
-                  name='link'
-                  type='url'
-                  value={newService.link}
-                  onChange={handleInputChange}
-                  required
-                  className='border-slate-800'
-                />
-              </div>
-              <Button type='submit' className='self-end'>
-                Save Service
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className='mb-4'>Add New Service</Button>
+            </DialogTrigger>
+            <DialogContent className='w-[280px] rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'>
+              <DialogHeader>
+                <DialogTitle>Add New Service</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className='flex flex-col space-y-4'>
+                <div>
+                  <Label htmlFor='name'>Service Name</Label>
+                  <Input
+                    id='name'
+                    name='name'
+                    value={newService.name}
+                    onChange={handleInputChange}
+                    required
+                    className='border-slate-800'
+                  />
+                </div>
+                <div>
+                  <Label htmlFor='value'>API Key</Label>
+                  <Input
+                    id='value'
+                    name='value'
+                    value={newService.value}
+                    onChange={handleInputChange}
+                    required
+                    className='border-slate-800'
+                  />
+                </div>
+                <div>
+                  <Label htmlFor='expDate'>Expiry Date</Label>
+                  <Input
+                    id='expDate'
+                    name='expDate'
+                    type='date'
+                    value={newService.expDate}
+                    onChange={handleInputChange}
+                    required
+                    className='border-slate-800'
+                  />
+                </div>
+                <div>
+                  <Label htmlFor='link'>Link</Label>
+                  <Input
+                    id='link'
+                    name='link'
+                    type='url'
+                    value={newService.link}
+                    onChange={handleInputChange}
+                    required
+                    className='border-slate-800'
+                  />
+                </div>
+                <Button type='submit' className='self-end'>
+                  Save Service
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
 
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-        {services.length === 0 && <p>No records found.</p>}
-        {services.map(service => (
-          <ServiceCard key={service.id} service={service} />
-        ))}
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+          {services.length === 0 && <p>No records found.</p>}
+          {services.map(service => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
+        </div>
       </div>
-    </div>
+      <div>
+        <PaginationComponent
+          start={start}
+          end={end}
+          setStart={setStart}
+          setEnd={setEnd}
+          contentSize={services.length}
+        />
+      </div>
+    </>
   )
 }

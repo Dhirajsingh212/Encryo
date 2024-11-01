@@ -24,43 +24,40 @@ export function PaginationComponent({
   contentSize: number
 }) {
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <Button
-            onClick={() => {
-              setStart(start - 10)
-              setEnd(end - 10)
-            }}
-          >
-            <PaginationPrevious />
-          </Button>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href='#'>1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href='#' isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href='#'>3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem className='cursor-pointer hover:bg-inherit'>
-          <Button
-            onClick={() => {
-              setStart(start + 10)
-              setEnd(end + 10)
-            }}
-          >
-            <PaginationNext />
-          </Button>
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+    <>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem className='cursor-pointer hover:bg-inherit'>
+            <Button
+              className='bg-inherit p-0 shadow-none hover:bg-inherit'
+              disabled={start === 0}
+              onClick={() => {
+                setStart(start - 20)
+                setEnd(end - 20)
+              }}
+            >
+              <PaginationPrevious className='bg-violet-600 text-white shadow-md hover:bg-violet-500 hover:text-white dark:bg-slate-950 dark:text-white dark:hover:bg-slate-800' />
+            </Button>
+          </PaginationItem>
+          <PaginationItem>
+            <Button variant='outline' className='mx-4'>
+              {start / 20 + 1}
+            </Button>
+          </PaginationItem>
+          <PaginationItem className='cursor-pointer hover:bg-inherit'>
+            <Button
+              className='bg-inherit p-0 shadow-none hover:bg-inherit'
+              disabled={end >= contentSize}
+              onClick={() => {
+                setStart(start + 20)
+                setEnd(end + 20)
+              }}
+            >
+              <PaginationNext className='bg-violet-600 text-white shadow-md hover:bg-violet-500 hover:text-white dark:bg-slate-950 dark:text-white dark:hover:bg-slate-800' />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </>
   )
 }

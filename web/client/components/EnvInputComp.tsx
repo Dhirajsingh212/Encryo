@@ -5,7 +5,7 @@ import { Envs } from '@/types/types'
 import { useAuth } from '@clerk/nextjs'
 import { Key, Pencil, User } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiFillCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai'
 import { FaTrash } from 'react-icons/fa'
 import { Button } from './ui/button'
@@ -19,7 +19,7 @@ const EnvInputComp = ({ pairs, index }: { pairs: Envs; index: number }) => {
   const [name, setName] = useState<string>(pairs.name)
   const [value, setValue] = useState<string>(pairs.value)
 
-  if (!userId) {
+  if (!userId || !pairs) {
     return null
   }
 
@@ -76,7 +76,7 @@ const EnvInputComp = ({ pairs, index }: { pairs: Envs; index: number }) => {
               const response = await deleteEnvById(pairs.id)
 
               if (response) {
-                showToast('success', 'Deleted.', theme)
+                showToast('success', `Deleted.`, theme)
               } else {
                 throw new Error('Something went wrong')
               }
