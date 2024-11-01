@@ -78,8 +78,9 @@ export default function ProjectDialog() {
         throw new Error('Something went wrong')
       }
     } catch (err) {
-      console.log(err)
-      showToast('error', 'Project already exists', theme)
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
     } finally {
       setIsLoading(false)
     }

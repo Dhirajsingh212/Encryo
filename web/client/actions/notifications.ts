@@ -34,7 +34,8 @@ export async function updateReadStatusByUserId(userId: string) {
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    console.log(err)
-    return false
+    const errorMessage =
+      err instanceof Error ? err.message : 'Failed to update data'
+    throw new Error(errorMessage)
   }
 }

@@ -21,7 +21,7 @@ const HomePageCreateMenu = ({
           <AiOutlineMenuUnfold className='size-4' />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='w-[200px]'>
+      <DropdownMenuContent className='mx-2 w-[200px]'>
         <AddEnvDialog />
         <Separator className='my-2' />
         {projectDetails && <ExportEnvsDialog projectDetails={projectDetails} />}

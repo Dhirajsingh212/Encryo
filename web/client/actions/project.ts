@@ -43,8 +43,9 @@ export async function addProjectToUser({
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    console.log(err)
-    return false
+    const errorMessage =
+      err instanceof Error ? err.message : 'Failed to create project'
+    throw new Error(errorMessage)
   }
 }
 
@@ -131,7 +132,8 @@ export async function deleteProjectById(projectId: string, userId: string) {
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    console.log(err)
-    return false
+    const errorMessage =
+      err instanceof Error ? err.message : 'Failed to delete project'
+    throw new Error(errorMessage)
   }
 }

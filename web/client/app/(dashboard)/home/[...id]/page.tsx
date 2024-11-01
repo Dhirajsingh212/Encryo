@@ -15,7 +15,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   if (!userId) {
     return
   }
-  
+
   const projectDetails = await getEnvsByProjectSlug(params.id[0], userId)
   const allUserDetails = await getAllUserDetails()
   const sharedUserDetails = await getSharedUserByProjectSlug(params.id[0])
@@ -51,7 +51,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
         <TabsContent value='services' className='flex flex-col gap-4 sm:px-4'>
           <ServiceComp services={serviceDetails} />
         </TabsContent>
-        <TabsContent value='password' className='px-4'>
+        <TabsContent value='password' className=''>
           {allUserDetails && projectDetails && sharedUserDetails && (
             <AccessComp
               users={allUserDetails}

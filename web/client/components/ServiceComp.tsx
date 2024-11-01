@@ -16,8 +16,8 @@ import { Service } from '@/types/types'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import ServiceCard from './ServiceCard'
 import { PaginationComponent } from './PaginationComponent'
+import ServiceCard from './ServiceCard'
 
 export default function ServiceComp({ services }: { services: Service[] }) {
   const [newService, setNewService] = useState<Omit<Service, 'id'>>({
@@ -66,8 +66,9 @@ export default function ServiceComp({ services }: { services: Service[] }) {
       showToast('success', 'Service add successfully', theme)
       setNewService({ name: '', value: '', expDate: '', link: '' })
     } catch (err) {
-      console.log(err)
-      showToast('error', 'Something went wrong', theme)
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
     }
   }
 

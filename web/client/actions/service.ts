@@ -52,8 +52,9 @@ export async function addServicesData({
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    console.log(err)
-    return false
+    const errorMessage =
+      err instanceof Error ? err.message : 'Failed to create service'
+    throw new Error(errorMessage)
   }
 }
 
@@ -107,8 +108,9 @@ export async function deleteServiceById(serviceId: string) {
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    console.log(err)
-    return false
+    const errorMessage =
+      err instanceof Error ? err.message : 'Failed to delete service'
+    throw new Error(errorMessage)
   }
 }
 
@@ -164,7 +166,8 @@ export async function updateServiceData({
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    console.log(err)
-    return false
+    const errorMessage =
+      err instanceof Error ? err.message : 'Failed to update service'
+    throw new Error(errorMessage)
   }
 }

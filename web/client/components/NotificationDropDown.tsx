@@ -65,7 +65,9 @@ export default function NotificationDropDown() {
       setOpen(false)
       showToast('success', 'All catched up', theme)
     } catch (err) {
-      showToast('error', 'failed to update', theme)
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
     }
   }
 
@@ -80,7 +82,7 @@ export default function NotificationDropDown() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='w-60 sm:w-80'>
+      <DropdownMenuContent className='mx-4 w-60 sm:w-80'>
         <DropdownMenuLabel className='font-normal'>
           <h2 className='text-lg font-semibold'>Notifications</h2>
           <p className='text-sm text-muted-foreground'>

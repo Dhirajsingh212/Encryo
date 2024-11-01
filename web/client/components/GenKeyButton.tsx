@@ -24,8 +24,9 @@ const GenKeyButton = () => {
         showToast('success', 'Keys generated', theme)
       }
     } catch (err) {
-      console.log(err)
-      showToast('error', JSON.stringify(err), theme)
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
     } finally {
       setIsLoading(false)
     }

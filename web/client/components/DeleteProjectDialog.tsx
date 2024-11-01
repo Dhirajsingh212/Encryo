@@ -28,8 +28,9 @@ const DeleteProjectDialog = ({
       await deleteProjectById(projectId, userId)
       showToast('success', 'Project Deleted successfully', theme)
     } catch (err) {
-      console.log(err)
-      showToast('error', 'something went wrong', theme)
+      const errorMessage =
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      showToast('error', errorMessage, theme)
     } finally {
       setIsLoading(false)
     }
