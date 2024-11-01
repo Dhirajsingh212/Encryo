@@ -98,7 +98,7 @@ export default function ProjectDialog() {
       </DialogTrigger>
       <DialogContent
         style={{ zIndex: 100 }}
-        className='max-h-[90vh] w-[280px] overflow-y-auto rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'
+        className='max-h-[90vh] w-[300px] overflow-y-auto rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'
       >
         <DialogHeader>
           <DialogTitle>Add New Project</DialogTitle>

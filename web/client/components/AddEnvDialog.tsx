@@ -36,6 +36,11 @@ export default function Component() {
 
     try {
       const lines = envInput.split('\n')
+
+      if (lines.length > 84) {
+        throw new Error('Max of 84 envs at a time.')
+      }
+
       const envObject: Record<string, string> = {}
 
       lines.forEach(line => {
