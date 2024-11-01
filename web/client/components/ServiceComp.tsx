@@ -40,6 +40,22 @@ export default function ServiceComp({ services }: { services: Service[] }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      if (
+        newService.name.trim().length <= 0 ||
+        newService.name.trim().length > 100
+      ) {
+        showToast('error', 'name is outof limit.', theme)
+        return
+      }
+
+      if (
+        newService.value.trim().length <= 0 ||
+        newService.value.trim().length > 166
+      ) {
+        showToast('error', 'api key should be less then 100 characters.', theme)
+        return
+      }
+
       await addServicesData({
         projectSlug: path.split('/')[2],
         name: newService.name,

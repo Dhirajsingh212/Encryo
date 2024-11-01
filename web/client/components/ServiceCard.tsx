@@ -54,7 +54,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
       <CardHeader className='space-y-0 pb-4'>
         <div className='flex items-center justify-between'>
           <CardTitle className='flex items-center gap-2 text-xl'>
-            <span className='capitalize'>{service.name}</span>
+            <span className='line-clamp-3 capitalize'>{service.name}</span>
           </CardTitle>
           <div className='flex items-center gap-2'>
             <ServiceCompEditDialog services={service} />

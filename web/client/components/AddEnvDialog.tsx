@@ -118,7 +118,10 @@ export default function Component() {
           </Button>
         </div>
         {error && (
-          <Alert variant='destructive'>
+          <Alert
+            variant='destructive'
+            className='dark:border-rose-400 dark:text-rose-400'
+          >
             <AlertCircle className='h-4 w-4' />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
