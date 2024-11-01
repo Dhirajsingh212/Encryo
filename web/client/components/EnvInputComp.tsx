@@ -93,11 +93,8 @@ export default function EnvInputComp({
   return (
     <Card className='w-full overflow-hidden transition-all duration-200 hover:shadow-md'>
       <CardContent className='p-4'>
-        <div className='flex flex-col space-y-4'>
-          <div className='flex items-center justify-between'>
-            {/* <Badge variant='outline' className='text-xs font-normal'>
-              ENV #{index + 1}
-            </Badge> */}
+        <div className='flex flex-col-reverse gap-4 space-y-4'>
+          <div className='flex items-center justify-end'>
             <div className='flex space-x-2'>
               <TooltipProvider>
                 <Tooltip>

@@ -24,8 +24,8 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'Next Shadcn Template',
-  description: 'NextJs template with shadcn/ui'
+  title: 'Encryo',
+  description: 'Only solution for storing api keys and envs.'
 }
 
 export default function RootLayout({
