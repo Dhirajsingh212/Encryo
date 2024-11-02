@@ -29,6 +29,7 @@ export default function ServiceCompEditDialog({
     expDate: services.expDate,
     link: services.link
   })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { theme } = useTheme()
   const path = usePathname()
 
@@ -40,6 +41,7 @@ export default function ServiceCompEditDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      setIsLoading(true)
       const response = await updateServiceData({
         projectSlug: path.split('/')[2],
         name: newService.name,
@@ -55,6 +57,8 @@ export default function ServiceCompEditDialog({
       }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -114,7 +118,7 @@ export default function ServiceCompEditDialog({
               className='border-slate-800'
             />
           </div>
-          <Button type='submit' className='self-end'>
+          <Button disabled={isLoading} type='submit' className='self-end'>
             Update service
           </Button>
         </form>

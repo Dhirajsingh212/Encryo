@@ -28,6 +28,7 @@ export default function ServiceComp({ services }: { services: Service[] }) {
   })
   const [start, setStart] = useState<number>(0)
   const [end, setEnd] = useState<number>(20)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { theme } = useTheme()
   const path = usePathname()
@@ -40,6 +41,7 @@ export default function ServiceComp({ services }: { services: Service[] }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      setIsLoading(true)
       if (
         newService.name.trim().length <= 0 ||
         newService.name.trim().length > 100
@@ -71,6 +73,8 @@ export default function ServiceComp({ services }: { services: Service[] }) {
       }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -135,7 +139,7 @@ export default function ServiceComp({ services }: { services: Service[] }) {
                     className='border-slate-800'
                   />
                 </div>
-                <Button type='submit' className='self-end'>
+                <Button disabled={isLoading} type='submit' className='self-end'>
                   Save Service
                 </Button>
               </form>
