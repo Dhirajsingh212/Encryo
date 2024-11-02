@@ -1,9 +1,12 @@
 'use client'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
 import { showToast } from '@/toast'
@@ -39,19 +42,32 @@ export function ExportEnvsDialog({
         Export envs
       </DialogTrigger>
       <DialogContent className='max-w-[280px] rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full sm:max-w-[425px]'>
-        <div className='grid gap-4 py-4'>
-          <div className='custom-scrollbar flex h-[400px] flex-col gap-4 overflow-scroll rounded-lg bg-slate-800 p-4'>
+        <DialogHeader>
+          <DialogTitle className='text-lg font-semibold'>
+            Export Environment Variables
+          </DialogTitle>
+        </DialogHeader>
+        <div className='mt-4'>
+          <div className='custom-scrollbar max-h-[400px] max-w-[260px] overflow-scroll rounded-md border-none bg-slate-800 p-4 dark:border-gray-700 dark:bg-gray-800 sm:max-w-[380px]'>
             {projectDetails &&
               projectDetails.envs &&
               projectDetails.envs.map((pairs, index) => (
-                <div key={index} className='text-md'>
-                  <p className='whitespace-nowrap'>{`${pairs.name}="${pairs.value}"`}</p>
+                <div key={index} className='mb-2 last:mb-0'>
+                  <p className='font-mono text-sm'>
+                    <span className='text-blue-600 dark:text-blue-400'>
+                      {pairs.name}
+                    </span>
+                    <span className='text-gray-600 dark:text-gray-400'>=</span>
+                    <span className='text-green-600 dark:text-green-400'>
+                      "{pairs.value}"
+                    </span>
+                  </p>
                 </div>
               ))}
           </div>
         </div>
-        <DialogFooter>
-          <Button type='button' onClick={handleCopy}>
+        <DialogFooter className='mt-6'>
+          <Button onClick={handleCopy} className='w-full sm:w-auto'>
             Copy to Clipboard
           </Button>
         </DialogFooter>
