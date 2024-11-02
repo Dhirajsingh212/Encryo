@@ -18,6 +18,7 @@ model User {
   bio              String?
   publicKey        String?
   privateKey       String?
+  limit            Int     @default(5)
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

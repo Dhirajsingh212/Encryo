@@ -25,10 +25,24 @@ export async function addProjectToUser({
     const userDetails = await prisma.user.findFirst({
       where: {
         clerkUserId: userId
+      },
+      select: {
+        id: true,
+        limit: true,
+        projects: {
+          select: {
+            id: true
+          }
+        }
       }
     })
+
     if (!userDetails) {
       return false
+    }
+
+    if (userDetails.projects.length >= userDetails.limit) {
+      throw new Error('Subscibe to add more projects')
     }
     await prisma.project.create({
       data: {
