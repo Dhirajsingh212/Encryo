@@ -21,7 +21,7 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 import { auth } from '@clerk/nextjs/server'
-import { Command, Folder, MoreHorizontal, Trash2 } from 'lucide-react'
+import { Command, Folder, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
@@ -95,10 +95,6 @@ export default async function AppSidebar() {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                          <Trash2 className='mr-2 size-4' />
-                          <span>Delete Project</span>
-                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </SidebarMenuItem>
