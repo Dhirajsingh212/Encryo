@@ -71,8 +71,7 @@ export async function removeSharedUserFromProject(
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Failed operation'
-    throw new Error(errorMessage)
+    return false
   }
 }
 

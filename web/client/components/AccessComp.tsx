@@ -112,8 +112,12 @@ export default function AccessComp({
   const removeUser = async (email: string) => {
     try {
       setIsLoading(true)
-      await removeSharedUserFromProject(email, projectId)
-      showToast('success', 'user removed successfully', theme)
+      const response = await removeSharedUserFromProject(email, projectId)
+      if (response) {
+        showToast('success', 'user removed successfully', theme)
+      } else {
+        showToast('error', 'failed to remove user', theme)
+      }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)
     } finally {

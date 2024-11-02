@@ -10,6 +10,16 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   }
   const projectDetails = await getSharedEnvsByProjectSlug(params.id[0], userId)
 
+  if (!projectDetails) {
+    return (
+      <div className='flex flex-row justify-center py-4'>
+        <p className='text-xl font-bold text-violet-600'>
+          You cannot access this project
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div className=''>
       <Tabs defaultValue='account' className='w-full sm:px-4'>
