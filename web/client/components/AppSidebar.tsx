@@ -94,7 +94,6 @@ export default async function AppSidebar() {
                             <span>View Project</span>
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </SidebarMenuItem>
