@@ -56,15 +56,19 @@ export default function ServiceComp({ services }: { services: Service[] }) {
         return
       }
 
-      await addServicesData({
+      const response = await addServicesData({
         projectSlug: path.split('/')[2],
         name: newService.name,
         apiKey: newService.value,
         expDate: newService.expDate,
         link: newService.link
       })
-      showToast('success', 'Service add successfully', theme)
-      setNewService({ name: '', value: '', expDate: '', link: '' })
+      if (response) {
+        showToast('success', 'Service add successfully', theme)
+        setNewService({ name: '', value: '', expDate: '', link: '' })
+      } else {
+        showToast('error', 'generate public key first', theme)
+      }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)
     }

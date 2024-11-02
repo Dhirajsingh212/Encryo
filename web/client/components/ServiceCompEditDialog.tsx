@@ -40,7 +40,7 @@ export default function ServiceCompEditDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await updateServiceData({
+      const response = await updateServiceData({
         projectSlug: path.split('/')[2],
         name: newService.name,
         value: newService.value,
@@ -48,7 +48,11 @@ export default function ServiceCompEditDialog({
         link: newService.link,
         serviceId: services.id
       })
-      showToast('success', 'Service updated successfully', theme)
+      if (response) {
+        showToast('success', 'Service updated successfully', theme)
+      } else {
+        showToast('error', 'generate public key first', theme)
+      }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)
     }

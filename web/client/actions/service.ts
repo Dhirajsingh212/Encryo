@@ -79,6 +79,10 @@ export async function getServicesDataByProjectSlug(projectSlug: string) {
       }
     })
 
+    if (serviceData.length === 0) {
+      return serviceData
+    }
+
     const decryptedData = await Promise.all(
       serviceData.map(async service => {
         return {

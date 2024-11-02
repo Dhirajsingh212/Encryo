@@ -79,16 +79,25 @@ export default function AccessComp({
         return
       }
 
+      if (!value) {
+        showToast('error', 'no user selected', theme)
+        return
+      }
+
       if (value && !projectUsers.some(user => user.userTo.email === value)) {
-        await addSharedUserToDB({
+        const response = await addSharedUserToDB({
           fromUserId: userId,
           toUserId: value,
           projectId: projectId,
           privilege: selectedAccess
         })
-        setValue('')
-        setSelectedAccess('read')
-        showToast('success', 'user added successfully', theme)
+        if (response) {
+          setValue('')
+          setSelectedAccess('read')
+          showToast('success', 'user added successfully', theme)
+        } else {
+          showToast('error', 'failed to add user', theme)
+        }
       } else {
         showToast('error', 'Same user cannot be added twice', theme)
         return

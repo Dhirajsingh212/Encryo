@@ -39,8 +39,12 @@ const ServiceCard = ({ service }: { service: Service }) => {
   const deleteHandler = async () => {
     try {
       setIsLoading(true)
-      await deleteServiceById(service.id)
-      showToast('success', 'deleted successfully', theme)
+      const response = await deleteServiceById(service.id)
+      if (response) {
+        showToast('success', 'deleted successfully', theme)
+      } else {
+        showToast('error', 'Failed to delete service', theme)
+      }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)
     } finally {
