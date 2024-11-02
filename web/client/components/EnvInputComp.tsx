@@ -49,12 +49,11 @@ export default function EnvInputComp({
       if (response) {
         showToast('success', `Environment variable deleted`, theme)
       } else {
-        throw new Error('Failed to delete environment variable')
+        showToast('error', 'Failed to delete environment variable', theme)
+        return
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     } finally {
       setIsLoading(false)
     }
@@ -73,12 +72,11 @@ export default function EnvInputComp({
         showToast('success', 'Environment variable updated', theme)
         setIsEditing(false)
       } else {
-        throw new Error('Failed to update environment variable')
+        showToast('error', 'Failed to update environment variable', theme)
+        return
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     } finally {
       setIsLoading(false)
     }

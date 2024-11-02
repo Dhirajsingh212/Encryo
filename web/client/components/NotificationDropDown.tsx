@@ -65,9 +65,7 @@ export default function NotificationDropDown() {
       setOpen(false)
       showToast('success', 'All catched up', theme)
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     }
   }
 

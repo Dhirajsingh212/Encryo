@@ -82,12 +82,11 @@ export default function Component() {
         setEnvInput('')
         setParsedEnv(null)
       } else {
-        throw new Error('Generate public key first')
+        showToast('error', 'Generate public key first', theme)
+        return
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     } finally {
       setIsLoading(false)
     }

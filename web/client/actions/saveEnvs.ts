@@ -22,7 +22,7 @@ export async function saveEnvs(
       !projectDetails.id ||
       !projectDetails.user.publicKey
     ) {
-      throw new Error('Project not found or missing public key')
+      return false
     }
 
     await Promise.all(

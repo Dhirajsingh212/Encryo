@@ -66,9 +66,7 @@ export default function ServiceComp({ services }: { services: Service[] }) {
       showToast('success', 'Service add successfully', theme)
       setNewService({ name: '', value: '', expDate: '', link: '' })
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     }
   }
 

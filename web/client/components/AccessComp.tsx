@@ -90,12 +90,11 @@ export default function AccessComp({
         setSelectedAccess('read')
         showToast('success', 'user added successfully', theme)
       } else {
-        throw new Error('Same user cannot be added twice')
+        showToast('error', 'Same user cannot be added twice', theme)
+        return
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     } finally {
       setIsLoading(false)
     }
@@ -107,9 +106,7 @@ export default function AccessComp({
       await removeSharedUserFromProject(email, projectId)
       showToast('success', 'user removed successfully', theme)
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     } finally {
       setIsLoading(false)
     }

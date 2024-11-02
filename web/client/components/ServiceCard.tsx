@@ -42,9 +42,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
       await deleteServiceById(service.id)
       showToast('success', 'deleted successfully', theme)
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      showToast('error', errorMessage, theme)
+      showToast('error', 'Something went wrong', theme)
     } finally {
       setIsLoading(false)
     }
