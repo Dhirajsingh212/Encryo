@@ -120,23 +120,34 @@ export async function getSharedEnvsByProjectSlug(slug: string, userId: string) {
       }
     })
 
+    if (!sharedUserDetail?.email) {
+      console.error('Shared user details not found')
+      return null
+    }
+
     const toUserIdDetails = await prisma.shared.findFirst({
       where: {
-        emailIdTo: sharedUserDetail?.email
+        emailIdTo: sharedUserDetail.email
       },
       select: {
         userIdFrom: true
       }
     })
 
+    if (!toUserIdDetails?.userIdFrom) {
+      console.error('Shared details not found')
+      return null
+    }
+
     const userDetails = await prisma.user.findFirst({
       where: {
-        clerkUserId: toUserIdDetails?.userIdFrom
+        clerkUserId: toUserIdDetails.userIdFrom
       }
     })
 
-    if (!userDetails || !userDetails.privateKey) {
-      throw new Error('User details or private key not found.')
+    if (!userDetails?.privateKey) {
+      console.error('User details or private key not found')
+      return null
     }
 
     const projectDetails = await prisma.project.findFirst({
@@ -155,19 +166,31 @@ export async function getSharedEnvsByProjectSlug(slug: string, userId: string) {
       }
     })
 
-    if (!projectDetails || !projectDetails.envs) {
-      throw new Error('Project details or environment variables not found.')
+    if (!projectDetails?.envs) {
+      console.error('Project details or environment variables not found')
+      return null
     }
 
     const decryptedEnvs = await Promise.all(
       projectDetails.envs.map(async pair => {
-        const decryptedValue = await decryptData(
-          pair.value,
-          userDetails.privateKey!
-        )
-        return {
-          ...pair,
-          value: decryptedValue
+        try {
+          const decryptedValue = await decryptData(
+            pair.value,
+            userDetails.privateKey!
+          )
+          return {
+            ...pair,
+            value: decryptedValue
+          }
+        } catch (decryptError) {
+          console.error(
+            `Failed to decrypt env variable ${pair.id}:`,
+            decryptError
+          )
+          return {
+            ...pair,
+            value: '' // Return empty string for failed decryption
+          }
         }
       })
     )
@@ -177,7 +200,7 @@ export async function getSharedEnvsByProjectSlug(slug: string, userId: string) {
       envs: decryptedEnvs
     }
   } catch (err) {
-    console.error(err)
+    console.error('Error in getSharedEnvsByProjectSlug:', err)
     return null
   }
 }
