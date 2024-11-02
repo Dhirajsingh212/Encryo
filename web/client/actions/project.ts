@@ -125,15 +125,20 @@ export async function getSharedProjectByUserId(userId: string) {
 export async function deleteProjectById(projectId: string, userId: string) {
   try {
     await prisma.$transaction(async prisma => {
+      await prisma.env.deleteMany({
+        where: {
+          projectId: projectId
+        }
+      })
+      await prisma.service.deleteMany({
+        where: {
+          projectId: projectId
+        }
+      })
       await prisma.shared.deleteMany({
         where: {
           userIdFrom: userId,
           projectId
-        }
-      })
-      await prisma.env.deleteMany({
-        where: {
-          projectId: projectId
         }
       })
       await prisma.project.deleteMany({
@@ -146,8 +151,7 @@ export async function deleteProjectById(projectId: string, userId: string) {
     revalidatePath('/home(.*)')
     return true
   } catch (err) {
-    const errorMessage =
-      err instanceof Error ? err.message : 'Failed to delete project'
-    throw new Error(errorMessage)
+    console.log(err)
+    return false
   }
 }
