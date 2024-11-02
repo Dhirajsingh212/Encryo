@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang='en' className='scroll-smooth' suppressHydrationWarning>
+      <html lang='en' className='scroll-smooth' suppressHydrationWarning={true}>
         <body
           className={cn(
             'flex min-h-screen flex-col',
