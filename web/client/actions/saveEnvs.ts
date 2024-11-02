@@ -55,16 +55,6 @@ export async function saveEnvs(
 
 export async function getEnvsByProjectSlug(slug: string, userId: string) {
   try {
-    const userDetails = await prisma.user.findFirst({
-      where: {
-        clerkUserId: userId
-      }
-    })
-
-    if (!userDetails || !userDetails.privateKey) {
-      throw new Error('User details or private key not found.')
-    }
-
     const projectDetails = await prisma.project.findFirst({
       where: {
         slug: slug
@@ -83,6 +73,20 @@ export async function getEnvsByProjectSlug(slug: string, userId: string) {
 
     if (!projectDetails || !projectDetails.envs) {
       throw new Error('Project details or environment variables not found.')
+    }
+
+    if (projectDetails.envs.length === 0) {
+      return { ...projectDetails }
+    }
+
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: userId
+      }
+    })
+
+    if (!userDetails || !userDetails.privateKey) {
+      throw new Error('User details or private key not found.')
     }
 
     const decryptedEnvs = await Promise.all(
