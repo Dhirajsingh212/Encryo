@@ -76,20 +76,20 @@ export default function Pricing() {
             title='Basic'
             price='Free'
             features={[
-              'Create 1 Custom Form',
-              'ATS Scoring for up to 50 Resumes',
-              'Swipe Review Feature'
+              'Create 5 Projects',
+              'Store Unlimited Envs',
+              'Add Team Members'
             ]}
             btnText='Start Small'
             highlighted={false}
           />
           <PricingCard
             title='Pro'
-            price='$29'
+            price='$10'
             features={[
-              'Create up to 5 Custom Forms',
-              'ATS Scoring for up to 500 Resumes',
-              'Advanced Swipe Filtering'
+              'Create up to 10 Projects',
+              'Unlimited Environment Variables',
+              'Role-based Access Control'
             ]}
             btnText='Make Waves'
             highlighted={true}
@@ -98,9 +98,9 @@ export default function Pricing() {
             title='Enterprise'
             price='Custom'
             features={[
-              'Unlimited Custom Forms',
-              'ATS Scoring for Unlimited Resumes',
-              'Customizable Swipe Workflows'
+              'Unlimited Projects',
+              'Store Unlimited Envs',
+              'Add Team Members'
             ]}
             btnText='Contact Us'
             highlighted={false}

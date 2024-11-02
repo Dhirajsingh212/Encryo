@@ -21,12 +21,7 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 import { auth } from '@clerk/nextjs/server'
-import {
-  Command,
-  Folder,
-  MoreHorizontal,
-  Trash2
-} from 'lucide-react'
+import { Command, Folder, MoreHorizontal, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
@@ -75,7 +70,7 @@ export default async function AppSidebar() {
                     <SidebarMenuButton asChild>
                       <Link href={`/home/${item.slug}`}>
                         {IconComp && <IconComp />}
-                        <span>{item.name}</span>
+                        <span className='capitalize'>{item.name}</span>
                       </Link>
                     </SidebarMenuButton>
                     <DropdownMenu>
@@ -134,7 +129,7 @@ export default async function AppSidebar() {
                     <SidebarMenuButton asChild>
                       <Link href={`/shared/${item.project.slug}`}>
                         {IconComp && <IconComp />}
-                        <span>{item.project.name}</span>
+                        <span className='capitalize'>{item.project.name}</span>
                       </Link>
                     </SidebarMenuButton>
                     <DropdownMenu>

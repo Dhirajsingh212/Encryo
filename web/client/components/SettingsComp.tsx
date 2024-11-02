@@ -1,7 +1,7 @@
 import { getPublicKey } from '@/actions/user'
 import { auth } from '@clerk/nextjs/server'
+import { CopyButton } from './CopyButton'
 import GenKeyButton from './GenKeyButton'
-import { Input } from './ui/input'
 
 const SettingsComp = async () => {
   const { userId } = auth()
@@ -26,18 +26,8 @@ const SettingsComp = async () => {
         )}
         {userDetails && userDetails.publicKey && userDetails.privateKey && (
           <div className='flex flex-row gap-2'>
-            <Input
-              placeholder='Public key'
-              className='bg-card dark:bg-neutral-900'
-              value={userDetails?.publicKey || ''}
-              disabled
-            />
-            <Input
-              placeholder='Private key'
-              className='bg-card dark:bg-neutral-900'
-              disabled
-              value={userDetails?.privateKey || ''}
-            />
+            <CopyButton text={userDetails.publicKey} />
+            <CopyButton text={userDetails.privateKey} />
           </div>
         )}
       </div>
