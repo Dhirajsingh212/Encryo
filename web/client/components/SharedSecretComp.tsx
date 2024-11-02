@@ -68,7 +68,7 @@ const SharedSecretComp = ({
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-1'>
+      <div className='flex min-h-screen flex-col gap-1'>
         {filteredEnv && filteredEnv.length === 0 && <p>No envs found.</p>}
         {filteredEnv &&
           filteredEnv.slice(start, end).map((pairs, index) => {
