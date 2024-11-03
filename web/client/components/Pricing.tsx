@@ -1,5 +1,3 @@
-import { Check } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -7,6 +5,8 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
+import { Check } from 'lucide-react'
+import EmailDialog from './EmailDialog'
 
 interface PricingCardProps {
   title: string
@@ -53,12 +53,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
         </ul>
       </CardContent>
       <CardFooter>
-        <Button
-          className='w-full'
-          variant={highlighted ? 'default' : 'outline'}
-        >
-          {btnText}
-        </Button>
+        <EmailDialog btnText={btnText} highlighted={highlighted} plan={title} />
       </CardFooter>
     </Card>
   )

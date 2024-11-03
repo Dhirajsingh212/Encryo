@@ -1,9 +1,9 @@
 'use client'
 
-import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import Header from '@/components/header'
 import Hero from '@/components/Hero'
+import Information from '@/components/Information'
 import Pricing from '@/components/Pricing'
 
 export default function LandingPage() {
@@ -13,7 +13,8 @@ export default function LandingPage() {
       <main>
         <Hero />
         <Pricing />
-        <Contact />
+        <Information />
+        {/* <Contact /> */}
       </main>
       <Footer />
     </div>
