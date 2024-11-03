@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import {
@@ -20,7 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar'
-import { auth } from '@clerk/nextjs/server'
+import { auth, clerkClient } from '@clerk/nextjs/server'
 import { Command, Folder, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import * as FaIcons from 'react-icons/fa'
@@ -29,6 +28,17 @@ import AddProjectDialog from './AddProjectDialog'
 
 const allIconsObject: any = { ...FaIcons, ...MdIcons }
 
+const fetchUserRepos = async (username: string) => {
+  const response = await fetch(
+    `https://api.github.com/users/${username}/repos?sort=created&direction=desc`
+  )
+  const res = await response.json()
+  if ((res as any).status) {
+    return []
+  }
+  return res
+}
+
 export default async function AppSidebar() {
   const { userId } = auth()
 
@@ -36,6 +46,8 @@ export default async function AppSidebar() {
     return null
   }
 
+  const user = await clerkClient().users.getUser(userId)
+  const repos = await fetchUserRepos(user.externalAccounts[0].username || '')
   const userProjects = await getProjectsByUserId(userId)
   const sharedProjects = await getSharedProjectByUserId(userId)
 
@@ -58,7 +70,7 @@ export default async function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className='custom-scrollbar'>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarMenu>
@@ -143,6 +155,53 @@ export default async function AppSidebar() {
                           <Link
                             className='flex w-full flex-row'
                             href={`/shared/${item.project.slug}`}
+                          >
+                            <Folder className='mr-2 size-4' />
+                            <span>View Project</span>
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </SidebarMenuItem>
+                )
+              })}
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
+          <SidebarGroupLabel>Github projects</SidebarGroupLabel>
+          <SidebarMenu>
+            {repos && repos.length === 0 && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <span>No records found</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
+            {repos &&
+              repos.map((item: any) => {
+                return (
+                  <SidebarMenuItem key={item.name}>
+                    <SidebarMenuButton asChild>
+                      <Link href={`/github/${item.name}`}>
+                        <span className='capitalize'>{item.name}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction showOnHover>
+                          <MoreHorizontal />
+                          <span className='sr-only'>More</span>
+                        </SidebarMenuAction>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className='w-48'
+                        side='bottom'
+                        align='end'
+                      >
+                        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                          <Link
+                            className='flex w-full flex-row'
+                            href={`/github/${item.name}`}
                           >
                             <Folder className='mr-2 size-4' />
                             <span>View Project</span>
