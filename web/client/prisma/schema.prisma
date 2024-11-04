@@ -8,91 +8,130 @@ datasource db {
 }
 
 model User {
-  id               String   @id @default(cuid())
-  email            String   @unique
-  clerkUserId      String   @unique
-  
+  id               String           @id @default(cuid())
+  email            String           @unique
+  clerkUserId      String           @unique
   firstName        String?
   lastName         String?
   imageUrl         String?
   bio              String?
   publicKey        String?
   privateKey       String?
-  limit            Int     @default(5)
-  
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  projects         Project[] 
-  sharedProjects    Shared[] @relation("SharedWith")
-  sharedByProjects  Shared[] @relation("SharedBy")
-  
-  notifications     Notification[]
+  limit            Int              @default(5)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  projects         Project[]
+  githubProjects   GithubProject[]
+  sharedProjects   Shared[]         @relation("SharedWith")
+  sharedByProjects Shared[]         @relation("SharedBy")
+  githubSharedTo   GithubShared[]   @relation("GithubSharedWith")
+  githubSharedBy   GithubShared[]   @relation("GithubSharedBy")
+  notifications    Notification[]
 }
 
 model Project {
-  id               String   @id @default(cuid())
+  id               String           @id @default(cuid())
   name             String
-  slug             String   @unique
+  slug             String           @unique
   deployed         Boolean
-  link             String?  
-  userId           String   
+  link             String?
+  userId           String
   icon             String
-  user             User     @relation(fields: [userId], references: [id])
-
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  envs             Env[]   
+  user             User             @relation(fields: [userId], references: [id])
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  envs             Env[]
   service          Service[]
   sharedWith       Shared[]
 }
 
-model Service{
-  id               String   @id @default(cuid())
-  name             String   
+model Service {
+  id               String           @id @default(cuid())
+  name             String
   value            String
   link             String
   expDate          String
-  projectId        String   
-  project          Project   @relation(fields: [projectId], references: [id])
-  createdAt        DateTime  @default(now())
+  projectId        String
+  project          Project          @relation(fields: [projectId], references: [id])
+  createdAt        DateTime         @default(now())
 }
 
 model Env {
-  id               String   @id @default(cuid())
-  name             String   
+  id               String           @id @default(cuid())
+  name             String
   value            String
-  projectId        String   
-
-  project          Project   @relation(fields: [projectId], references: [id])
-
-  createdAt        DateTime @default(now())
+  projectId        String
+  project          Project          @relation(fields: [projectId], references: [id])
+  createdAt        DateTime         @default(now())
 }
 
 model Shared {
-  id              String     @id @default(cuid())
-  projectId       String
-  userIdFrom      String   
-  emailIdTo       String   
-  isAccepted      Boolean    @default(false)
-  privilege       Privilege 
-  project         Project    @relation(fields: [projectId], references: [id])
-  userFrom        User       @relation("SharedBy", fields: [userIdFrom], references: [clerkUserId])
-  userTo          User       @relation("SharedWith", fields: [emailIdTo], references: [email])
-  
-  createdAt       DateTime   @default(now())
+  id               String           @id @default(cuid())
+  projectId        String
+  userIdFrom       String
+  emailIdTo        String
+  isAccepted       Boolean          @default(false)
+  privilege        Privilege
+  project          Project          @relation(fields: [projectId], references: [id])
+  userFrom         User             @relation("SharedBy", fields: [userIdFrom], references: [clerkUserId])
+  userTo           User             @relation("SharedWith", fields: [emailIdTo], references: [email])
+  createdAt        DateTime         @default(now())
 }
 
 model Notification {
-  id              String     @id @default(cuid())
-  userId          String
-  message         String
-  isRead          Boolean    @default(false)
-  
-  createdAt       DateTime   @default(now())
-  
-  user            User       @relation(fields: [userId], references: [clerkUserId])
+  id               String           @id @default(cuid())
+  userId           String
+  message          String
+  isRead           Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  user             User             @relation(fields: [userId], references: [clerkUserId])
+}
+
+model GithubProject {
+  id               String           @id @default(cuid())
+  name             String
+  slug             String           @unique
+  link             String?
+  userId           String
+  user             User             @relation(fields: [userId], references: [clerkUserId])
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  githubEnvs       GithubEnv[]
+  githubService    GithubService[]
+  githubSharedWith GithubShared[]
+}
+
+model GithubService {
+  id               String           @id @default(cuid())
+  name             String
+  value            String
+  link             String
+  expDate          String
+  githubProjectId  String
+  githubProject    GithubProject    @relation(fields: [githubProjectId], references: [id])
+  createdAt        DateTime         @default(now())
+}
+
+model GithubEnv {
+  id               String           @id @default(cuid())
+  name             String
+  value            String
+  githubProjectId  String
+  githubProject    GithubProject    @relation(fields: [githubProjectId], references: [id])
+  createdAt        DateTime         @default(now())
+}
+
+model GithubShared {
+  id               String           @id @default(cuid())
+  githubProjectId  String
+  userIdFrom       String
+  emailIdTo        String
+  isAccepted       Boolean          @default(false)
+  privilege        Privilege
+  githubProject    GithubProject    @relation(fields: [githubProjectId], references: [id])
+  userFrom         User             @relation("GithubSharedBy", fields: [userIdFrom], references: [clerkUserId])
+  userTo           User             @relation("GithubSharedWith", fields: [emailIdTo], references: [email])
+  createdAt        DateTime         @default(now())
 }
 
 enum Privilege {

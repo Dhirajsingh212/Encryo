@@ -5,7 +5,7 @@ export const fetchUserRepos = async (username: string) => {
     `https://api.github.com/users/${username}/repos?sort=created&direction=desc&per_page=100`
   )
   const res = await response.json()
-  if ((res as any).status) {
+  if ((res as any).status || (res as any).message) {
     return []
   }
   return res

@@ -27,6 +27,7 @@ import * as MdIcons from 'react-icons/md'
 import AddProjectDialog from './AddProjectDialog'
 import { fetchUserRepos } from '@/actions/github'
 import { ScrollArea } from './ui/scroll-area'
+import { getGithubProjectDetailsByUserID } from '@/actions/githubProject'
 
 const allIconsObject: any = { ...FaIcons, ...MdIcons }
 
@@ -48,6 +49,7 @@ export default async function AppSidebar() {
     : []
   const userProjects = await getProjectsByUserId(userId)
   const sharedProjects = await getSharedProjectByUserId(userId)
+  const githubDbProjectDetails = await getGithubProjectDetailsByUserID(userId)
 
   return (
     <Sidebar variant='inset'>
@@ -168,20 +170,21 @@ export default async function AppSidebar() {
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Forked projects</SidebarGroupLabel>
           <SidebarMenu>
-            <ScrollArea className='h-56'>
-              {repos && repos.length === 0 && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <span>No records found</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
-              {repos &&
-                repos.map((item: any) => {
+            <ScrollArea className='max-h-56'>
+              {githubDbProjectDetails &&
+                githubDbProjectDetails.length === 0 && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <span>No records found</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+              {githubDbProjectDetails &&
+                githubDbProjectDetails.map((item: any) => {
                   return (
                     <SidebarMenuItem key={item.name}>
                       <SidebarMenuButton asChild>
-                        <Link href={`/github/${item.name}`}>
+                        <Link href={`/forked/${item.name}`}>
                           <span className='capitalize'>{item.name}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -200,7 +203,7 @@ export default async function AppSidebar() {
                           <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
                             <Link
                               className='flex w-full flex-row'
-                              href={`/github/${item.name}`}
+                              href={`/forked/${item.name}`}
                             >
                               <Folder className='mr-2 size-4' />
                               <span>View Project</span>
@@ -217,7 +220,7 @@ export default async function AppSidebar() {
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Github projects</SidebarGroupLabel>
           <SidebarMenu>
-            <ScrollArea className='h-56'>
+            <ScrollArea className='max-h-56'>
               {repos && repos.length === 0 && (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>

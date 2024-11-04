@@ -1,6 +1,6 @@
 'use client'
 
-import { saveEnvs } from '@/actions/saveEnvs'
+import { saveGithubEnvs } from '@/actions/githubEnv'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { showToast } from '@/toast'
+import { useAuth } from '@clerk/nextjs'
 import { AlertCircle } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
@@ -29,6 +30,7 @@ export default function GithubCreateEnvDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { theme } = useTheme()
   const path = usePathname()
+  const { userId } = useAuth()
 
   const parseEnv = () => {
     setError(null)
@@ -75,7 +77,12 @@ export default function GithubCreateEnvDialog() {
         return
       }
 
-      const response = await saveEnvs(slug, parsedEnv)
+      if (!userId) {
+        showToast('error', 'User not logged in', theme)
+        return
+      }
+
+      const response = await saveGithubEnvs(slug, parsedEnv)
 
       if (response) {
         showToast('success', 'Environment variables saved successfully.', theme)
