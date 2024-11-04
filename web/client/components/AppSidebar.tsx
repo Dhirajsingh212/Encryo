@@ -25,19 +25,9 @@ import Link from 'next/link'
 import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
 import AddProjectDialog from './AddProjectDialog'
+import { fetchUserRepos } from '@/actions/github'
 
 const allIconsObject: any = { ...FaIcons, ...MdIcons }
-
-const fetchUserRepos = async (username: string) => {
-  const response = await fetch(
-    `https://api.github.com/users/${username}/repos?sort=created&direction=desc`
-  )
-  const res = await response.json()
-  if ((res as any).status) {
-    return []
-  }
-  return res
-}
 
 export default async function AppSidebar() {
   const { userId } = auth()
@@ -47,7 +37,14 @@ export default async function AppSidebar() {
   }
 
   const user = await clerkClient().users.getUser(userId)
-  const repos = await fetchUserRepos(user.externalAccounts[0].username || '')
+
+  const githubUser = user.externalAccounts.find(
+    account => account.provider === 'oauth_github'
+  )
+
+  const repos = githubUser
+    ? await fetchUserRepos(githubUser.username || '')
+    : []
   const userProjects = await getProjectsByUserId(userId)
   const sharedProjects = await getSharedProjectByUserId(userId)
 
@@ -70,7 +67,7 @@ export default async function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className='custom-scrollbar'>
+      <SidebarContent className='no-scrollbar'>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarMenu>
