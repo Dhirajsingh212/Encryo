@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import SettingsComp from '@/components/SettingsComp'
+import GithubCreateFile from '@/components/GithubCreateFile'
 
 const Page = async ({ params }: { params: { id: string[] } }) => {
   return (
@@ -10,7 +11,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <TabsTrigger value='setting'>Setting</TabsTrigger>
         </TabsList>
         <TabsContent value='files' className='flex flex-col gap-4 sm:px-4'>
-          Files
+          <GithubCreateFile />
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
           <SettingsComp />

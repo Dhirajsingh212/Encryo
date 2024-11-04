@@ -26,6 +26,7 @@ import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
 import AddProjectDialog from './AddProjectDialog'
 import { fetchUserRepos } from '@/actions/github'
+import { ScrollArea } from './ui/scroll-area'
 
 const allIconsObject: any = { ...FaIcons, ...MdIcons }
 
@@ -165,50 +166,101 @@ export default async function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
+          <SidebarGroupLabel>Forked projects</SidebarGroupLabel>
+          <SidebarMenu>
+            <ScrollArea className='h-56'>
+              {repos && repos.length === 0 && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <span>No records found</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+              {repos &&
+                repos.map((item: any) => {
+                  return (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton asChild>
+                        <Link href={`/github/${item.name}`}>
+                          <span className='capitalize'>{item.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <SidebarMenuAction showOnHover>
+                            <MoreHorizontal />
+                            <span className='sr-only'>More</span>
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          className='w-48'
+                          side='bottom'
+                          align='end'
+                        >
+                          <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                            <Link
+                              className='flex w-full flex-row'
+                              href={`/github/${item.name}`}
+                            >
+                              <Folder className='mr-2 size-4' />
+                              <span>View Project</span>
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </SidebarMenuItem>
+                  )
+                })}
+            </ScrollArea>
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>Github projects</SidebarGroupLabel>
           <SidebarMenu>
-            {repos && repos.length === 0 && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <span>No records found</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-            {repos &&
-              repos.map((item: any) => {
-                return (
-                  <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild>
-                      <Link href={`/github/${item.name}`}>
-                        <span className='capitalize'>{item.name}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuAction showOnHover>
-                          <MoreHorizontal />
-                          <span className='sr-only'>More</span>
-                        </SidebarMenuAction>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className='w-48'
-                        side='bottom'
-                        align='end'
-                      >
-                        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                          <Link
-                            className='flex w-full flex-row'
-                            href={`/github/${item.name}`}
-                          >
-                            <Folder className='mr-2 size-4' />
-                            <span>View Project</span>
-                          </Link>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </SidebarMenuItem>
-                )
-              })}
+            <ScrollArea className='h-56'>
+              {repos && repos.length === 0 && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <span>No records found</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+              {repos &&
+                repos.map((item: any) => {
+                  return (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton asChild>
+                        <Link href={`/github/${item.name}`}>
+                          <span className='capitalize'>{item.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <SidebarMenuAction showOnHover>
+                            <MoreHorizontal />
+                            <span className='sr-only'>More</span>
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          className='w-48'
+                          side='bottom'
+                          align='end'
+                        >
+                          <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                            <Link
+                              className='flex w-full flex-row'
+                              href={`/github/${item.name}`}
+                            >
+                              <Folder className='mr-2 size-4' />
+                              <span>View Project</span>
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </SidebarMenuItem>
+                  )
+                })}
+            </ScrollArea>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
