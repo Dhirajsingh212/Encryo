@@ -1,15 +1,17 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import SettingsComp from '@/components/SettingsComp'
+import { getGithubFilesByProjectSlug } from '@/actions/githubFile'
 import GithubCreateFile from '@/components/GithubCreateFile'
+import SettingsComp from '@/components/SettingsComp'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { auth } from '@clerk/nextjs/server'
-import { getGithubEnvs } from '@/actions/githubEnv'
 
 const Page = async ({ params }: { params: { id: string[] } }) => {
   const { userId } = auth()
   if (!userId) {
     return null
   }
-  const githubEnvDetails = await getGithubEnvs(userId, params.id[0])
+
+  const githubFileDetails = await getGithubFilesByProjectSlug(params.id[0])
+
   return (
     <div className=''>
       <Tabs defaultValue='files' className='w-full sm:px-4'>
@@ -18,7 +20,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <TabsTrigger value='setting'>Setting</TabsTrigger>
         </TabsList>
         <TabsContent value='files' className='flex flex-col gap-4 sm:px-4'>
-          <GithubCreateFile projectDetails={githubEnvDetails} />
+          <GithubCreateFile githubFiles={githubFileDetails?.files} />
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
           <SettingsComp />

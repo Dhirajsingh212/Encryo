@@ -1,5 +1,6 @@
 'use client'
 
+import { addFileToGithubProject } from '@/actions/githubFile'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import {
   Select,
@@ -8,11 +9,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { motion, AnimatePresence } from 'framer-motion'
+import { showToast } from '@/toast'
+import { FormData } from '@/types/types'
+import { useAuth } from '@clerk/nextjs'
+import { AnimatePresence, motion } from 'framer-motion'
 import { PlusSquare } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import CreateConfigDialog from './CreateConfigDialog'
-import GithubCreateEnvDialog from './GithubCreateEnvDialog'
+import GithubMultistepForm from './GithubMultistepForm'
 import { Button } from './ui/button'
 
 const steps = ['Step 1', 'Step 2']
@@ -20,10 +25,71 @@ const steps = ['Step 1', 'Step 2']
 const MultiStepDialog = () => {
   const [selectValue, setSelectValue] = useState<string>('')
   const [currentStep, setCurrentStep] = useState(0)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    extension: '',
+    content: ''
+  })
+  const { theme } = useTheme()
+  const path = usePathname()
+  const { userId } = useAuth()
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev: FormData) => {
+      return {
+        ...prev,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
 
   const nextStep = () =>
     setCurrentStep(prev => Math.min(prev + 1, steps.length - 1))
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0))
+
+  const submitHandler = async () => {
+    try {
+      setIsLoading(true)
+      if (!userId) {
+        showToast('error', 'user not logged in', theme)
+        return
+      }
+      if (!selectValue.trim()) {
+        showToast('error', 'File type is not selected in step 1', theme)
+        return
+      }
+      if (
+        !formData.name.trim() ||
+        !formData.extension.trim() ||
+        !formData.content.trim()
+      ) {
+        showToast('error', 'Fields cannot be empty in step 2', theme)
+        return
+      }
+      const response = await addFileToGithubProject(
+        formData,
+        path.split('/')[2],
+        userId,
+        selectValue
+      )
+      if (response) {
+        showToast('success', 'File created successfully', theme)
+        setFormData({
+          name: '',
+          content: '',
+          extension: ''
+        })
+        setSelectValue('')
+      } else {
+        showToast('error', 'failed to create file', theme)
+      }
+    } catch (err) {
+      showToast('error', 'Failed to create file', theme)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Dialog>
@@ -33,7 +99,7 @@ const MultiStepDialog = () => {
           Add files
         </Button>
       </DialogTrigger>
-      <DialogContent className='flex max-h-[90vh] w-[90vw] max-w-4xl flex-col gap-4 overflow-hidden rounded-xl border-none bg-gradient-to-br from-slate-900 to-slate-800 p-0 text-white shadow-2xl'>
+      <DialogContent className='flex max-h-[90vh] w-[90vw] max-w-4xl flex-col gap-4 overflow-hidden rounded-xl border-none bg-gradient-to-br from-slate-900 to-slate-800 p-0 text-white shadow-2xl max-sm:overflow-y-scroll'>
         <div className='flex flex-col lg:flex-row'>
           <motion.div
             className='bg-violet-700 p-6 lg:w-1/3'
@@ -76,7 +142,7 @@ const MultiStepDialog = () => {
                 {currentStep === 0 && (
                   <div className='space-y-6'>
                     <h2 className='text-2xl font-bold'>Select File Type</h2>
-                    <Select onValueChange={setSelectValue}>
+                    <Select onValueChange={setSelectValue} required>
                       <SelectTrigger className='w-full bg-slate-700 text-white'>
                         <SelectValue placeholder='Select type of file' />
                       </SelectTrigger>
@@ -94,8 +160,11 @@ const MultiStepDialog = () => {
                 {currentStep === 1 && (
                   <div className='space-y-6'>
                     <h2 className='text-2xl font-bold'>Configure File</h2>
-                    {selectValue === 'env' && <GithubCreateEnvDialog />}
-                    {selectValue === 'config' && <CreateConfigDialog />}
+                    <GithubMultistepForm
+                      formData={formData}
+                      setFormData={setFormData}
+                      changeHandler={changeHandler}
+                    />
                   </div>
                 )}
               </motion.div>
@@ -108,13 +177,24 @@ const MultiStepDialog = () => {
               >
                 Previous
               </Button>
-              <Button
-                onClick={nextStep}
-                disabled={currentStep === steps.length - 1}
-                className='bg-violet-600 hover:bg-violet-700'
-              >
-                Next
-              </Button>
+              {currentStep !== 1 && (
+                <Button
+                  onClick={nextStep}
+                  disabled={currentStep === steps.length - 1}
+                  className='bg-violet-600 hover:bg-violet-700'
+                >
+                  Next
+                </Button>
+              )}
+              {currentStep === 1 && (
+                <Button
+                  onClick={submitHandler}
+                  disabled={isLoading}
+                  className='bg-violet-600 hover:bg-violet-700'
+                >
+                  Submit
+                </Button>
+              )}
             </div>
           </motion.div>
         </div>

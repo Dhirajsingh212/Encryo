@@ -33,3 +33,9 @@ export interface Service {
   value: string
   expDate: string
 }
+
+export interface FormData {
+  name: string
+  extension: string
+  content: string
+}

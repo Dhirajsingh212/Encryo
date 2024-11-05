@@ -24,8 +24,6 @@ model User {
   githubProjects   GithubProject[]
   sharedProjects   Shared[]         @relation("SharedWith")
   sharedByProjects Shared[]         @relation("SharedBy")
-  githubSharedTo   GithubShared[]   @relation("GithubSharedWith")
-  githubSharedBy   GithubShared[]   @relation("GithubSharedBy")
   notifications    Notification[]
 }
 
@@ -96,9 +94,20 @@ model GithubProject {
   user             User             @relation(fields: [userId], references: [clerkUserId])
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
-  githubEnvs       GithubEnv[]
   githubService    GithubService[]
-  githubSharedWith GithubShared[]
+  files            GithubFile[]     
+}
+
+model GithubFile {
+  id               String        @id @default(uuid())
+  name             String
+  encryptedContent String        @db.Text
+  extension        String
+  type             String
+  project          GithubProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId        String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }
 
 model GithubService {
@@ -112,27 +121,6 @@ model GithubService {
   createdAt        DateTime         @default(now())
 }
 
-model GithubEnv {
-  id               String           @id @default(cuid())
-  name             String
-  value            String
-  githubProjectId  String
-  githubProject    GithubProject    @relation(fields: [githubProjectId], references: [id])
-  createdAt        DateTime         @default(now())
-}
-
-model GithubShared {
-  id               String           @id @default(cuid())
-  githubProjectId  String
-  userIdFrom       String
-  emailIdTo        String
-  isAccepted       Boolean          @default(false)
-  privilege        Privilege
-  githubProject    GithubProject    @relation(fields: [githubProjectId], references: [id])
-  userFrom         User             @relation("GithubSharedBy", fields: [userIdFrom], references: [clerkUserId])
-  userTo           User             @relation("GithubSharedWith", fields: [emailIdTo], references: [email])
-  createdAt        DateTime         @default(now())
-}
 
 enum Privilege {
   READ

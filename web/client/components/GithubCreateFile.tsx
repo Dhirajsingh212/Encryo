@@ -1,49 +1,119 @@
 'use client'
-import { useEffect, useState } from 'react'
-import GithubEnvInputComp from './GithubEnvInputComp'
+
+import { useState } from 'react'
+import { FaFileAlt, FaEye, FaEdit, FaTrash } from 'react-icons/fa'
+import { motion, AnimatePresence } from 'framer-motion'
 import MultiStepDialog from './MultiStepDialog'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import GithubContentViewDialog from './GithubContentViewDialog'
 
-interface GithubEnv {
-  id: string
+interface GithubFile {
   name: string
-  value: string
+  encryptedContent: string
+  type: string
+  extension: string
 }
 
-interface GithubEnvDetails {
-  id: string
-  githubEnvs: GithubEnv[]
-}
-
-const GithubCreateFile = ({
-  projectDetails
+export default function GithubCreateFile({
+  githubFiles = []
 }: {
-  projectDetails: GithubEnvDetails | null
-}) => {
-  const [filteredEnv, setFilteredEnv] = useState(
-    projectDetails ? projectDetails.githubEnvs : []
-  )
-
-  useEffect(() => {
-    setFilteredEnv(projectDetails ? projectDetails.githubEnvs : [])
-  }, [projectDetails])
+  githubFiles?: GithubFile[]
+}) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='flex flex-row items-center justify-between'>
-        <p className='text-xl font-semibold'>Config files</p>
+    <div className='space-y-6'>
+      <div className='flex items-center justify-between'>
+        <h2 className='text-2xl font-semibold'>Config Files</h2>
         <MultiStepDialog />
       </div>
-      <div className='flex min-h-screen flex-col gap-2'>
-        {filteredEnv && filteredEnv.length === 0 && <p>No envs found.</p>}
-        {filteredEnv &&
-          filteredEnv.map((pairs, index) => {
-            return (
-              <GithubEnvInputComp key={pairs.id} pairs={pairs} index={index} />
-            )
-          })}
-      </div>
+      <AnimatePresence>
+        {githubFiles.map((item: GithubFile, index: number) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card
+              className='overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-lg'
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <CardContent className='p-4'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center space-x-3'>
+                    <FaFileAlt className='text-2xl text-primary' />
+                    <span className='text-lg font-medium'>
+                      {item.name}.{item.extension}
+                    </span>
+                  </div>
+                  <div className='flex space-x-2'>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <GithubContentViewDialog
+                            content={item.encryptedContent}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>View content</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant='ghost' size='icon'>
+                            <FaEdit className='h-4 w-4' />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Edit</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant='ghost' size='icon'>
+                            <FaTrash className='h-4 w-4' />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Delete</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </div>
+                <AnimatePresence>
+                  {hoveredIndex === index && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className='mt-4 text-sm text-muted-foreground'
+                    >
+                      <p>Type: {item.type}</p>
+                      <p>Encrypted: Yes</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   )
 }
-
-export default GithubCreateFile
