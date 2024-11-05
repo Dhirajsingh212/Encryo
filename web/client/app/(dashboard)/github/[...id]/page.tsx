@@ -48,7 +48,7 @@ const Page = () => {
               setIsLoading(false)
             }
           }}
-          className='group relative flex w-full flex-col gap-4 overflow-hidden border border-purple-400/50 bg-gradient-to-br from-purple-600 to-pink-500 py-20 transition-all duration-300 hover:from-purple-500 hover:to-pink-400 lg:h-[600px]'
+          className='group relative flex w-full flex-col gap-4 overflow-hidden border border-purple-400/50 bg-gradient-to-br from-purple-600 to-pink-500 py-20 transition-all duration-300 hover:from-purple-500 hover:to-pink-400 lg:h-[565px]'
         >
           <motion.div
             animate={{ rotate: [0, 360] }}

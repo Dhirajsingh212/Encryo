@@ -102,7 +102,7 @@ export default function GithubCreateEnvDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button>
+        <Button className='w-full'>
           <FaPlusSquare className='mr-2 size-4' />
           Add Envs
         </Button>
