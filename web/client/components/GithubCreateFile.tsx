@@ -30,7 +30,7 @@ const GithubCreateFile = ({
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex flex-row items-center justify-between'>
-        <p className='text-xl'>Create your config files</p>
+        <p className='text-xl font-semibold'>Config files</p>
         <MultiStepDialog />
       </div>
       <div className='flex min-h-screen flex-col gap-2'>
