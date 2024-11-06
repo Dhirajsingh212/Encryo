@@ -29,7 +29,7 @@ const GithubContentViewDialog = ({ content }: { content: string }) => {
           <FaEye className='h-4 w-4' />
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[90vh] w-[300px] overflow-y-auto rounded-lg border-none bg-slate-950 bg-gradient-to-br pt-10 text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'>
+      <DialogContent className='max-h-[90vh] w-[300px] overflow-y-auto rounded-lg border-none bg-gradient-to-br from-slate-900 to-slate-800 pt-10 text-white shadow-2xl transition-colors duration-300 sm:w-full'>
         <ScrollArea className='h-60 rounded-lg border border-slate-700 bg-slate-700 p-2'>
           <p className='no-scrollbar overflow-x-scroll whitespace-pre'>
             {content}

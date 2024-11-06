@@ -7,9 +7,18 @@ const loading = () => {
       <Tabs defaultValue='account' className='w-full sm:px-4'>
         <TabsList className='mb-4 w-full justify-start gap-0 rounded-none border-b bg-inherit pb-4'>
           <TabsTrigger value='account'>Files</TabsTrigger>
+          <TabsTrigger value='services'>Service</TabsTrigger>
           <TabsTrigger value='setting'>Setting</TabsTrigger>
         </TabsList>
         <TabsContent value='account' className='flex flex-col gap-4 sm:px-4'>
+          {Array.from({ length: 10 }).map((_, index) => {
+            return <Skeleton key={index} className='h-40 w-full' />
+          })}
+        </TabsContent>
+        <TabsContent
+          value='services'
+          className='grid grid-cols-1 gap-4 sm:px-4 md:grid-cols-2 lg:grid-cols-3'
+        >
           {Array.from({ length: 10 }).map((_, index) => {
             return <Skeleton key={index} className='h-40 w-full' />
           })}

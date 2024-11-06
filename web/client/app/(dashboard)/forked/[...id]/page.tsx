@@ -1,5 +1,7 @@
 import { getGithubFilesByProjectSlug } from '@/actions/githubFile'
+import { getServicesDataByProjectSlug } from '@/actions/githubService'
 import GithubCreateFile from '@/components/GithubCreateFile'
+import GithubService from '@/components/GithubService'
 import SettingsComp from '@/components/SettingsComp'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { auth } from '@clerk/nextjs/server'
@@ -14,6 +16,8 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
     params.id[0],
     userId
   )
+
+  const servicesData = await getServicesDataByProjectSlug(params.id[0])
 
   if (!githubFileDetails) {
     return (
@@ -30,10 +34,14 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
       <Tabs defaultValue='files' className='w-full sm:px-4'>
         <TabsList className='mb-4 w-full justify-start gap-0 rounded-none border-b bg-inherit pb-4'>
           <TabsTrigger value='files'>Files</TabsTrigger>
+          <TabsTrigger value='service'>Services</TabsTrigger>
           <TabsTrigger value='setting'>Setting</TabsTrigger>
         </TabsList>
         <TabsContent value='files' className='flex flex-col gap-4 sm:px-4'>
           <GithubCreateFile githubFiles={githubFileDetails?.files} />
+        </TabsContent>
+        <TabsContent value='service' className='flex flex-col gap-4 sm:px-4'>
+          <GithubService services={servicesData || []} />
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
           <SettingsComp />

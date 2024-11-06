@@ -66,7 +66,7 @@ const GithubFileEditDialog = ({ item }: { item: GithubFile }) => {
           <FaEdit className='h-4 w-4' />
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[90vh] w-[300px] overflow-y-auto rounded-lg border-none bg-slate-950 bg-gradient-to-br text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'>
+      <DialogContent className='max-h-[90vh] w-[300px] overflow-y-auto rounded-lg border-none bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-2xl transition-colors duration-300 sm:w-full'>
         <div className='flex flex-col gap-4'>
           <div className='flex flex-col gap-2'>
             <Label>File name</Label>

@@ -16,24 +16,6 @@ export interface UserForms {
   forms: Form[]
 }
 
-export interface ProjectDetails {
-  envs: Envs[]
-}
-
-export interface Envs {
-  value: string
-  name: string
-  id: string
-}
-
-export interface Service {
-  id: string
-  name: string
-  link: string
-  value: string
-  expDate: string
-}
-
 export interface FormData {
   name: string
   extension: string
@@ -46,4 +28,19 @@ export interface GithubFile {
   encryptedContent: string
   type: string
   extension: string
+}
+
+export interface ServiceForm {
+  name: string
+  value: string
+  date: string
+  link: string
+}
+
+export interface Service {
+  name: string
+  value: string
+  expDate: string
+  link: string
+  id: string
 }
