@@ -11,6 +11,7 @@ import { ArrowDownToLine } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import GithubSharedFilesCard from './GithubSharedFilesCard'
+import SharedMultiStepDialog from './SharedMultiStepDialog'
 
 export default function GithubSharedWriteAccess({
   githubFiles = [],
@@ -51,6 +52,7 @@ export default function GithubSharedWriteAccess({
       <div className='flex items-center justify-between'>
         <h2 className='text-2xl font-semibold'>Config Files</h2>
         <div className='flex flex-row gap-2'>
+          <SharedMultiStepDialog />
           <Button onClick={downloadZip}>
             <ArrowDownToLine className='size-4 sm:mr-2' />
             <span className='visible max-sm:hidden'>Download</span>

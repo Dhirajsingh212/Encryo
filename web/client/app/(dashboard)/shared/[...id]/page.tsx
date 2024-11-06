@@ -14,7 +14,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
     userId,
     params.id[0]
   )
-  const servicesData = await getServicesDataByProjectSlug(params.id[0])
+  // const servicesData = await getServicesDataByProjectSlug(params.id[0])
 
   if (!githubFileDetails) {
     return (

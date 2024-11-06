@@ -3,6 +3,7 @@
 import { decryptData, encryptData } from '@/lib/key'
 import prisma from '@/lib/prisma'
 import { FormData } from '@/types/types'
+import { revalidatePath } from 'next/cache'
 
 export async function getSharedProjectDetailsByUserIdAndSlug(
   userId: string,
@@ -131,6 +132,70 @@ export async function updateSharedGithubFileById(
         extension: formData.extension
       }
     })
+    revalidatePath('/shared(.*)')
+    return true
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export async function addFileToSharedProject(
+  formData: FormData,
+  projectSlug: string,
+  userId: string,
+  type: string
+) {
+  try {
+    // FIRST FIND THE PROJECT DETAILS
+    const projectDetails = await prisma.githubProject.findFirst({
+      where: {
+        slug: projectSlug
+      },
+      select: {
+        id: true
+      }
+    })
+    if (!projectDetails) {
+      return false
+    }
+    // SECOND FIND THE SHARED DETAILS OF THE PROJECT WITH PROJECTID AND UserIDTO
+    const sharedDetails = await prisma.githubShared.findFirst({
+      where: {
+        userIdTo: userId,
+        githubProjectId: projectDetails?.id
+      }
+    })
+
+    if (!sharedDetails) {
+      return false
+    }
+    //THIRD FIND THE PUBLIC AND PRIVATE KEY OF USER WHO SHARED THIS PROJECT TO DECODE THE FILES
+    const sharedFromUserDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: sharedDetails.userIdFrom
+      }
+    })
+
+    if (!sharedFromUserDetails || !sharedFromUserDetails.publicKey) {
+      return false
+    }
+
+    const encryptedContent = await encryptData(
+      formData.content,
+      sharedFromUserDetails.publicKey
+    )
+
+    await prisma.githubFile.create({
+      data: {
+        name: formData.name,
+        encryptedContent: encryptedContent,
+        projectId: projectDetails.id,
+        extension: formData.extension,
+        type: type
+      }
+    })
+    revalidatePath('/forked(.*)')
     return true
   } catch (err) {
     console.log(err)
