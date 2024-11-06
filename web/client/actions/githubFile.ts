@@ -74,6 +74,7 @@ export async function getGithubFilesByProjectSlug(
         slug
       },
       select: {
+        id: true,
         files: {
           select: {
             id: true,

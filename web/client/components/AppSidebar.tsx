@@ -1,5 +1,8 @@
 import { fetchUserRepos } from '@/actions/github'
-import { getGithubProjectDetailsByUserID } from '@/actions/githubProject'
+import {
+  getGithubProjectDetailsByUserID,
+  getGithubSharedProjectByUserId
+} from '@/actions/githubProject'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,6 +42,7 @@ export default async function AppSidebar() {
     ? await fetchUserRepos(githubUser.username || '')
     : []
   const githubDbProjectDetails = await getGithubProjectDetailsByUserID(userId)
+  const sharedProjects = await getGithubSharedProjectByUserId(userId)
 
   return (
     <Sidebar variant='inset'>
@@ -99,6 +103,59 @@ export default async function AppSidebar() {
                             <Link
                               className='flex w-full flex-row'
                               href={`/forked/${item.name}`}
+                            >
+                              <Folder className='mr-2 size-4' />
+                              <span>View Project</span>
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </SidebarMenuItem>
+                  )
+                })}
+            </ScrollArea>
+          </SidebarMenu>
+        </SidebarGroup>
+        <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
+          <SidebarGroupLabel>
+            <Link href='/shared'>Shared projects</Link>
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            <ScrollArea className='max-h-80'>
+              {sharedProjects && sharedProjects.length === 0 && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <span>No records found</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+              {sharedProjects &&
+                sharedProjects.map((item: any) => {
+                  return (
+                    <SidebarMenuItem key={item.project.name}>
+                      <SidebarMenuButton asChild>
+                        <Link href={`/shared/${item.project.name}`}>
+                          <span className='capitalize'>
+                            {item.project.name}
+                          </span>
+                        </Link>
+                      </SidebarMenuButton>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <SidebarMenuAction showOnHover>
+                            <MoreHorizontal />
+                            <span className='sr-only'>More</span>
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          className='w-48'
+                          side='bottom'
+                          align='end'
+                        >
+                          <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
+                            <Link
+                              className='flex w-full flex-row'
+                              href={`/shared/${item.project.name}`}
                             >
                               <Folder className='mr-2 size-4' />
                               <span>View Project</span>

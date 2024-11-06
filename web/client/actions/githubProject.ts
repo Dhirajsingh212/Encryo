@@ -38,3 +38,24 @@ export async function createNewGithubProject(
     return false
   }
 }
+
+export async function getGithubSharedProjectByUserId(userId: string) {
+  try {
+    const projectDetails = await prisma.githubShared.findMany({
+      where: {
+        userIdTo: userId
+      },
+      select: {
+        project: {
+          select: {
+            name: true,
+            slug: true
+          }
+        }
+      }
+    })
+    return projectDetails
+  } catch (err) {
+    return null
+  }
+}
