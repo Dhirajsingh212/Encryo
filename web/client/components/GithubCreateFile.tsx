@@ -51,10 +51,12 @@ export default function GithubCreateFile({
         <h2 className='text-2xl font-semibold'>Config Files</h2>
         <div className='flex flex-row gap-2'>
           <MultiStepDialog />
-          <Button onClick={downloadZip}>
-            <ArrowDownToLine className='size-4 sm:mr-2' />
-            <span className='visible max-sm:hidden'>Download</span>
-          </Button>
+          {githubFiles.length > 0 && (
+            <Button onClick={downloadZip}>
+              <ArrowDownToLine className='size-4 sm:mr-2' />
+              <span className='visible max-sm:hidden'>Download</span>
+            </Button>
+          )}
         </div>
       </div>
       <AnimatePresence>

@@ -1,9 +1,9 @@
-import { getServicesDataByProjectSlug } from '@/actions/githubService'
 import { getSharedProjectDetailsByUserIdAndSlug } from '@/actions/sharedProject'
+import { getSharedServicedDetailsByUserIdAndSlug } from '@/actions/sharedServices'
 import GithubSharedWriteAccess from '@/components/GithubSharedWriteAccess'
+import SharedGithubWriteAccessService from '@/components/SharedGithubWriteAccessService'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { auth } from '@clerk/nextjs/server'
-
 const Page = async ({ params }: { params: { id: string[] } }) => {
   const { userId } = auth()
   if (!userId) {
@@ -14,7 +14,10 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
     userId,
     params.id[0]
   )
-  // const servicesData = await getServicesDataByProjectSlug(params.id[0])
+  const servicesData = await getSharedServicedDetailsByUserIdAndSlug(
+    userId,
+    params.id[0]
+  )
 
   if (!githubFileDetails) {
     return (
@@ -40,7 +43,12 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           />
         </TabsContent>
         <TabsContent value='service' className='flex flex-col gap-4 sm:px-4'>
-          {/* <GithubService services={servicesData || []} /> */}
+          {servicesData && (
+            <SharedGithubWriteAccessService
+              access={servicesData.access}
+              services={servicesData?.decryptedData || []}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </div>
