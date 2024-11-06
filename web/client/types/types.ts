@@ -39,3 +39,11 @@ export interface FormData {
   extension: string
   content: string
 }
+
+export interface GithubFile {
+  id: string
+  name: string
+  encryptedContent: string
+  type: string
+  extension: string
+}
