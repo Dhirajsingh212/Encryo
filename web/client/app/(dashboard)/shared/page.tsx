@@ -1,4 +1,3 @@
-import { getGithubProjectDetailsByUserID } from '@/actions/githubProject'
 import { getSharedProjectsByUserId } from '@/actions/sharedServices'
 import { Card, CardContent } from '@/components/ui/card'
 import { auth } from '@clerk/nextjs/server'
