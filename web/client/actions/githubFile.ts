@@ -1,8 +1,9 @@
 'use server'
 
-import { encryptData } from '@/lib/key'
+import { decryptData, encryptData } from '@/lib/key'
 import prisma from '@/lib/prisma'
 import { FormData } from '@/types/types'
+import { revalidatePath } from 'next/cache'
 
 export async function addFileToGithubProject(
   formData: FormData,
@@ -31,20 +32,21 @@ export async function addFileToGithubProject(
       return false
     }
 
-    // const encryptedContent = await encryptData(
-    //   formData.content,
-    //   userDetails.publicKey
-    // )
+    const encryptedContent = await encryptData(
+      formData.content,
+      userDetails.publicKey
+    )
 
     await prisma.githubFile.create({
       data: {
         name: formData.name,
-        encryptedContent: formData.content,
+        encryptedContent: encryptedContent,
         projectId: projectDetails.id,
         extension: formData.extension,
         type: type
       }
     })
+    revalidatePath('/forked(.*)')
     return true
   } catch (err) {
     console.log(err)
@@ -52,8 +54,21 @@ export async function addFileToGithubProject(
   }
 }
 
-export async function getGithubFilesByProjectSlug(slug: string) {
+export async function getGithubFilesByProjectSlug(
+  slug: string,
+  userId: string
+) {
   try {
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: userId
+      }
+    })
+
+    if (!userDetails) {
+      return null
+    }
+
     const fileDetails = await prisma.githubProject.findFirst({
       where: {
         slug
@@ -61,6 +76,7 @@ export async function getGithubFilesByProjectSlug(slug: string) {
       select: {
         files: {
           select: {
+            id: true,
             name: true,
             encryptedContent: true,
             extension: true,
@@ -69,9 +85,45 @@ export async function getGithubFilesByProjectSlug(slug: string) {
         }
       }
     })
-    return fileDetails
+
+    if (!fileDetails || !fileDetails.files) {
+      return null
+    }
+
+    const decryptedData = await Promise.all(
+      fileDetails.files.map(async item => {
+        const decryptedValue = await decryptData(
+          item.encryptedContent,
+          userDetails.privateKey!
+        )
+        return {
+          ...item,
+          encryptedContent: decryptedValue
+        }
+      })
+    )
+
+    return {
+      ...fileDetails,
+      files: decryptedData
+    }
   } catch (err) {
     console.log(err)
     return null
+  }
+}
+
+export async function deleteFileById(id: string) {
+  try {
+    await prisma.githubFile.deleteMany({
+      where: {
+        id
+      }
+    })
+    revalidatePath('/forked(.*)')
+    return true
+  } catch (err) {
+    console.log(err)
+    return false
   }
 }

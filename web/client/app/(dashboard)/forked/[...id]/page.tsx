@@ -10,7 +10,20 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
     return null
   }
 
-  const githubFileDetails = await getGithubFilesByProjectSlug(params.id[0])
+  const githubFileDetails = await getGithubFilesByProjectSlug(
+    params.id[0],
+    userId
+  )
+
+  if (!githubFileDetails) {
+    return (
+      <div>
+        <p className='text-xl font-semibold text-violet-600'>
+          Project not added to personal
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className=''>

@@ -1,20 +1,29 @@
 'use client'
 
-import { useState } from 'react'
-import { FaFileAlt, FaEye, FaEdit, FaTrash } from 'react-icons/fa'
-import { motion, AnimatePresence } from 'framer-motion'
-import MultiStepDialog from './MultiStepDialog'
-import { Card, CardContent } from '@/components/ui/card'
+import { deleteFileById } from '@/actions/githubFile'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip'
+import { showToast } from '@/toast'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useTheme } from 'next-themes'
+import { useState } from 'react'
+import { FaEdit, FaFileAlt, FaTrash } from 'react-icons/fa'
 import GithubContentViewDialog from './GithubContentViewDialog'
+import MultiStepDialog from './MultiStepDialog'
+import { usePathname } from 'next/navigation'
+import { extractZip } from '@/actions/convertZip'
+import { useAuth } from '@clerk/nextjs'
+import { saveAs } from 'file-saver'
+import { ArrowDownToLine } from 'lucide-react'
 
 interface GithubFile {
+  id: string
   name: string
   encryptedContent: string
   type: string
@@ -27,17 +36,67 @@ export default function GithubCreateFile({
   githubFiles?: GithubFile[]
 }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { theme } = useTheme()
+  const { userId } = useAuth()
+  const path = usePathname()
+
+  const deleteHandler = async (id: string) => {
+    try {
+      setIsLoading(true)
+      const response = await deleteFileById(id)
+      if (response) {
+        showToast('success', 'Deleted successfully', theme)
+      } else {
+        showToast('error', 'Failed to delete', theme)
+      }
+    } catch (err) {
+      console.log(err)
+      showToast('error', 'Failed to delete', theme)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const downloadZip = async () => {
+    try {
+      if (!userId) {
+        showToast('error', 'User not logged in', theme)
+        return
+      }
+
+      const response = await extractZip(userId, path.split('/')[2])
+
+      if (!response) {
+        throw new Error('Failed to download zip file')
+      }
+
+      const blob = new Blob([new Uint8Array(response)], {
+        type: 'application/zip'
+      })
+
+      saveAs(blob, 'files.zip')
+    } catch (error) {
+      console.error('Error downloading zip:', error)
+    }
+  }
 
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <h2 className='text-2xl font-semibold'>Config Files</h2>
-        <MultiStepDialog />
+        <div className='flex flex-row gap-2'>
+          <MultiStepDialog />
+          <Button onClick={downloadZip}>
+            <ArrowDownToLine className='mr-2 size-4' />
+            Download
+          </Button>
+        </div>
       </div>
       <AnimatePresence>
         {githubFiles.map((item: GithubFile, index: number) => (
           <motion.div
-            key={index}
+            key={item.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -84,7 +143,14 @@ export default function GithubCreateFile({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant='ghost' size='icon'>
+                          <Button
+                            disabled={isLoading}
+                            onClick={async () => {
+                              await deleteHandler(item.id)
+                            }}
+                            variant='ghost'
+                            size='icon'
+                          >
                             <FaTrash className='h-4 w-4' />
                           </Button>
                         </TooltipTrigger>

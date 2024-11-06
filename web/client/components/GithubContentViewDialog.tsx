@@ -5,6 +5,7 @@ import { Button } from './ui/button'
 import { useState } from 'react'
 import { showToast } from '@/toast'
 import { useTheme } from 'next-themes'
+import { ScrollArea } from './ui/scroll-area'
 
 const GithubContentViewDialog = ({ content }: { content: string }) => {
   const [copySuccess, setCopySuccess] = useState(false)
@@ -29,9 +30,11 @@ const GithubContentViewDialog = ({ content }: { content: string }) => {
         </Button>
       </DialogTrigger>
       <DialogContent className='max-h-[90vh] w-[300px] overflow-y-auto rounded-lg border-none bg-slate-950 bg-gradient-to-br pt-10 text-white transition-colors duration-300 dark:from-[#1a1625] dark:to-[#231c35] dark:text-white sm:w-full'>
-        <p className='no-scrollbar h-60 overflow-scroll whitespace-pre rounded-lg border border-slate-700 bg-slate-700 p-2'>
-          {content}
-        </p>
+        <ScrollArea className='h-60 rounded-lg border border-slate-700 bg-slate-700 p-2'>
+          <p className='no-scrollbar overflow-x-scroll whitespace-pre'>
+            {content}
+          </p>
+        </ScrollArea>
         <Button onClick={handleCopy} className='mt-2'>
           {copySuccess ? 'Copied!' : 'Copy'}
         </Button>
