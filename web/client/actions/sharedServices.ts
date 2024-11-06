@@ -80,6 +80,29 @@ export async function getSharedServicedDetailsByUserIdAndSlug(
   }
 }
 
+export async function getSharedProjectsByUserId(userId: string) {
+  try {
+    const sharedDetails = await prisma.githubShared.findMany({
+      where: {
+        userIdTo: userId
+      },
+      select: {
+        project: {
+          select: {
+            name: true,
+            id: true,
+            createdAt: true
+          }
+        }
+      }
+    })
+    return sharedDetails
+  } catch (err) {
+    console.log(err)
+    return null
+  }
+}
+
 export async function addSharedGithubService(
   serviceData: ServiceForm,
   projectSlug: string,
