@@ -95,8 +95,8 @@ const MultiStepDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button className='bg-violet-600 text-white hover:bg-violet-700'>
-          <PlusSquare className='mr-2 h-4 w-4' />
-          Add files
+          <PlusSquare className='h-4 w-4 sm:mr-2' />
+          <span className='visible max-sm:hidden'>Add files</span>
         </Button>
       </DialogTrigger>
       <DialogContent className='flex max-h-[90vh] w-[90vw] max-w-4xl flex-col gap-4 overflow-hidden rounded-xl border-none bg-gradient-to-br from-slate-900 to-slate-800 p-0 text-white shadow-2xl max-sm:overflow-y-scroll'>

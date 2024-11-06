@@ -52,14 +52,15 @@ export default function GithubCreateFile({
         <div className='flex flex-row gap-2'>
           <MultiStepDialog />
           <Button onClick={downloadZip}>
-            <ArrowDownToLine className='mr-2 size-4' />
-            Download
+            <ArrowDownToLine className='size-4 sm:mr-2' />
+            <span className='visible max-sm:hidden'>Download</span>
           </Button>
         </div>
       </div>
       <AnimatePresence>
+        {githubFiles.length === 0 && <p>No files found.</p>}
         {githubFiles.map((item: GithubFile, index: number) => (
-          <GithubFilesCard item={item} index={index} />
+          <GithubFilesCard key={item.id} item={item} index={index} />
         ))}
       </AnimatePresence>
     </div>

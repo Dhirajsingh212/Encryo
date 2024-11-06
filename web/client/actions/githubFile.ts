@@ -127,3 +127,42 @@ export async function deleteFileById(id: string) {
     return false
   }
 }
+
+export async function updateGithubFileById(
+  formData: FormData,
+  id: string,
+  userId: string
+) {
+  try {
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: userId
+      }
+    })
+
+    if (!userDetails || !userDetails.publicKey || !userDetails.privateKey) {
+      return false
+    }
+
+    const encryptedContent = await encryptData(
+      formData.content,
+      userDetails.publicKey
+    )
+
+    await prisma.githubFile.update({
+      where: {
+        id: id
+      },
+      data: {
+        name: formData.name,
+        encryptedContent: encryptedContent,
+        extension: formData.extension
+      }
+    })
+    revalidatePath('/forked(.*)')
+    return true
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}

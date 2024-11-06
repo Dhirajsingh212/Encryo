@@ -20,61 +20,25 @@ model User {
   limit            Int              @default(5)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
-  projects         Project[]
   githubProjects   GithubProject[]
-  sharedProjects   Shared[]         @relation("SharedWith")
-  sharedByProjects Shared[]         @relation("SharedBy")
+  // sharedProjects   Shared[]         @relation("SharedWith")
+  // sharedByProjects Shared[]         @relation("SharedBy")
   notifications    Notification[]
 }
 
-model Project {
-  id               String           @id @default(cuid())
-  name             String
-  slug             String           @unique
-  deployed         Boolean
-  link             String?
-  userId           String
-  icon             String
-  user             User             @relation(fields: [userId], references: [id])
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  envs             Env[]
-  service          Service[]
-  sharedWith       Shared[]
-}
 
-model Service {
-  id               String           @id @default(cuid())
-  name             String
-  value            String
-  link             String
-  expDate          String
-  projectId        String
-  project          Project          @relation(fields: [projectId], references: [id])
-  createdAt        DateTime         @default(now())
-}
-
-model Env {
-  id               String           @id @default(cuid())
-  name             String
-  value            String
-  projectId        String
-  project          Project          @relation(fields: [projectId], references: [id])
-  createdAt        DateTime         @default(now())
-}
-
-model Shared {
-  id               String           @id @default(cuid())
-  projectId        String
-  userIdFrom       String
-  emailIdTo        String
-  isAccepted       Boolean          @default(false)
-  privilege        Privilege
-  project          Project          @relation(fields: [projectId], references: [id])
-  userFrom         User             @relation("SharedBy", fields: [userIdFrom], references: [clerkUserId])
-  userTo           User             @relation("SharedWith", fields: [emailIdTo], references: [email])
-  createdAt        DateTime         @default(now())
-}
+// model Shared {
+//   id               String           @id @default(cuid())
+//   projectId        String
+//   userIdFrom       String
+//   emailIdTo        String
+//   isAccepted       Boolean          @default(false)
+//   privilege        Privilege
+//   project          Project          @relation(fields: [projectId], references: [id])
+//   userFrom         User             @relation("SharedBy", fields: [userIdFrom], references: [clerkUserId])
+//   userTo           User             @relation("SharedWith", fields: [emailIdTo], references: [email])
+//   createdAt        DateTime         @default(now())
+// }
 
 model Notification {
   id               String           @id @default(cuid())

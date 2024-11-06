@@ -1,7 +1,5 @@
-import {
-  getProjectsByUserId,
-  getSharedProjectByUserId
-} from '@/actions/project'
+import { fetchUserRepos } from '@/actions/github'
+import { getGithubProjectDetailsByUserID } from '@/actions/githubProject'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,14 +20,7 @@ import {
 import { auth, clerkClient } from '@clerk/nextjs/server'
 import { Command, Folder, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
-import * as FaIcons from 'react-icons/fa'
-import * as MdIcons from 'react-icons/md'
-import AddProjectDialog from './AddProjectDialog'
-import { fetchUserRepos } from '@/actions/github'
 import { ScrollArea } from './ui/scroll-area'
-import { getGithubProjectDetailsByUserID } from '@/actions/githubProject'
-
-const allIconsObject: any = { ...FaIcons, ...MdIcons }
 
 export default async function AppSidebar() {
   const { userId } = auth()
@@ -47,8 +38,6 @@ export default async function AppSidebar() {
   const repos = githubUser
     ? await fetchUserRepos(githubUser.username || '')
     : []
-  const userProjects = await getProjectsByUserId(userId)
-  const sharedProjects = await getSharedProjectByUserId(userId)
   const githubDbProjectDetails = await getGithubProjectDetailsByUserID(userId)
 
   return (
@@ -72,105 +61,11 @@ export default async function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className='no-scrollbar'>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            <Link href='/forked'>Forked projects</Link>
+          </SidebarGroupLabel>
           <SidebarMenu>
-            {userProjects &&
-              userProjects.map(item => {
-                const IconComp = allIconsObject[item.icon]
-                return (
-                  <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild>
-                      <Link href={`/home/${item.slug}`}>
-                        {IconComp && <IconComp />}
-                        <span className='capitalize'>{item.name}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuAction showOnHover>
-                          <MoreHorizontal />
-                          <span className='sr-only'>More</span>
-                        </SidebarMenuAction>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className='w-48'
-                        side='bottom'
-                        align='end'
-                      >
-                        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                          <Link
-                            className='flex w-full flex-row'
-                            href={`/home/${item.slug}`}
-                          >
-                            <Folder className='mr-2 size-4' />
-                            <span>View Project</span>
-                          </Link>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </SidebarMenuItem>
-                )
-              })}
-            <SidebarMenuItem>
-              <SidebarMenuButton>
-                <AddProjectDialog></AddProjectDialog>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
-        <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
-          <SidebarGroupLabel>Shared projects</SidebarGroupLabel>
-          <SidebarMenu>
-            {sharedProjects && sharedProjects.length === 0 && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <span>No records found</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-            {sharedProjects &&
-              sharedProjects.map(item => {
-                const IconComp = allIconsObject[item.project.icon]
-                return (
-                  <SidebarMenuItem key={item.project.name}>
-                    <SidebarMenuButton asChild>
-                      <Link href={`/shared/${item.project.slug}`}>
-                        {IconComp && <IconComp />}
-                        <span className='capitalize'>{item.project.name}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuAction showOnHover>
-                          <MoreHorizontal />
-                          <span className='sr-only'>More</span>
-                        </SidebarMenuAction>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className='w-48'
-                        side='bottom'
-                        align='end'
-                      >
-                        <DropdownMenuItem className='focus:bg-violet-600 focus:text-white'>
-                          <Link
-                            className='flex w-full flex-row'
-                            href={`/shared/${item.project.slug}`}
-                          >
-                            <Folder className='mr-2 size-4' />
-                            <span>View Project</span>
-                          </Link>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </SidebarMenuItem>
-                )
-              })}
-          </SidebarMenu>
-        </SidebarGroup>
-        <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
-          <SidebarGroupLabel>Forked projects</SidebarGroupLabel>
-          <SidebarMenu>
-            <ScrollArea className='max-h-56'>
+            <ScrollArea className='max-h-80'>
               {githubDbProjectDetails &&
                 githubDbProjectDetails.length === 0 && (
                   <SidebarMenuItem>
@@ -218,9 +113,11 @@ export default async function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
-          <SidebarGroupLabel>Github projects</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            <Link href='/github'>Github projects</Link>
+          </SidebarGroupLabel>
           <SidebarMenu>
-            <ScrollArea className='max-h-56'>
+            <ScrollArea className='max-h-80'>
               {repos && repos.length === 0 && (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>

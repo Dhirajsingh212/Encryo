@@ -53,7 +53,7 @@ const Header = () => {
             <UserButton />
           </SignedIn>
           <Button asChild className='visible max-md:hidden'>
-            <Link href='/home'>Get Started</Link>
+            <Link href='/forked'>Get Started</Link>
           </Button>
         </div>
       </nav>

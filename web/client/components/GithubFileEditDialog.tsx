@@ -1,20 +1,64 @@
+'use client'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { FormData } from '@/types/types'
+import { FormData, GithubFile } from '@/types/types'
 import { FaEdit } from 'react-icons/fa'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Textarea } from './ui/textarea'
+import { useState } from 'react'
+import { showToast } from '@/toast'
+import { useTheme } from 'next-themes'
+import { useAuth } from '@clerk/nextjs'
+import { updateGithubFileById } from '@/actions/githubFile'
 
-const GithubFileEditDialog = ({
-  formData,
-  setFormData,
-  changeHandler
-}: {
-  formData: any
-  setFormData: any
-  changeHandler: any
-}) => {
+const GithubFileEditDialog = ({ item }: { item: GithubFile }) => {
+  const { theme } = useTheme()
+  const { userId } = useAuth()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [formData, setFormData] = useState<FormData>({
+    name: item.name,
+    content: item.encryptedContent,
+    extension: item.extension
+  })
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev: FormData) => {
+      return {
+        ...prev,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
+
+  const submitHandler = async () => {
+    try {
+      setIsLoading(true)
+      if (!userId) {
+        showToast('error', 'user not logged in', theme)
+        return
+      }
+      if (
+        !formData.name.trim() ||
+        !formData.extension.trim() ||
+        !formData.content.trim()
+      ) {
+        showToast('error', 'Fields cannot be empty in step 2', theme)
+        return
+      }
+      const response = await updateGithubFileById(formData, item.id, userId)
+      if (response) {
+        showToast('success', 'File updated successfully', theme)
+      } else {
+        showToast('error', 'failed to update file', theme)
+      }
+    } catch (err) {
+      showToast('error', 'Failed to update', theme)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -60,7 +104,9 @@ const GithubFileEditDialog = ({
               placeholder='File content'
             />
           </div>
-          <Button>Save</Button>
+          <Button onClick={submitHandler} disabled={isLoading}>
+            Save
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

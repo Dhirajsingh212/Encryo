@@ -27,22 +27,8 @@ const GithubFilesCard = ({
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [formData, setFormData] = useState<FormData>({
-    name: item.name,
-    content: item.encryptedContent,
-    extension: item.extension
-  })
 
   const { theme } = useTheme()
-
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev: FormData) => {
-      return {
-        ...prev,
-        [e.target.name]: e.target.value
-      }
-    })
-  }
 
   const deleteHandler = async (id: string) => {
     try {
@@ -63,7 +49,6 @@ const GithubFilesCard = ({
 
   return (
     <motion.div
-      key={item.id}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -96,11 +81,7 @@ const GithubFilesCard = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <GithubFileEditDialog
-                      formData={formData}
-                      changeHandler={changeHandler}
-                      setFormData={setFormData}
-                    />
+                    <GithubFileEditDialog item={item} />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Edit</p>
