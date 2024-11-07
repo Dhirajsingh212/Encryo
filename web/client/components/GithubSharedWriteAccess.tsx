@@ -12,6 +12,11 @@ import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import GithubSharedFilesCard from './GithubSharedFilesCard'
 import SharedMultiStepDialog from './SharedMultiStepDialog'
+import { Search } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useDebounce } from 'use-debounce'
+import { PaginationComponent } from './PaginationComponent'
+import { Input } from './ui/input'
 
 export default function GithubSharedWriteAccess({
   githubFiles = [],
@@ -20,9 +25,28 @@ export default function GithubSharedWriteAccess({
   githubFiles?: GithubFile[]
   access: string
 }) {
+  const [filteredFiles, setFilteredFiles] = useState(githubFiles)
+  const [start, setStart] = useState(0)
+  const [end, setEnd] = useState(20)
+  const [text, setText] = useState<string>('')
+  const [searchText] = useDebounce(text, 400)
   const { theme } = useTheme()
   const { userId } = useAuth()
   const path = usePathname()
+
+  useEffect(() => {
+    setFilteredFiles(githubFiles)
+  }, [githubFiles])
+
+  useEffect(() => {
+    const filteredData = githubFiles.filter(item => {
+      return (
+        item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.extension.toLowerCase().includes(searchText.toLowerCase())
+      )
+    })
+    setFilteredFiles(filteredData)
+  }, [searchText])
 
   const downloadZip = async () => {
     try {
@@ -49,9 +73,9 @@ export default function GithubSharedWriteAccess({
 
   return (
     <div className='space-y-6'>
-      <div className='flex items-center justify-between'>
+      <div className='flex flex-col justify-between max-lg:gap-2 lg:flex-row lg:items-center'>
         <h2 className='text-2xl font-semibold'>Config Files</h2>
-        <div className='flex flex-row gap-2'>
+        <div className='flex flex-row-reverse gap-2 lg:flex-row'>
           <SharedMultiStepDialog />
           {githubFiles.length > 0 && (
             <Button onClick={downloadZip}>
@@ -59,11 +83,20 @@ export default function GithubSharedWriteAccess({
               <span className='visible max-sm:hidden'>Download</span>
             </Button>
           )}
+          <div className='relative w-full'>
+            <Search className='absolute left-3 top-1/2 size-4 -translate-y-1/2 transform text-muted-foreground' />
+            <Input
+              className='w-full bg-card pl-10 outline-none'
+              placeholder='Search file...'
+              value={text}
+              onChange={e => setText(e.target.value)}
+            />
+          </div>
         </div>
       </div>
       <AnimatePresence>
-        {githubFiles.length === 0 && <p>No files found.</p>}
-        {githubFiles.map((item: GithubFile, index: number) => (
+        {filteredFiles.length === 0 && <p>No files found.</p>}
+        {filteredFiles.map((item: GithubFile, index: number) => (
           <GithubSharedFilesCard
             access={access}
             key={item.id}
@@ -72,6 +105,17 @@ export default function GithubSharedWriteAccess({
           />
         ))}
       </AnimatePresence>
+      {filteredFiles.length > 20 && (
+        <div>
+          <PaginationComponent
+            start={start}
+            end={end}
+            setStart={setStart}
+            setEnd={setEnd}
+            contentSize={filteredFiles.length}
+          />
+        </div>
+      )}
     </div>
   )
 }
