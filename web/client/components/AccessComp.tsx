@@ -47,6 +47,7 @@ import { Check, ChevronsUpDown, Trash2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import { AccessAlertDialog } from './AccessAlertDialog'
+import Spinner from './Spinner'
 
 type ProjectUser = {
   privilege: 'READ' | 'WRITE'
@@ -236,7 +237,7 @@ export default function AccessComp({
                       size='sm'
                       onClick={() => removeUser(user.userTo.clerkUserId)}
                     >
-                      <Trash2 className='h-4 w-4' />
+                      {isLoading ? <Spinner /> : <Trash2 className='h-4 w-4' />}
                     </Button>
                   </TableCell>
                 </TableRow>

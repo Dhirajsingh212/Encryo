@@ -8,6 +8,7 @@ import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { FaEdit } from 'react-icons/fa'
+import Spinner from './Spinner'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -112,7 +113,7 @@ const GithubSharedFileEditDialog = ({ item }: { item: GithubFile }) => {
             />
           </div>
           <Button onClick={submitHandler} disabled={isLoading}>
-            Save
+            {isLoading ? <Spinner /> : 'Save'}
           </Button>
         </div>
       </DialogContent>

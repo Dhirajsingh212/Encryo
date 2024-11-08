@@ -11,6 +11,7 @@ import { showToast } from '@/toast'
 import { useTheme } from 'next-themes'
 import { useAuth } from '@clerk/nextjs'
 import { updateGithubFileById } from '@/actions/githubFile'
+import Spinner from './Spinner'
 
 const GithubFileEditDialog = ({ item }: { item: GithubFile }) => {
   const { theme } = useTheme()
@@ -105,7 +106,7 @@ const GithubFileEditDialog = ({ item }: { item: GithubFile }) => {
             />
           </div>
           <Button onClick={submitHandler} disabled={isLoading}>
-            Save
+            {isLoading ? <Spinner /> : 'Save'}
           </Button>
         </div>
       </DialogContent>

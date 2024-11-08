@@ -9,6 +9,7 @@ import { createNewGithubProject } from '@/actions/githubProject'
 import { useAuth } from '@clerk/nextjs'
 import { showToast } from '@/toast'
 import { useTheme } from 'next-themes'
+import Spinner from '@/components/Spinner'
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -56,8 +57,14 @@ const Page = () => {
             className='absolute inset-0 bg-gradient-to-br from-purple-400/20 to-pink-300/20 opacity-0 group-hover:opacity-100'
           />
           <div className='flex flex-col items-center justify-center gap-2'>
-            <PlusCircleIcon className='drop-shadow-glow size-10 text-white lg:size-12' />
-            <p className='text-xl lg:text-2xl'>Add this to personal</p>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <>
+                <PlusCircleIcon className='drop-shadow-glow size-10 text-white lg:size-12' />
+                <p className='text-xl lg:text-2xl'>Add this to personal</p>
+              </>
+            )}
           </div>
         </Button>
       </motion.div>

@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { FaFileAlt, FaTrash } from 'react-icons/fa'
 import GithubContentViewDialog from './GithubContentViewDialog'
 import GithubSharedFileEditDialog from './GithubSharedFileEditDialog'
+import Spinner from './Spinner'
 
 const GithubSharedFilesCard = ({
   item,
@@ -104,7 +105,11 @@ const GithubSharedFilesCard = ({
                         variant='ghost'
                         size='icon'
                       >
-                        <FaTrash className='h-4 w-4' />
+                        {isLoading ? (
+                          <Spinner />
+                        ) : (
+                          <FaTrash className='h-4 w-4' />
+                        )}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>

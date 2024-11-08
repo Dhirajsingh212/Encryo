@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label'
 import { showToast } from '@/toast'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
+import Spinner from './Spinner'
 
 export default function EmailDialog({
   btnText,
@@ -100,7 +101,7 @@ export default function EmailDialog({
           </div>
           <DialogFooter>
             <Button disabled={isLoading} type='submit'>
-              Request Plan
+              {isLoading ? <Spinner /> : 'Request Plan'}
             </Button>
           </DialogFooter>
         </form>

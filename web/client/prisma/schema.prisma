@@ -65,7 +65,7 @@ model GithubProject {
 
 model GithubFile {
   id               String        @id @default(uuid())
-  name             String
+  name             String        
   encryptedContent String        @db.Text
   extension        String
   type             String
@@ -73,17 +73,21 @@ model GithubFile {
   projectId        String
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
+
+  @@unique([name, projectId]) 
 }
 
 model GithubService {
   id               String           @id @default(cuid())
-  name             String
+  name             String           
   value            String
   link             String
   expDate          String
   githubProjectId  String
   githubProject    GithubProject    @relation(fields: [githubProjectId], references: [id])
   createdAt        DateTime         @default(now())
+
+  @@unique([name, githubProjectId]) 
 }
 
 

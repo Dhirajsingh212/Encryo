@@ -1,6 +1,6 @@
 'use client'
 
-import { bulkUploadToDb } from '@/actions/uploadMultiple'
+import { bulkSharedUploadToDb } from '@/actions/uploadMultiple'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -19,7 +19,7 @@ import { usePathname } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import Spinner from './Spinner'
 
-export default function UploadMultipeFiles() {
+export default function UploadMultipleFilesShared() {
   const [files, setFiles] = useState<File[]>([])
   const [dragActive, setDragActive] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -70,7 +70,7 @@ export default function UploadMultipeFiles() {
       const formData = new FormData()
       files.forEach(file => formData.append('files', file))
 
-      const response = await bulkUploadToDb(
+      const response = await bulkSharedUploadToDb(
         formData,
         userId,
         path.split('/')[2]

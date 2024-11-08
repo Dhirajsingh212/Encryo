@@ -8,6 +8,7 @@ import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import { FaPlusSquare } from 'react-icons/fa'
 import { Button } from './ui/button'
+import Spinner from './Spinner'
 
 const GenKeyButton = () => {
   const { theme } = useTheme()
@@ -32,8 +33,14 @@ const GenKeyButton = () => {
 
   return (
     <Button disabled={isLoading} className='' onClick={clickHandler}>
-      <FaPlusSquare className='mr-2' />
-      Generate keys
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          <FaPlusSquare className='mr-2' />
+          Generate keys
+        </>
+      )}
     </Button>
   )
 }

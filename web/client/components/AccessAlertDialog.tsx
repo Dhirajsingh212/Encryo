@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import Spinner from './Spinner'
 
 export function AccessAlertDialog({
   addUser,
@@ -23,7 +24,13 @@ export function AccessAlertDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button disabled={isLoading}>
-          <Plus className='mr-2 h-4 w-4' /> Add User
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <>
+              <Plus className='mr-2 h-4 w-4' /> Add User
+            </>
+          )}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className='border-none bg-slate-950'>

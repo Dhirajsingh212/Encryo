@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import CreateServiceForm from './CreateServiceForm'
 import { Button } from './ui/button'
+import Spinner from './Spinner'
 
 const CreateServiceDialog = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -118,7 +119,7 @@ const CreateServiceDialog = () => {
                 disabled={isLoading}
                 className='bg-violet-600 hover:bg-violet-700'
               >
-                Submit
+                {isLoading ? <Spinner /> : 'Submit'}
               </Button>
             </div>
           </motion.div>

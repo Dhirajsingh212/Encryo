@@ -1,22 +1,22 @@
 'use client'
 
-import { extractZip } from '@/actions/convertZip'
+import { extractSharedZip } from '@/actions/convertZip'
 import { Button } from '@/components/ui/button'
 import { showToast } from '@/toast'
 import { GithubFile } from '@/types/types'
 import { useAuth } from '@clerk/nextjs'
 import { saveAs } from 'file-saver'
 import { AnimatePresence } from 'framer-motion'
-import { ArrowDownToLine } from 'lucide-react'
+import { ArrowDownToLine, Search } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
-import GithubSharedFilesCard from './GithubSharedFilesCard'
-import SharedMultiStepDialog from './SharedMultiStepDialog'
-import { Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'use-debounce'
+import GithubSharedFilesCard from './GithubSharedFilesCard'
 import { PaginationComponent } from './PaginationComponent'
+import SharedMultiStepDialog from './SharedMultiStepDialog'
 import { Input } from './ui/input'
+import UploadMultipleFilesShared from './UploadMultipleFilesShared'
 
 export default function GithubSharedWriteAccess({
   githubFiles = [],
@@ -55,7 +55,7 @@ export default function GithubSharedWriteAccess({
         return
       }
 
-      const response = await extractZip(userId, path.split('/')[2])
+      const response = await extractSharedZip(userId, path.split('/')[2])
 
       if (!response) {
         throw new Error('Failed to download zip file')
@@ -76,13 +76,14 @@ export default function GithubSharedWriteAccess({
       <div className='flex flex-col justify-between max-lg:gap-2 lg:flex-row lg:items-center'>
         <h2 className='text-2xl font-semibold'>Config Files</h2>
         <div className='flex flex-row-reverse gap-2 lg:flex-row'>
-          <SharedMultiStepDialog />
+          {access === 'write' && <SharedMultiStepDialog />}
           {githubFiles.length > 0 && (
             <Button onClick={downloadZip}>
               <ArrowDownToLine className='size-4 sm:mr-2' />
               <span className='visible max-sm:hidden'>Download</span>
             </Button>
           )}
+          {access === 'write' && <UploadMultipleFilesShared />}
           <div className='relative w-full'>
             <Search className='absolute left-3 top-1/2 size-4 -translate-y-1/2 transform text-muted-foreground' />
             <Input

@@ -18,6 +18,7 @@ import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import GithubMultistepForm from './GithubMultistepForm'
+import Spinner from './Spinner'
 import { Button } from './ui/button'
 
 const steps = ['Step 1', 'Step 2']
@@ -192,7 +193,7 @@ const SharedMultiStepDialog = () => {
                   disabled={isLoading}
                   className='bg-violet-600 hover:bg-violet-700'
                 >
-                  Submit
+                  {isLoading ? <Spinner /> : 'Submit'}
                 </Button>
               )}
             </div>

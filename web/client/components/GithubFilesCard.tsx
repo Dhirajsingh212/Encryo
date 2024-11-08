@@ -10,13 +10,14 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip'
 import { showToast } from '@/toast'
-import { FormData, GithubFile } from '@/types/types'
+import { GithubFile } from '@/types/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import { FaFileAlt, FaTrash } from 'react-icons/fa'
 import GithubContentViewDialog from './GithubContentViewDialog'
 import GithubFileEditDialog from './GithubFileEditDialog'
+import Spinner from './Spinner'
 
 const GithubFilesCard = ({
   item,
@@ -99,7 +100,11 @@ const GithubFilesCard = ({
                       variant='ghost'
                       size='icon'
                     >
-                      <FaTrash className='h-4 w-4' />
+                      {isLoading ? (
+                        <Spinner />
+                      ) : (
+                        <FaTrash className='h-4 w-4' />
+                      )}
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>

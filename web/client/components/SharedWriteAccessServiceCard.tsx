@@ -23,6 +23,7 @@ import {
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import SharedServiceEditDialog from './SharedServiceEditDialog'
+import Spinner from './Spinner'
 
 const SharedWriteAccessServiceCard = ({
   service,
@@ -81,8 +82,14 @@ const SharedWriteAccessServiceCard = ({
                     onClick={deleteHandler}
                     className='text-destructive focus:bg-destructive focus:text-destructive-foreground'
                   >
-                    <Trash className='mr-2 size-4' />
-                    Delete
+                    {isLoading ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <Trash className='mr-2 size-4' />
+                        Delete
+                      </>
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

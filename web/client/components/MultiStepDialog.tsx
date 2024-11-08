@@ -19,6 +19,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import GithubMultistepForm from './GithubMultistepForm'
 import { Button } from './ui/button'
+import Spinner from './Spinner'
 
 const steps = ['Step 1', 'Step 2']
 
@@ -192,7 +193,7 @@ const MultiStepDialog = () => {
                   disabled={isLoading}
                   className='bg-violet-600 hover:bg-violet-700'
                 >
-                  Submit
+                  {isLoading ? <Spinner /> : 'Submit'}
                 </Button>
               )}
             </div>

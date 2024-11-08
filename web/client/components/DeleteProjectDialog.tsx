@@ -10,6 +10,7 @@ import { showToast } from '@/toast'
 import { EllipsisVertical, Trash2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
+import Spinner from './Spinner'
 
 const DeleteProjectDialog = ({
   projectId,
@@ -47,8 +48,14 @@ const DeleteProjectDialog = ({
           disabled={isLoading}
           className='flex flex-row items-center focus:bg-violet-600 focus:text-white'
         >
-          <Trash2 className='mr-2 size-4' />
-          Delete
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <>
+              <Trash2 className='mr-2 size-4' />
+              Delete
+            </>
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

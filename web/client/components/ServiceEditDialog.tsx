@@ -17,6 +17,7 @@ import { SquarePen } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import Spinner from './Spinner'
 
 export default function ServiceEditDialog({ services }: { services: Service }) {
   const [newService, setNewService] = useState<Omit<Service, 'id'>>({
@@ -115,7 +116,7 @@ export default function ServiceEditDialog({ services }: { services: Service }) {
             />
           </div>
           <Button disabled={isLoading} type='submit' className='self-end'>
-            Update service
+            {isLoading ? <Spinner /> : 'Update service'}
           </Button>
         </form>
       </DialogContent>
