@@ -59,3 +59,37 @@ export async function getGithubSharedProjectByUserId(userId: string) {
     return null
   }
 }
+
+export async function deleteProjectById(projectId: string, userId: string) {
+  try {
+    await prisma.$transaction(async prisma => {
+      await prisma.githubFile.deleteMany({
+        where: {
+          projectId: projectId
+        }
+      })
+      await prisma.githubService.deleteMany({
+        where: {
+          githubProjectId: projectId
+        }
+      })
+      await prisma.githubShared.deleteMany({
+        where: {
+          userIdFrom: userId,
+          githubProjectId: projectId
+        }
+      })
+      await prisma.githubProject.deleteMany({
+        where: {
+          id: projectId
+        }
+      })
+    })
+
+    revalidatePath('/forked(.*)')
+    return true
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}

@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { auth, clerkClient } from '@clerk/nextjs/server'
 import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { format } from 'date-fns'
 
 export default async function Component() {
   const { userId } = auth()
@@ -38,15 +39,15 @@ export default async function Component() {
               <Card className='min-h-40 overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 transition-shadow duration-300 hover:shadow-lg'>
                 <CardContent className='p-6'>
                   <div className='flex flex-row justify-between'>
-                    <Link href={`/github/${project.name}`}>
+                    <Link href={`/github/${project.name}`} className='w-[80%]'>
                       <h2 className='mb-2 line-clamp-2 flex-wrap break-words text-xl font-semibold text-primary'>
                         {project.name}
                       </h2>
                     </Link>
                   </div>
                   <p className='mb-4 text-muted-foreground'>
-                    Created on:
-                    {new Date(project.created_at).toLocaleDateString()}
+                    Created on:{' '}
+                    {format(new Date(project.created_at), 'do MMMM yy')}
                   </p>
                   {project.html_url && (
                     <Link

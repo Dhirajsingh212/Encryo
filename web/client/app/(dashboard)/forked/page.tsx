@@ -1,7 +1,9 @@
 import { getGithubProjectDetailsByUserID } from '@/actions/githubProject'
+import DeleteProjectDialog from '@/components/DeleteProjectDialog'
 import { Card, CardContent } from '@/components/ui/card'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
+import { format } from 'date-fns'
 
 export default async function Component() {
   const { userId } = auth()
@@ -34,10 +36,14 @@ export default async function Component() {
                         {project.name}
                       </h2>
                     </Link>
+                    <DeleteProjectDialog
+                      projectId={project.id}
+                      userId={userId}
+                    />
                   </div>
                   <p className='mb-4 text-muted-foreground'>
-                    Created on:
-                    {new Date(project.createdAt).toLocaleDateString()}
+                    Created on:{' '}
+                    {format(new Date(project.createdAt), 'do MMMM yy')}
                   </p>
                 </CardContent>
               </Card>

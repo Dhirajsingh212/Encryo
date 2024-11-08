@@ -1,6 +1,7 @@
 import { getSharedProjectsByUserId } from '@/actions/sharedServices'
 import { Card, CardContent } from '@/components/ui/card'
 import { auth } from '@clerk/nextjs/server'
+import { format } from 'date-fns'
 import Link from 'next/link'
 
 export default async function Component() {
@@ -36,8 +37,8 @@ export default async function Component() {
                     </Link>
                   </div>
                   <p className='mb-4 text-muted-foreground'>
-                    Created on:
-                    {new Date(item.project.createdAt).toLocaleDateString()}
+                    Created on:{' '}
+                    {format(new Date(item.project.createdAt), 'do MMMM yy')}
                   </p>
                 </CardContent>
               </Card>
