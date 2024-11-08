@@ -16,6 +16,7 @@ import GithubFilesCard from './GithubFilesCard'
 import MultiStepDialog from './MultiStepDialog'
 import { PaginationComponent } from './PaginationComponent'
 import { Input } from './ui/input'
+import UploadMultipeFiles from './UploadMultipeFiles'
 
 export default function GithubCreateFile({
   githubFiles = []
@@ -74,6 +75,7 @@ export default function GithubCreateFile({
         <h2 className='text-2xl font-semibold'>Config Files</h2>
         <div className='flex flex-row-reverse gap-2 lg:flex-row'>
           <MultiStepDialog />
+          <UploadMultipeFiles />
           {githubFiles.length > 0 && (
             <Button onClick={downloadZip}>
               <ArrowDownToLine className='size-4 sm:mr-2' />
@@ -92,7 +94,7 @@ export default function GithubCreateFile({
         </div>
       </div>
       <AnimatePresence>
-        <div className='min-h-screen'>
+        <div className='flex min-h-screen flex-col gap-4'>
           {filteredFiles.length === 0 && <p>No files found.</p>}
           {filteredFiles.map((item: GithubFile, index: number) => (
             <GithubFilesCard key={item.id} item={item} index={index} />
