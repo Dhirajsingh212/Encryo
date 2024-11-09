@@ -75,11 +75,11 @@ export default function UploadMultipleFilesShared() {
         userId,
         path.split('/')[2]
       )
-      if (response) {
-        showToast('success', 'file uploaded', theme)
+      if (response.success) {
+        showToast('success', response.message, theme)
         setFiles([])
       } else {
-        showToast('error', 'failed to upload', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Failed to bulk upload', theme)
@@ -152,7 +152,7 @@ export default function UploadMultipleFilesShared() {
             {isLoading ? (
               <Spinner />
             ) : (
-              `Upload ${files.length} file${files.length !== 1 && 's'}`
+              `Upload ${files.length} file${files.length > 1 ? 's' : ''}`
             )}
           </Button>
         </div>

@@ -152,7 +152,7 @@ export default function UploadMultipeFiles() {
             {isLoading ? (
               <Spinner />
             ) : (
-              `Upload ${files.length} file${files.length !== 1 && 's'}`
+              `Upload ${files.length} file${files.length > 1 ? 's' : ''}`
             )}
           </Button>
         </div>

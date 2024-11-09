@@ -97,7 +97,7 @@ export async function bulkUploadToDb(
     if (errorCount > 0) {
       return {
         message: `${errorCount} files failed to upload`,
-        success: true
+        success: false
       }
     }
     return {
@@ -219,7 +219,7 @@ export async function bulkSharedUploadToDb(
     if (errorCount > 0) {
       return {
         message: `${errorCount} files failed to upload`,
-        success: true
+        success: false
       }
     }
     return {
