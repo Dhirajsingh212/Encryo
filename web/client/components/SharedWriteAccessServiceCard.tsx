@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { showToast } from '@/toast'
 import { Service } from '@/types/types'
+import { format } from 'date-fns'
 import {
   CircleCheck,
   Copy,
@@ -128,7 +129,9 @@ const SharedWriteAccessServiceCard = ({
         <div className='flex flex-col gap-2 rounded-lg bg-muted p-3'>
           <div className='flex items-center justify-between gap-2'>
             <span className='text-sm font-medium'>Expiry Date</span>
-            <span className='text-sm tabular-nums'>{service.expDate}</span>
+            <span className='text-sm tabular-nums'>
+              {format(new Date(service.expDate), 'do MMMM yy')}
+            </span>
           </div>
           <div className='flex items-center justify-between gap-2'>
             <span className='text-sm font-medium'>Service Link</span>
@@ -142,6 +145,17 @@ const SharedWriteAccessServiceCard = ({
               <ExternalLink className='size-3' />
             </a>
           </div>
+        </div>
+        <div className='flex flex-row justify-end'>
+          {new Date(service.expDate) > new Date() ? (
+            <span className='rounded-md border border-green-600 bg-green-500 px-2 py-1 text-sm font-semibold text-white hover:bg-inherit hover:text-green-500'>
+              Active
+            </span>
+          ) : (
+            <span className='rounded-md border border-rose-600 bg-rose-500 px-2 py-1 text-sm font-semibold text-white hover:bg-inherit hover:text-rose-500'>
+              Expired
+            </span>
+          )}
         </div>
       </CardContent>
     </Card>
