@@ -3,6 +3,7 @@ import { getServicesDataByProjectSlug } from '@/actions/githubService'
 import { getSharedUserByProjectSlug } from '@/actions/githubShared'
 import { getAllUserDetails } from '@/actions/user'
 import AccessComp from '@/components/AccessComp'
+import CliComp from '@/components/CliComp'
 import GithubCreateFile from '@/components/GithubCreateFile'
 import GithubService from '@/components/GithubService'
 import SettingsComp from '@/components/SettingsComp'
@@ -69,7 +70,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <SettingsComp />
         </TabsContent>
         <TabsContent value='cli' className='px-4'>
-          CLI tool command
+          <CliComp />
         </TabsContent>
       </Tabs>
     </div>

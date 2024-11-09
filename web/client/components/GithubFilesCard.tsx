@@ -62,7 +62,7 @@ const GithubFilesCard = ({
       >
         <CardContent className='p-4'>
           <div className='flex items-center justify-between'>
-            <div className='flex items-center space-x-3'>
+            <div className='flex flex-wrap items-center space-x-3 break-words'>
               <FaFileAlt className='text-2xl text-primary' />
               <span className='text-lg font-medium'>
                 {item.name}.{item.extension}
