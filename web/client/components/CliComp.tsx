@@ -29,7 +29,7 @@ export default function CliComp() {
   const isShared = path.split('/')[1] === 'shared'
 
   const commands = [
-    `curl -X POST -H "Content-Type: application/json" -d '{"userId":"${userId}", "slug":"${slug}", "shared":"${isShared}"}' http://localhost:3000/api/getFiles --output download.zip`,
+    `curl -X POST -H "Content-Type: application/json" -d '{"userId":"${userId}", "slug":"${slug}", "shared":"${isShared}"}' ${process.env.NEXT_PUBLIC_EMAIL_URL}api/getFiles --output download.zip`,
     'unzip download.zip',
     'rm download.zip'
   ]
