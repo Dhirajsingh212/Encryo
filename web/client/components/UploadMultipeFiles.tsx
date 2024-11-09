@@ -75,11 +75,11 @@ export default function UploadMultipeFiles() {
         userId,
         path.split('/')[2]
       )
-      if (response) {
-        showToast('success', 'file uploaded', theme)
+      if (response.success) {
+        showToast('success', response.message, theme)
         setFiles([])
       } else {
-        showToast('error', 'failed to upload', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Failed to bulk upload', theme)

@@ -55,10 +55,10 @@ const GithubSharedFileEditDialog = ({ item }: { item: GithubFile }) => {
         item.id,
         formData
       )
-      if (response) {
+      if (response.success) {
         showToast('success', 'File updated successfully', theme)
       } else {
-        showToast('error', 'failed to update file', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Failed to update', theme)

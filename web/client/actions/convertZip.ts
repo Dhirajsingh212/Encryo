@@ -12,6 +12,20 @@ export async function extractZip(userId: string, projectSlug: string) {
       }
     })
 
+    if (!userDetails) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
+    }
+
+    if (!userDetails.publicKey) {
+      return {
+        message: 'Public key does not exists',
+        success: false
+      }
+    }
+
     const projectDetails = await prisma.githubProject.findFirst({
       where: {
         slug: projectSlug
@@ -29,13 +43,11 @@ export async function extractZip(userId: string, projectSlug: string) {
       }
     })
 
-    if (
-      !projectDetails ||
-      !projectDetails.files ||
-      !userDetails ||
-      !userDetails.publicKey
-    ) {
-      return null
+    if (!projectDetails || !projectDetails.files) {
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
     }
 
     // console.log(projectDetails.files)
@@ -66,10 +78,17 @@ export async function extractZip(userId: string, projectSlug: string) {
 
     const zipContent = await zip.generateAsync({ type: 'nodebuffer' })
 
-    return zipContent
+    return {
+      message: 'Success',
+      zipContent,
+      success: true
+    }
   } catch (err) {
-    console.log(err)
-    return null
+    return {
+      message: 'Something went wrong',
+      zipContent: null,
+      success: false
+    }
   }
 }
 
@@ -92,11 +111,25 @@ export async function extractSharedZip(userId: string, projectSlug: string) {
       }
     })
 
+    if (!projectDetails || !projectDetails.files) {
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
+    }
+
     const sharedDetails = await prisma.githubShared.findFirst({
       where: {
         userIdTo: userId
       }
     })
+
+    if (!sharedDetails) {
+      return {
+        message: 'User not authorized to access this',
+        success: false
+      }
+    }
 
     const userDetails = await prisma.user.findFirst({
       where: {
@@ -104,13 +137,18 @@ export async function extractSharedZip(userId: string, projectSlug: string) {
       }
     })
 
-    if (
-      !projectDetails ||
-      !projectDetails.files ||
-      !userDetails ||
-      !userDetails.publicKey
-    ) {
-      return null
+    if (!userDetails) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
+    }
+
+    if (!userDetails.publicKey) {
+      return {
+        message: 'Public key does not exists',
+        success: false
+      }
     }
 
     const decryptedData = await Promise.all(
@@ -139,9 +177,16 @@ export async function extractSharedZip(userId: string, projectSlug: string) {
 
     const zipContent = await zip.generateAsync({ type: 'nodebuffer' })
 
-    return zipContent
+    return {
+      message: 'Success',
+      zipContent,
+      success: true
+    }
   } catch (err) {
-    console.log(err)
-    return null
+    return {
+      zipContent: null,
+      success: false,
+      message: 'Something went wrong'
+    }
   }
 }

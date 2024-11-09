@@ -37,11 +37,11 @@ const Page = () => {
                 userId,
                 path.split('/')[2]
               )
-              if (response) {
+              if (response.success) {
                 showToast('success', 'successfully added', theme)
                 return
               } else {
-                showToast('error', 'Project already added', theme)
+                showToast('error', response.message, theme)
               }
             } catch (err) {
               showToast('error', 'failed to add', theme)

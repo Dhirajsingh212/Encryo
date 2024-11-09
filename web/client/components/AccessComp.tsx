@@ -94,12 +94,12 @@ export default function AccessComp({
           projectId: projectId,
           privilege: selectedAccess
         })
-        if (response) {
+        if (response.success) {
           setValue('')
           setSelectedAccess('read')
           showToast('success', 'user added successfully', theme)
         } else {
-          showToast('error', 'failed to add user', theme)
+          showToast('error', response.message, theme)
         }
       } else {
         showToast('error', 'Same user cannot be added twice', theme)
@@ -116,10 +116,10 @@ export default function AccessComp({
     try {
       setIsLoading(true)
       const response = await removeSharedUserFromProject(email, projectId)
-      if (response) {
+      if (response.success) {
         showToast('success', 'user removed successfully', theme)
       } else {
-        showToast('error', 'failed to remove user', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)

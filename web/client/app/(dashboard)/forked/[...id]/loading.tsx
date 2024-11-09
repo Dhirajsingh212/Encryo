@@ -10,6 +10,7 @@ const loading = () => {
           <TabsTrigger value='services'>Service</TabsTrigger>
           <TabsTrigger value='access'>Access</TabsTrigger>
           <TabsTrigger value='setting'>Setting</TabsTrigger>
+          <TabsTrigger value='cli'>CLI</TabsTrigger>
         </TabsList>
         <TabsContent value='account' className='flex flex-col gap-4 sm:px-4'>
           {Array.from({ length: 10 }).map((_, index) => {
@@ -30,6 +31,11 @@ const loading = () => {
           })}
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
+          {Array.from({ length: 1 }).map((_, index) => {
+            return <Skeleton key={index} className='h-40 w-full' />
+          })}
+        </TabsContent>
+        <TabsContent value='cli' className='px-4'>
           {Array.from({ length: 1 }).map((_, index) => {
             return <Skeleton key={index} className='h-40 w-full' />
           })}

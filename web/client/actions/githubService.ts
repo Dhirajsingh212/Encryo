@@ -11,23 +11,50 @@ export async function addGithubService(
   userId: string
 ) {
   try {
+    const alreadyExistData = await prisma.githubService.findFirst({
+      where: {
+        name: serviceData.name
+      }
+    })
+
+    if (alreadyExistData) {
+      return {
+        message: 'Service already exists',
+        success: false
+      }
+    }
+
     const userDetails = await prisma.user.findFirst({
       where: {
         clerkUserId: userId
       }
     })
+
+    if (!userDetails) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
+    }
+
     const projectDetails = await prisma.githubProject.findFirst({
       where: {
         slug: projectSlug
       }
     })
 
-    if (!projectDetails || !userDetails) {
-      return false
+    if (!projectDetails) {
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
     }
 
     if (!userDetails.publicKey) {
-      return false
+      return {
+        message: 'User publicKey does not exsits',
+        success: false
+      }
     }
 
     const encryptedValue = await encryptData(
@@ -45,9 +72,15 @@ export async function addGithubService(
       }
     })
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'Service created successfully',
+      success: true
+    }
   } catch (err) {
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -97,15 +130,34 @@ export async function getServicesDataByProjectSlug(projectSlug: string) {
 
 export async function deleteServiceById(serviceId: string) {
   try {
+    const serviceDetails = await prisma.githubService.findFirst({
+      where: {
+        id: serviceId
+      }
+    })
+
+    if (!serviceDetails) {
+      return {
+        message: 'Service does not exists',
+        success: false
+      }
+    }
+
     await prisma.githubService.deleteMany({
       where: {
         id: serviceId
       }
     })
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'Service deleted successfully',
+      success: true
+    }
   } catch (err) {
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -125,6 +177,19 @@ export async function updateServiceData({
   serviceId: string
 }) {
   try {
+    const serviceDetails = await prisma.githubService.findFirst({
+      where: {
+        id: serviceId
+      }
+    })
+
+    if (!serviceDetails) {
+      return {
+        message: 'Service does not exists',
+        success: false
+      }
+    }
+
     const projectDetails = await prisma.githubProject.findFirst({
       where: { slug: projectSlug },
       select: {
@@ -133,18 +198,38 @@ export async function updateServiceData({
       }
     })
 
-    if (
-      !projectDetails ||
-      !projectDetails.id ||
-      !projectDetails.user.publicKey
-    ) {
-      throw new Error('Project not found or missing public key')
+    if (!projectDetails || !projectDetails.id) {
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
+    }
+
+    if (!projectDetails.user) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
+    }
+
+    if (!projectDetails.user.publicKey) {
+      return {
+        message: 'Public key does not exists',
+        success: false
+      }
     }
 
     const encryptedValue = await encryptData(
       value,
       projectDetails.user.publicKey || ''
     )
+
+    if (!encryptedValue) {
+      return {
+        message: 'Failed to encypt content',
+        success: false
+      }
+    }
 
     await prisma.githubService.updateMany({
       where: {
@@ -159,8 +244,14 @@ export async function updateServiceData({
     })
 
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'Successfully updated service',
+      success: true
+    }
   } catch (err) {
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }

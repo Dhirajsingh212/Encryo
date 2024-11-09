@@ -47,10 +47,10 @@ export default function ServiceEditDialog({ services }: { services: Service }) {
         link: newService.link,
         serviceId: services.id
       })
-      if (response) {
+      if (response.success) {
         showToast('success', 'Service updated successfully', theme)
       } else {
-        showToast('error', 'generate public key first', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)

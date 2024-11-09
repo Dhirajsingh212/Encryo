@@ -109,6 +109,19 @@ export async function addSharedGithubService(
   userId: string
 ) {
   try {
+    const serviceDetails = await prisma.githubService.findFirst({
+      where: {
+        name: serviceData.name
+      }
+    })
+
+    if (serviceDetails) {
+      return {
+        message: 'Service already exists',
+        success: false
+      }
+    }
+
     //FIRST FIND THE PROJECT DETAILS AND ID
     const projectDetails = await prisma.githubProject.findFirst({
       where: {
@@ -117,7 +130,10 @@ export async function addSharedGithubService(
     })
 
     if (!projectDetails) {
-      return null
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
     }
 
     // SECOND FIND SHARED DETAILS
@@ -130,7 +146,10 @@ export async function addSharedGithubService(
     })
 
     if (!sharedDetails) {
-      return null
+      return {
+        message: 'User not authorized to access this',
+        success: false
+      }
     }
 
     //THIRD FIND THE PUBLIC AND PRIVATE KEY OF USER WHO SHARED THIS PROJECT TO DECODE THE FILES
@@ -141,13 +160,30 @@ export async function addSharedGithubService(
     })
 
     if (!userDetails) {
-      return null
+      return {
+        message: 'Admin user does not exists',
+        success: false
+      }
+    }
+
+    if (!userDetails.publicKey) {
+      return {
+        message: 'Admin user public key does not exists',
+        success: false
+      }
     }
 
     const encryptedValue = await encryptData(
       serviceData.value,
       userDetails?.publicKey || ''
     )
+
+    if (!encryptedValue) {
+      return {
+        message: 'Failed to encrypt data',
+        success: false
+      }
+    }
 
     await prisma.githubService.create({
       data: {
@@ -159,9 +195,15 @@ export async function addSharedGithubService(
       }
     })
     revalidatePath('/shared(.*)')
-    return true
+    return {
+      message: 'Successfully added service',
+      success: true
+    }
   } catch (err) {
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -191,7 +233,23 @@ export async function updateSharedServiceData({
     })
 
     if (!projectDetails) {
-      return null
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
+    }
+
+    const serviceDetails = await prisma.githubService.findFirst({
+      where: {
+        id: serviceId
+      }
+    })
+
+    if (!serviceDetails) {
+      return {
+        message: 'Servie does not exists',
+        success: false
+      }
     }
 
     // SECOND FIND SHARED DETAILS
@@ -204,7 +262,10 @@ export async function updateSharedServiceData({
     })
 
     if (!sharedDetails) {
-      return null
+      return {
+        message: 'User not authorized to access this',
+        success: false
+      }
     }
 
     //THIRD FIND THE PUBLIC AND PRIVATE KEY OF USER WHO SHARED THIS PROJECT TO DECODE THE FILES
@@ -215,10 +276,27 @@ export async function updateSharedServiceData({
     })
 
     if (!userDetails) {
-      return null
+      return {
+        message: 'Admin user does not exists',
+        success: false
+      }
+    }
+
+    if (!userDetails.publicKey) {
+      return {
+        message: 'Admin user public key does not exists',
+        success: false
+      }
     }
 
     const encryptedValue = await encryptData(value, userDetails.publicKey || '')
+
+    if (!encryptedValue) {
+      return {
+        message: 'Failed to encrypt data',
+        success: false
+      }
+    }
 
     await prisma.githubService.updateMany({
       where: {
@@ -233,8 +311,14 @@ export async function updateSharedServiceData({
     })
 
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'Service updated successfully',
+      success: true
+    }
   } catch (err) {
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }

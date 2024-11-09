@@ -24,18 +24,52 @@ export async function addFileToGithubProject(
       }
     })
 
-    if (!userDetails || !userDetails.publicKey || !userDetails.privateKey) {
-      return false
+    if (!userDetails) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
+    }
+
+    if (!userDetails.publicKey || !userDetails.privateKey) {
+      return {
+        message: 'Key does not exists',
+        success: false
+      }
     }
 
     if (!projectDetails) {
-      return false
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
+    }
+
+    const fileDetails = await prisma.githubFile.findFirst({
+      where: {
+        name: formData.name,
+        projectId: projectDetails.id
+      }
+    })
+
+    if (fileDetails) {
+      return {
+        message: 'File already exists',
+        success: false
+      }
     }
 
     const encryptedContent = await encryptData(
       formData.content,
       userDetails.publicKey
     )
+
+    if (!encryptedContent) {
+      return {
+        message: 'Failed to encrypt content',
+        success: false
+      }
+    }
 
     await prisma.githubFile.create({
       data: {
@@ -47,10 +81,15 @@ export async function addFileToGithubProject(
       }
     })
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'File added successfully',
+      success: true
+    }
   } catch (err) {
-    console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -116,16 +155,35 @@ export async function getGithubFilesByProjectSlug(
 
 export async function deleteFileById(id: string) {
   try {
+    const fileDetails = await prisma.githubFile.findFirst({
+      where: {
+        id
+      }
+    })
+
+    if (!fileDetails) {
+      return {
+        message: 'File does not exists',
+        success: false
+      }
+    }
+
     await prisma.githubFile.deleteMany({
       where: {
         id
       }
     })
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'File successfully deleted',
+      success: true
+    }
   } catch (err) {
     console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -135,20 +193,50 @@ export async function updateGithubFileById(
   userId: string
 ) {
   try {
+    const fileDetails = await prisma.githubFile.findFirst({
+      where: {
+        id
+      }
+    })
+
+    if (!fileDetails) {
+      return {
+        message: 'File does not exists',
+        success: false
+      }
+    }
+
     const userDetails = await prisma.user.findFirst({
       where: {
         clerkUserId: userId
       }
     })
 
+    if (!userDetails) {
+      return {
+        message: 'user does not exists',
+        success: false
+      }
+    }
+
     if (!userDetails || !userDetails.publicKey || !userDetails.privateKey) {
-      return false
+      return {
+        message: 'Public key does not exists',
+        success: false
+      }
     }
 
     const encryptedContent = await encryptData(
       formData.content,
       userDetails.publicKey
     )
+
+    if (!encryptedContent) {
+      return {
+        message: 'Failed to encrypt content',
+        success: false
+      }
+    }
 
     await prisma.githubFile.update({
       where: {
@@ -161,9 +249,14 @@ export async function updateGithubFileById(
       }
     })
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'File successfully updated',
+      success: true
+    }
   } catch (err) {
-    console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }

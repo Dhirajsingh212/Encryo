@@ -22,6 +22,20 @@ export async function createNewGithubProject(
   projectName: string
 ) {
   try {
+    const projectDetails = await prisma.githubProject.findFirst({
+      where: {
+        userId,
+        name: projectName
+      }
+    })
+
+    if (projectDetails) {
+      return {
+        message: 'Project already exists',
+        success: false
+      }
+    }
+
     await prisma.githubProject.create({
       data: {
         userId,
@@ -33,9 +47,15 @@ export async function createNewGithubProject(
     revalidatePath('/forked(.*)')
     revalidatePath('/home(.*)')
     revalidatePath('/shared(.*)')
-    return true
+    return {
+      message: 'Created successfully',
+      success: true
+    }
   } catch (err) {
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -87,9 +107,15 @@ export async function deleteProjectById(projectId: string, userId: string) {
     })
 
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'Deleted successfully',
+      success: true
+    }
   } catch (err) {
     console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }

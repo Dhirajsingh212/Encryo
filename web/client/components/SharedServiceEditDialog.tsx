@@ -59,10 +59,10 @@ export default function SharedServiceEditDialog({
         serviceId: services.id,
         userId
       })
-      if (response) {
+      if (response.success) {
         showToast('success', 'Service updated successfully', theme)
       } else {
-        showToast('error', 'generate public key first', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)

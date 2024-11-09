@@ -15,7 +15,7 @@ import { Check, Copy, Terminal } from 'lucide-react'
 import { showToast } from '@/toast'
 import { useTheme } from 'next-themes'
 
-export default function CliComponent() {
+export default function CliComp() {
   const { userId } = useAuth()
   const path = usePathname()
   const [copiedStates, setCopiedStates] = useState([false, false, false])

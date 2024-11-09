@@ -37,10 +37,10 @@ const GithubSharedFilesCard = ({
     try {
       setIsLoading(true)
       const response = await deleteFileById(id)
-      if (response) {
+      if (response.success) {
         showToast('success', 'Deleted successfully', theme)
       } else {
-        showToast('error', 'Failed to delete', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       console.log(err)

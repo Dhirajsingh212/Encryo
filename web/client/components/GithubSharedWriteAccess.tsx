@@ -57,11 +57,12 @@ export default function GithubSharedWriteAccess({
 
       const response = await extractSharedZip(userId, path.split('/')[2])
 
-      if (!response) {
-        throw new Error('Failed to download zip file')
+      if (!response.success || !response.zipContent) {
+        showToast('error', response.message, theme)
+        return
       }
 
-      const blob = new Blob([new Uint8Array(response)], {
+      const blob = new Blob([new Uint8Array(response.zipContent)], {
         type: 'application/zip'
       })
 

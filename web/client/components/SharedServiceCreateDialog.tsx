@@ -63,7 +63,7 @@ const SharedServiceCreateDialog = () => {
         path.split('/')[2],
         userId
       )
-      if (response) {
+      if (response.success) {
         showToast('success', 'Service created successfully', theme)
         setFormData({
           name: '',
@@ -72,7 +72,7 @@ const SharedServiceCreateDialog = () => {
           link: ''
         })
       } else {
-        showToast('error', 'Failed to create service', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Failed to create file', theme)

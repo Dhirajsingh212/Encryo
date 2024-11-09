@@ -93,7 +93,10 @@ export async function updateSharedGithubFileById(
       }
     })
     if (!projectDetails) {
-      return false
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
     }
     // SECOND FIND THE SHARED DETAILS OF THE PROJECT WITH PROJECTID AND UserIDTO
     const sharedDetails = await prisma.githubShared.findFirst({
@@ -104,7 +107,10 @@ export async function updateSharedGithubFileById(
     })
 
     if (!sharedDetails) {
-      return false
+      return {
+        message: 'User not authorized to access this',
+        success: false
+      }
     }
     //THIRD FIND THE PUBLIC AND PRIVATE KEY OF USER WHO SHARED THIS PROJECT TO DECODE THE FILES
     const userDetails = await prisma.user.findFirst({
@@ -113,14 +119,33 @@ export async function updateSharedGithubFileById(
       }
     })
 
-    if (!userDetails || !userDetails.publicKey) {
-      return false
+    if (!userDetails) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
     }
+
+    if (!userDetails.publicKey) {
+      return {
+        message: 'Public key not found',
+        success: false
+      }
+    }
+
     //ENCRYPT THE FILES
     const encryptedData = await encryptData(
       formData.content,
       userDetails.publicKey
     )
+
+    if (!encryptedData) {
+      return {
+        message: 'Failed to encrypt data',
+        success: false
+      }
+    }
+
     //UPDATE THE DATA
     await prisma.githubFile.update({
       where: {
@@ -133,10 +158,16 @@ export async function updateSharedGithubFileById(
       }
     })
     revalidatePath('/shared(.*)')
-    return true
+    return {
+      message: 'File updated successfully',
+      success: true
+    }
   } catch (err) {
     console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -157,7 +188,24 @@ export async function addFileToSharedProject(
       }
     })
     if (!projectDetails) {
-      return false
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
+    }
+
+    const fileDetails = await prisma.githubFile.findFirst({
+      where: {
+        name: formData.name,
+        projectId: projectDetails.id
+      }
+    })
+
+    if (fileDetails) {
+      return {
+        message: 'File already exists',
+        success: false
+      }
     }
     // SECOND FIND THE SHARED DETAILS OF THE PROJECT WITH PROJECTID AND UserIDTO
     const sharedDetails = await prisma.githubShared.findFirst({
@@ -168,7 +216,10 @@ export async function addFileToSharedProject(
     })
 
     if (!sharedDetails) {
-      return false
+      return {
+        message: 'User not authorized to access this',
+        success: false
+      }
     }
     //THIRD FIND THE PUBLIC AND PRIVATE KEY OF USER WHO SHARED THIS PROJECT TO DECODE THE FILES
     const sharedFromUserDetails = await prisma.user.findFirst({
@@ -177,14 +228,31 @@ export async function addFileToSharedProject(
       }
     })
 
-    if (!sharedFromUserDetails || !sharedFromUserDetails.publicKey) {
-      return false
+    if (!sharedFromUserDetails) {
+      return {
+        message: 'Admin user does not exists',
+        success: false
+      }
+    }
+
+    if (!sharedFromUserDetails.publicKey) {
+      return {
+        message: 'Admin user public key does not exists',
+        success: false
+      }
     }
 
     const encryptedContent = await encryptData(
       formData.content,
       sharedFromUserDetails.publicKey
     )
+
+    if (!encryptedContent) {
+      return {
+        message: 'Failed to encrypt data',
+        success: false
+      }
+    }
 
     await prisma.githubFile.create({
       data: {
@@ -196,9 +264,14 @@ export async function addFileToSharedProject(
       }
     })
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'Successfully created file',
+      success: true
+    }
   } catch (err) {
-    console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }

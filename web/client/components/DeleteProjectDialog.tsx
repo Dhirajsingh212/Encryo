@@ -26,10 +26,10 @@ const DeleteProjectDialog = ({
     try {
       setIsLoading(true)
       const response = await deleteProjectById(projectId, userId)
-      if (response) {
+      if (response.success) {
         showToast('success', 'Project Deleted successfully', theme)
       } else {
-        showToast('error', 'Failed to delete project', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)

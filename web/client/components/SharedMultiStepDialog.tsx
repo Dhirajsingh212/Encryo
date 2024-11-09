@@ -74,7 +74,7 @@ const SharedMultiStepDialog = () => {
         userId,
         selectValue
       )
-      if (response) {
+      if (response.success) {
         showToast('success', 'File created successfully', theme)
         setFormData({
           name: '',
@@ -83,7 +83,7 @@ const SharedMultiStepDialog = () => {
         })
         setSelectValue('')
       } else {
-        showToast('error', 'failed to create file', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Failed to create file', theme)

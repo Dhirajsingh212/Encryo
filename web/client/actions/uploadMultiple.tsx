@@ -17,8 +17,18 @@ export async function bulkUploadToDb(
       }
     })
 
-    if (!userDetails || !userDetails.publicKey) {
-      return false
+    if (!userDetails) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
+    }
+
+    if (!userDetails.publicKey) {
+      return {
+        message: 'Public key does not exists',
+        success: false
+      }
     }
 
     const projectDetails = await prisma.githubProject.findFirst({
@@ -28,10 +38,14 @@ export async function bulkUploadToDb(
     })
 
     if (!projectDetails) {
-      return false
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
     }
 
     const filePromises = []
+    let errorCount = 0
 
     for (const [_, value] of formData.entries()) {
       if (value instanceof File) {
@@ -70,7 +84,7 @@ export async function bulkUploadToDb(
                 })
               } catch (error) {
                 console.error(`Error processing file ${value.name}:`, error)
-                return false
+                errorCount++
               }
             })()
           )
@@ -80,10 +94,22 @@ export async function bulkUploadToDb(
 
     await Promise.all(filePromises)
     revalidatePath('/forked(.*)')
-    return true
+    if (errorCount > 0) {
+      return {
+        message: `${errorCount} files failed to upload`,
+        success: true
+      }
+    }
+    return {
+      message: 'Files uploaded successfully',
+      success: true
+    }
   } catch (err) {
     console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -100,7 +126,10 @@ export async function bulkSharedUploadToDb(
     })
 
     if (!projectDetails) {
-      return false
+      return {
+        message: 'Project does not exists',
+        success: false
+      }
     }
 
     const sharedDetails = await prisma.githubShared.findFirst({
@@ -111,7 +140,10 @@ export async function bulkSharedUploadToDb(
     })
 
     if (!sharedDetails) {
-      return false
+      return {
+        message: 'User not authorized to access this',
+        success: false
+      }
     }
 
     const userDetails = await prisma.user.findFirst({
@@ -121,10 +153,21 @@ export async function bulkSharedUploadToDb(
     })
 
     if (!userDetails) {
-      return false
+      return {
+        message: 'Admin user does not exists',
+        success: false
+      }
+    }
+
+    if (!userDetails.publicKey) {
+      return {
+        message: 'Admin user public key does not exists',
+        success: false
+      }
     }
 
     const filePromises = []
+    let errorCount = 0
 
     for (const [_, value] of formData.entries()) {
       if (value instanceof File) {
@@ -163,7 +206,7 @@ export async function bulkSharedUploadToDb(
                 })
               } catch (error) {
                 console.error(`Error processing file ${value.name}:`, error)
-                return false
+                errorCount++
               }
             })()
           )
@@ -173,10 +216,22 @@ export async function bulkSharedUploadToDb(
 
     await Promise.all(filePromises)
     revalidatePath('/forked(.*)')
-    return true
+    if (errorCount > 0) {
+      return {
+        message: `${errorCount} files failed to upload`,
+        success: true
+      }
+    }
+    return {
+      message: 'Files uploaded successfully',
+      success: true
+    }
   } catch (err) {
     console.log(err)
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 

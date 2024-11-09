@@ -41,10 +41,10 @@ const ServiceCard = ({ service }: { service: Service }) => {
     try {
       setIsLoading(true)
       const response = await deleteServiceById(service.id)
-      if (response) {
+      if (response.success) {
         showToast('success', 'deleted successfully', theme)
       } else {
-        showToast('error', 'Failed to delete service', theme)
+        showToast('error', response.message, theme)
       }
     } catch (err) {
       showToast('error', 'Something went wrong', theme)

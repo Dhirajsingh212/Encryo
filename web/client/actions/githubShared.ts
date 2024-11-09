@@ -16,6 +16,22 @@ export async function addSharedUserToDB({
   privilege: 'read' | 'write'
 }) {
   try {
+    const sharedDetails = await prisma.githubShared.findFirst({
+      where: {
+        userIdFrom: fromUserId,
+        userIdTo: toUserId,
+        githubProjectId: projectId,
+        privilege: privilege === 'read' ? 'READ' : 'WRITE'
+      }
+    })
+
+    if (sharedDetails) {
+      return {
+        message: 'Already shared with the user',
+        success: false
+      }
+    }
+
     await prisma.githubShared.create({
       data: {
         userIdFrom: fromUserId,
@@ -50,10 +66,15 @@ export async function addSharedUserToDB({
       `${fromUserDetails?.firstName}  ${fromUserDetails?.lastName} Added you to their project`
     )
     revalidatePath('/home(.*)')
-    return true
+    return {
+      message: 'User added to the project',
+      success: true
+    }
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Failed operation'
-    throw new Error(errorMessage)
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
@@ -62,6 +83,20 @@ export async function removeSharedUserFromProject(
   projectId: string
 ) {
   try {
+    const sharedDetails = await prisma.githubShared.findFirst({
+      where: {
+        userIdTo: emailIdTo,
+        githubProjectId: projectId
+      }
+    })
+
+    if (!sharedDetails) {
+      return {
+        message: 'User does not added',
+        success: false
+      }
+    }
+
     await prisma.githubShared.deleteMany({
       where: {
         userIdTo: emailIdTo,
@@ -69,9 +104,15 @@ export async function removeSharedUserFromProject(
       }
     })
     revalidatePath('/forked(.*)')
-    return true
+    return {
+      message: 'User removed successfully',
+      success: true
+    }
   } catch (err) {
-    return false
+    return {
+      message: 'Something went wrong',
+      success: false
+    }
   }
 }
 
