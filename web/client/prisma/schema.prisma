@@ -74,7 +74,7 @@ model GithubFile {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  @@unique([name, projectId]) 
+  @@unique([name, extension, projectId]) 
 }
 
 model GithubService {

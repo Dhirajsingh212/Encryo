@@ -48,6 +48,7 @@ export async function addFileToGithubProject(
     const fileDetails = await prisma.githubFile.findFirst({
       where: {
         name: formData.name,
+        extension: formData.extension,
         projectId: projectDetails.id
       }
     })
