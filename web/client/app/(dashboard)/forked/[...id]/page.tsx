@@ -41,6 +41,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <TabsTrigger value='service'>Services</TabsTrigger>
           <TabsTrigger value='shared'>Access</TabsTrigger>
           <TabsTrigger value='setting'>Setting</TabsTrigger>
+          <TabsTrigger value='cli'>CLI</TabsTrigger>
         </TabsList>
         <TabsContent value='files' className='flex flex-col gap-4 sm:px-4'>
           <GithubCreateFile githubFiles={githubFileDetails?.files} />
@@ -66,6 +67,9 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
         </TabsContent>
         <TabsContent value='setting' className='px-4'>
           <SettingsComp />
+        </TabsContent>
+        <TabsContent value='cli' className='px-4'>
+          CLI tool command
         </TabsContent>
       </Tabs>
     </div>
