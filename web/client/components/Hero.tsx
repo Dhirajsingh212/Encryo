@@ -14,7 +14,11 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          Manage all your API keys and secrets in one place.
+          Manage all your{' '}
+          <span className='bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent dark:from-green-400 dark:to-blue-500'>
+            API keys
+          </span>{' '}
+          and secrets in one place.
         </motion.h1>
         <motion.p
           className='mx-auto mb-12 max-w-2xl text-xl text-gray-600 dark:text-gray-300'

@@ -61,7 +61,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
 
 export default function Pricing() {
   return (
-    <section id='pricing' className='bg-background py-40 lg:px-20'>
+    <section id='pricing' className='py-40 dark:bg-background lg:px-20'>
       <div className='container mx-auto px-4 md:px-6'>
         <h2 className='mb-12 text-center text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl'>
           Choose Your Wave
