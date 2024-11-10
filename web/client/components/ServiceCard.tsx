@@ -74,7 +74,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
                 <DropdownMenuItem
                   disabled={isLoading}
                   onClick={deleteHandler}
-                  className='text-destructive focus:bg-destructive focus:text-destructive-foreground'
+                  className='flex flex-row items-center text-rose-500 focus:bg-destructive focus:text-destructive-foreground'
                 >
                   {isLoading ? (
                     <Spinner />

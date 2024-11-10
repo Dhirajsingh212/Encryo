@@ -33,7 +33,7 @@ export function AccessAlertDialog({
           )}
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className='border-none bg-slate-950'>
+      <AlertDialogContent className='border-none bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-2xl transition-colors duration-300'>
         <AlertDialogHeader>
           <AlertDialogTitle className='text-white'>
             Are you absolutely sure?
@@ -43,7 +43,9 @@ export function AccessAlertDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className='text-black dark:text-white'>
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction onClick={addUser}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
