@@ -66,7 +66,12 @@ export default async function AppSidebar() {
       <SidebarContent className='no-scrollbar'>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>
-            <Link href='/forked'>Forked projects</Link>
+            <Link
+              href='/forked'
+              className='duration-400 transition-all hover:text-blue-500'
+            >
+              Forked projects
+            </Link>
           </SidebarGroupLabel>
           <SidebarMenu>
             <ScrollArea className='max-h-80'>
@@ -118,7 +123,12 @@ export default async function AppSidebar() {
         </SidebarGroup>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>
-            <Link href='/shared'>Shared projects</Link>
+            <Link
+              href='/shared'
+              className='duration-400 transition-all hover:text-blue-500'
+            >
+              Shared projects
+            </Link>
           </SidebarGroupLabel>
           <SidebarMenu>
             <ScrollArea className='max-h-80'>
@@ -171,7 +181,12 @@ export default async function AppSidebar() {
         </SidebarGroup>
         <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
           <SidebarGroupLabel>
-            <Link href='/github'>Github projects</Link>
+            <Link
+              href='/github'
+              className='duration-400 transition-all hover:text-blue-500'
+            >
+              Github projects
+            </Link>
           </SidebarGroupLabel>
           <SidebarMenu>
             <ScrollArea className='max-h-80'>

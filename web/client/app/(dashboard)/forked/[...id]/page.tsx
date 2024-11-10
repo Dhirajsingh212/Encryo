@@ -66,10 +66,10 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
             </div>
           </div>
         </TabsContent>
-        <TabsContent value='setting' className='px-4'>
+        <TabsContent value='setting' className='sm:px-4'>
           <SettingsComp />
         </TabsContent>
-        <TabsContent value='cli' className='px-4'>
+        <TabsContent value='cli' className='sm:px-4'>
           <CliComp />
         </TabsContent>
       </Tabs>
