@@ -22,6 +22,19 @@ export async function createNewGithubProject(
   projectName: string
 ) {
   try {
+    const userDetails = await prisma.user.findFirst({
+      where: {
+        clerkUserId: userId
+      }
+    })
+
+    if (!userDetails) {
+      return {
+        message: 'User does not exists',
+        success: false
+      }
+    }
+
     const projectDetails = await prisma.githubProject.findFirst({
       where: {
         userId,
@@ -32,6 +45,15 @@ export async function createNewGithubProject(
     if (projectDetails) {
       return {
         message: 'Project already exists',
+        success: false
+      }
+    }
+
+    const length = (await prisma.githubProject.findMany({})).length
+
+    if (userDetails.limit < length) {
+      return {
+        message: 'You have reached your limit',
         success: false
       }
     }
