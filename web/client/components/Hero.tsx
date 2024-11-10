@@ -7,7 +7,7 @@ import FeaturesComp from './Features'
 const Hero = () => {
   return (
     <>
-      <section className='container mx-auto px-6 pb-20 pt-16 text-center md:pb-60 md:pt-40'>
+      <section className='container mx-auto px-6 pb-20 pt-16 text-center md:pb-40 md:pt-40'>
         <motion.h1
           className='mb-8 text-3xl font-extrabold text-gray-900 dark:text-white md:text-6xl lg:px-40'
           initial={{ opacity: 0, y: -50 }}
