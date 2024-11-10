@@ -109,19 +109,6 @@ export async function addSharedGithubService(
   userId: string
 ) {
   try {
-    const serviceDetails = await prisma.githubService.findFirst({
-      where: {
-        name: serviceData.name
-      }
-    })
-
-    if (serviceDetails) {
-      return {
-        message: 'Service already exists',
-        success: false
-      }
-    }
-
     //FIRST FIND THE PROJECT DETAILS AND ID
     const projectDetails = await prisma.githubProject.findFirst({
       where: {
@@ -132,6 +119,20 @@ export async function addSharedGithubService(
     if (!projectDetails) {
       return {
         message: 'Project does not exists',
+        success: false
+      }
+    }
+
+    const serviceDetails = await prisma.githubService.findFirst({
+      where: {
+        name: serviceData.name,
+        githubProjectId: projectDetails.id
+      }
+    })
+
+    if (serviceDetails) {
+      return {
+        message: 'Service already exists',
         success: false
       }
     }

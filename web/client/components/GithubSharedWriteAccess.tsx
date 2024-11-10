@@ -15,6 +15,7 @@ import { useDebounce } from 'use-debounce'
 import GithubSharedFilesCard from './GithubSharedFilesCard'
 import { PaginationComponent } from './PaginationComponent'
 import SharedMultiStepDialog from './SharedMultiStepDialog'
+import Spinner from './Spinner'
 import { Input } from './ui/input'
 import UploadMultipleFilesShared from './UploadMultipleFilesShared'
 
@@ -26,6 +27,7 @@ export default function GithubSharedWriteAccess({
   access: string
 }) {
   const [filteredFiles, setFilteredFiles] = useState(githubFiles)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [start, setStart] = useState(0)
   const [end, setEnd] = useState(20)
   const [text, setText] = useState<string>('')
@@ -50,6 +52,7 @@ export default function GithubSharedWriteAccess({
 
   const downloadZip = async () => {
     try {
+      setIsLoading(true)
       if (!userId) {
         showToast('error', 'User not logged in', theme)
         return
@@ -57,18 +60,20 @@ export default function GithubSharedWriteAccess({
 
       const response = await extractSharedZip(userId, path.split('/')[2])
 
-      if (!response.success || !response.zipContent) {
-        showToast('error', response.message, theme)
+      if (!response) {
+        showToast('error', 'Failed to export', theme)
         return
       }
 
-      const blob = new Blob([new Uint8Array(response.zipContent)], {
+      const blob = new Blob([new Uint8Array(response)], {
         type: 'application/zip'
       })
 
       saveAs(blob, 'files.zip')
     } catch (error) {
       console.error('Error downloading zip:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -79,9 +84,15 @@ export default function GithubSharedWriteAccess({
         <div className='flex flex-row-reverse gap-2 lg:flex-row'>
           {access === 'write' && <SharedMultiStepDialog />}
           {githubFiles.length > 0 && (
-            <Button onClick={downloadZip}>
-              <ArrowDownToLine className='size-4 sm:mr-2' />
-              <span className='visible max-sm:hidden'>Download</span>
+            <Button disabled={isLoading} onClick={downloadZip}>
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <>
+                  <ArrowDownToLine className='size-4 sm:mr-2' />
+                  <span className='visible max-sm:hidden'>Download</span>
+                </>
+              )}
             </Button>
           )}
           {access === 'write' && <UploadMultipleFilesShared />}

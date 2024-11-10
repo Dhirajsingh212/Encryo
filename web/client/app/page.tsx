@@ -14,7 +14,6 @@ export default function LandingPage() {
         <Hero />
         <Pricing />
         <Information />
-        {/* <Contact /> */}
       </main>
       <Footer />
     </div>

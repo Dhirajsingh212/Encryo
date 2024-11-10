@@ -51,8 +51,8 @@ export async function POST(req: NextRequest) {
         : await extractZip(body.userId, body.slug)
 
     // Check if files are of Buffer type
-    if (Buffer.isBuffer(files.zipContent)) {
-      return new NextResponse(files.zipContent, {
+    if (Buffer.isBuffer(files)) {
+      return new NextResponse(files, {
         status: 200,
         headers: {
           'Content-Disposition': 'attachment; filename="download.zip"', // Adjust filename as needed

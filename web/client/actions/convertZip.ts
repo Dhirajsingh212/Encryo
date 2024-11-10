@@ -13,17 +13,11 @@ export async function extractZip(userId: string, projectSlug: string) {
     })
 
     if (!userDetails) {
-      return {
-        message: 'User does not exists',
-        success: false
-      }
+      return null
     }
 
     if (!userDetails.publicKey) {
-      return {
-        message: 'Public key does not exists',
-        success: false
-      }
+      return null
     }
 
     const projectDetails = await prisma.githubProject.findFirst({
@@ -44,10 +38,7 @@ export async function extractZip(userId: string, projectSlug: string) {
     })
 
     if (!projectDetails || !projectDetails.files) {
-      return {
-        message: 'Project does not exists',
-        success: false
-      }
+      return null
     }
 
     // console.log(projectDetails.files)
@@ -78,17 +69,9 @@ export async function extractZip(userId: string, projectSlug: string) {
 
     const zipContent = await zip.generateAsync({ type: 'nodebuffer' })
 
-    return {
-      message: 'Success',
-      zipContent,
-      success: true
-    }
+    return zipContent
   } catch (err) {
-    return {
-      message: 'Something went wrong',
-      zipContent: null,
-      success: false
-    }
+    return null
   }
 }
 
@@ -112,10 +95,7 @@ export async function extractSharedZip(userId: string, projectSlug: string) {
     })
 
     if (!projectDetails || !projectDetails.files) {
-      return {
-        message: 'Project does not exists',
-        success: false
-      }
+      return null
     }
 
     const sharedDetails = await prisma.githubShared.findFirst({
@@ -125,10 +105,7 @@ export async function extractSharedZip(userId: string, projectSlug: string) {
     })
 
     if (!sharedDetails) {
-      return {
-        message: 'User not authorized to access this',
-        success: false
-      }
+      return null
     }
 
     const userDetails = await prisma.user.findFirst({
@@ -138,17 +115,11 @@ export async function extractSharedZip(userId: string, projectSlug: string) {
     })
 
     if (!userDetails) {
-      return {
-        message: 'User does not exists',
-        success: false
-      }
+      return null
     }
 
     if (!userDetails.publicKey) {
-      return {
-        message: 'Public key does not exists',
-        success: false
-      }
+      return null
     }
 
     const decryptedData = await Promise.all(
@@ -177,16 +148,8 @@ export async function extractSharedZip(userId: string, projectSlug: string) {
 
     const zipContent = await zip.generateAsync({ type: 'nodebuffer' })
 
-    return {
-      message: 'Success',
-      zipContent,
-      success: true
-    }
+    return zipContent
   } catch (err) {
-    return {
-      zipContent: null,
-      success: false,
-      message: 'Something went wrong'
-    }
+    return null
   }
 }

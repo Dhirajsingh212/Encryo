@@ -15,6 +15,7 @@ import { useDebounce } from 'use-debounce'
 import GithubFilesCard from './GithubFilesCard'
 import MultiStepDialog from './MultiStepDialog'
 import { PaginationComponent } from './PaginationComponent'
+import Spinner from './Spinner'
 import { Input } from './ui/input'
 import UploadMultipeFiles from './UploadMultipeFiles'
 
@@ -24,6 +25,7 @@ export default function GithubCreateFile({
   githubFiles?: GithubFile[]
 }) {
   const [filteredFiles, setFilteredFiles] = useState(githubFiles)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [start, setStart] = useState(0)
   const [end, setEnd] = useState(20)
   const [text, setText] = useState<string>('')
@@ -48,6 +50,7 @@ export default function GithubCreateFile({
 
   const downloadZip = async () => {
     try {
+      setIsLoading(true)
       if (!userId) {
         showToast('error', 'User not logged in', theme)
         return
@@ -55,18 +58,20 @@ export default function GithubCreateFile({
 
       const response = await extractZip(userId, path.split('/')[2])
 
-      if (!response.success || !response.zipContent) {
-        showToast('error', response.message, theme)
+      if (!response) {
+        showToast('error', 'Failed to export', theme)
         return
       }
 
-      const blob = new Blob([new Uint8Array(response.zipContent)], {
+      const blob = new Blob([new Uint8Array(response)], {
         type: 'application/zip'
       })
 
       saveAs(blob, 'files.zip')
     } catch (error) {
       console.error('Error downloading zip:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -78,9 +83,15 @@ export default function GithubCreateFile({
           <MultiStepDialog />
           <UploadMultipeFiles />
           {githubFiles.length > 0 && (
-            <Button onClick={downloadZip}>
-              <ArrowDownToLine className='size-4 sm:mr-2' />
-              <span className='visible max-sm:hidden'>Download</span>
+            <Button disabled={isLoading} onClick={downloadZip}>
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <>
+                  <ArrowDownToLine className='size-4 sm:mr-2' />
+                  <span className='visible max-sm:hidden'>Download</span>
+                </>
+              )}
             </Button>
           )}
           <div className='relative w-full'>

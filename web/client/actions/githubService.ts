@@ -11,19 +11,6 @@ export async function addGithubService(
   userId: string
 ) {
   try {
-    const alreadyExistData = await prisma.githubService.findFirst({
-      where: {
-        name: serviceData.name
-      }
-    })
-
-    if (alreadyExistData) {
-      return {
-        message: 'Service already exists',
-        success: false
-      }
-    }
-
     const userDetails = await prisma.user.findFirst({
       where: {
         clerkUserId: userId
@@ -53,6 +40,20 @@ export async function addGithubService(
     if (!userDetails.publicKey) {
       return {
         message: 'User publicKey does not exsits',
+        success: false
+      }
+    }
+
+    const alreadyExistData = await prisma.githubService.findFirst({
+      where: {
+        name: serviceData.name,
+        githubProjectId: projectDetails.id
+      }
+    })
+
+    if (alreadyExistData) {
+      return {
+        message: 'Service already exists',
         success: false
       }
     }
