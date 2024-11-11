@@ -1,8 +1,6 @@
 'use client'
 
-import { useAuth } from '@clerk/nextjs'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -10,14 +8,14 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Check, Copy, Terminal } from 'lucide-react'
 import { showToast } from '@/toast'
+import { useAuth } from '@clerk/nextjs'
+import { Check, Copy, Terminal } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { useState } from 'react'
 
-export default function CliComp() {
+export default function CliComp({ hashedCommand }: { hashedCommand: string }) {
   const { userId } = useAuth()
-  const path = usePathname()
   const [copiedStates, setCopiedStates] = useState([false, false, false])
   const { theme } = useTheme()
 
@@ -25,11 +23,8 @@ export default function CliComp() {
     return null
   }
 
-  const slug = path.split('/')[2]
-  const isShared = path.split('/')[1] === 'shared'
-
   const commands = [
-    `curl -X POST -H "Content-Type: application/json" -d '{"userId":"${userId}", "slug":"${slug}", "shared":"${isShared}"}' ${process.env.NEXT_PUBLIC_EMAIL_URL}api/getFiles --output download.zip`,
+    `curl -X POST -H "Content-Type: application/json" -d '{"data":"${hashedCommand}"}' ${process.env.NEXT_PUBLIC_EMAIL_URL}api/getFiles --output download.zip`,
     'unzip download.zip',
     'rm download.zip'
   ]
@@ -64,7 +59,7 @@ export default function CliComp() {
             key={index}
             className='flex items-center justify-between rounded-md bg-muted p-2'
           >
-            <code className='custom-scrollbar w-full overflow-x-scroll px-6 py-4 text-sm'>
+            <code className='custom-scrollbar flex-wrap overflow-x-scroll break-all px-6 py-4 text-sm'>
               {command}
             </code>
             <Button

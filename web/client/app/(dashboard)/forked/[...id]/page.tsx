@@ -1,3 +1,4 @@
+import { hashCliCommand } from '@/actions/cliHash'
 import { getGithubFilesByProjectSlug } from '@/actions/githubFile'
 import { getServicesDataByProjectSlug } from '@/actions/githubService'
 import { getSharedUserByProjectSlug } from '@/actions/githubShared'
@@ -23,6 +24,11 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   const sharedUserDetails = await getSharedUserByProjectSlug(params.id[0])
   const allUserDetails = await getAllUserDetails()
   const servicesData = await getServicesDataByProjectSlug(params.id[0])
+  const hashedCommand = await hashCliCommand({
+    userId,
+    slug: params.id[0],
+    shared: false
+  })
 
   if (!githubFileDetails) {
     return (
@@ -70,7 +76,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           <SettingsComp />
         </TabsContent>
         <TabsContent value='cli' className='sm:px-4'>
-          <CliComp />
+          {hashedCommand && <CliComp hashedCommand={hashedCommand} />}
         </TabsContent>
       </Tabs>
     </div>

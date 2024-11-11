@@ -1,3 +1,4 @@
+import { decryptCliHash } from '@/actions/cliHash'
 import { extractSharedZip, extractZip } from '@/actions/convertZip'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -32,12 +33,14 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
-    if (!body || !body.userId || !body.slug || !body.shared) {
+    if (!body || !body.data) {
       return NextResponse.json({ message: 'Incomplete data' })
     }
 
+    const decryptData = await decryptCliHash(body.data)
+
     // Check rate limiting for the user
-    if (isRateLimited(body.userId)) {
+    if (isRateLimited(decryptData.userId)) {
       return NextResponse.json(
         { message: 'Too many requests. Please try again later.' },
         { status: 429 }
@@ -46,9 +49,9 @@ export async function POST(req: NextRequest) {
 
     // Determine which function to call based on 'shared' flag
     const files =
-      body.shared === 'true'
-        ? await extractSharedZip(body.userId, body.slug)
-        : await extractZip(body.userId, body.slug)
+      decryptData.shared === true
+        ? await extractSharedZip(decryptData.userId, decryptData.slug)
+        : await extractZip(decryptData.userId, decryptData.slug)
 
     // Check if files are of Buffer type
     if (Buffer.isBuffer(files)) {

@@ -1,6 +1,7 @@
 'use server'
 import { subtle } from 'crypto'
 import { Buffer } from 'buffer'
+import * as crypto from 'crypto'
 
 // Generate a key pair for the user
 export async function generateKeyPair() {
@@ -135,4 +136,73 @@ export interface EncryptedVariable {
   name: string
   encryptedValue: string
   userId: string
+}
+
+function toBase64URL(str: string): string {
+  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+}
+
+function fromBase64URL(str: string): string {
+  str = str.replace(/-/g, '+').replace(/_/g, '/')
+  const pad = str.length % 4
+  if (pad) {
+    if (pad === 1) {
+      throw new Error('Invalid base64url string')
+    }
+    str += new Array(5 - pad).join('=')
+  }
+  return str
+}
+
+export async function encryptCLICommand(
+  plaintext: string,
+  secretKey: string
+): Promise<string> {
+  const iv = crypto.randomBytes(12)
+  const key = crypto
+    .createHash('sha256')
+    .update(secretKey)
+    .digest()
+    .slice(0, 32)
+
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
+
+  let encrypted = cipher.update(plaintext, 'utf8')
+  encrypted = Buffer.concat([encrypted, cipher.final()])
+
+  const tag = cipher.getAuthTag()
+
+  const combined = Buffer.concat([iv, encrypted, tag])
+  const encoded = toBase64URL(combined.toString('base64'))
+
+  return encoded
+}
+
+export async function decryptCLICommand(
+  encryptedData: string,
+  secretKey: string
+): Promise<string> {
+  try {
+    const key = crypto
+      .createHash('sha256')
+      .update(secretKey)
+      .digest()
+      .slice(0, 32)
+
+    const combined = Buffer.from(fromBase64URL(encryptedData), 'base64')
+
+    const iv = combined.slice(0, 12)
+    const tag = combined.slice(-16)
+    const encrypted = combined.slice(12, -16)
+
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv)
+    decipher.setAuthTag(tag)
+
+    let decrypted = decipher.update(encrypted)
+    decrypted = Buffer.concat([decrypted, decipher.final()])
+
+    return decrypted.toString('utf8')
+  } catch (error) {
+    throw new Error('Decryption failed')
+  }
 }

@@ -1,3 +1,4 @@
+import { hashCliCommand } from '@/actions/cliHash'
 import { getSharedProjectDetailsByUserIdAndSlug } from '@/actions/sharedProject'
 import { getSharedServicedDetailsByUserIdAndSlug } from '@/actions/sharedServices'
 import CliComp from '@/components/CliComp'
@@ -5,6 +6,7 @@ import GithubSharedWriteAccess from '@/components/GithubSharedWriteAccess'
 import SharedGithubWriteAccessService from '@/components/SharedGithubWriteAccessService'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { auth } from '@clerk/nextjs/server'
+
 const Page = async ({ params }: { params: { id: string[] } }) => {
   const { userId } = auth()
   if (!userId) {
@@ -19,6 +21,11 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
     userId,
     params.id[0]
   )
+  const hashedCommand = await hashCliCommand({
+    userId,
+    slug: params.id[0],
+    shared: true
+  })
 
   if (!githubFileDetails) {
     return (
@@ -53,7 +60,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
           )}
         </TabsContent>
         <TabsContent value='cli'>
-          <CliComp />
+          {hashedCommand && <CliComp hashedCommand={hashedCommand} />}
         </TabsContent>
       </Tabs>
     </div>
