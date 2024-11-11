@@ -64,7 +64,7 @@ export default function EmailDialog({
           {btnText}
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-w-[280px] rounded-lg border-none bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-2xl transition-colors duration-300 sm:max-w-[425px]'>
+      <DialogContent className='max-w-[280px] rounded-lg border-none bg-gradient-to-br from-slate-900 to-slate-800 text-white transition-colors duration-300 sm:max-w-[426px]'>
         <DialogHeader>
           <DialogTitle>Email Plan Request</DialogTitle>
           <DialogDescription>

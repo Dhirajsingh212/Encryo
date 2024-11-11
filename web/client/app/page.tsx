@@ -22,7 +22,7 @@ export default function LandingPage() {
             'inset-x-0 inset-y-[-30%] h-[200%] skew-y-12'
           )}
         /> */}
-        <RetroGrid angle={0} />
+        <RetroGrid angle={180} />
         <Hero />
         <Pricing />
         <Information />

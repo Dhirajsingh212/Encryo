@@ -36,7 +36,7 @@ const Hero = () => {
           <Button
             asChild
             size='lg'
-            className='transform rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 px-8 py-4 text-lg font-bold text-white transition duration-300 ease-in-out hover:scale-105 hover:from-teal-600 hover:to-cyan-700'
+            className='transform rounded-full bg-black from-teal-500 to-cyan-600 px-8 py-4 text-lg font-bold text-white transition duration-300 ease-in-out hover:scale-105 hover:bg-black dark:bg-gradient-to-r dark:hover:from-teal-600 dark:hover:to-cyan-700'
           >
             <Link href='/forked'>Add your api keys.</Link>
           </Button>
