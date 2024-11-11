@@ -28,11 +28,11 @@ export default async function Component() {
               key={index}
               className='group transform transition-transform duration-300 hover:scale-105'
             >
-              <Card className='min-h-32 overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 transition-shadow duration-300 hover:shadow-lg'>
-                <CardContent className='p-6'>
+              <Card className='overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 transition-shadow duration-300 hover:shadow-lg'>
+                <CardContent className='flex h-full min-h-40 flex-col justify-between p-6'>
                   <div className='flex flex-row justify-between'>
                     <Link href={`/forked/${project.name}`}>
-                      <h2 className='mb-2 line-clamp-2 flex-wrap break-words text-xl font-semibold text-primary'>
+                      <h2 className='mb-2 line-clamp-2 flex-wrap break-words text-xl font-semibold capitalize text-primary'>
                         {project.name}
                       </h2>
                     </Link>
