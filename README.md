@@ -4,6 +4,17 @@
 
 As developers, we all face the struggle of managing environment variables (env vars) and API keys across multiple projects. Keeping track of them all becomes increasingly difficult as project numbers grow. Storing them directly in version control systems like GitHub is a security risk. **Encryo** solves this problem by providing a secure and collaborative platform to manage your project secrets.
 
+
+
+
+https://github.com/user-attachments/assets/56ab8e57-de24-4a3f-9caf-acdc4b53f7af
+
+
+
+
+https://github.com/user-attachments/assets/57b8d7c4-9254-4ca1-b401-9720dec276ca
+
+
 ---
 
 ## How Encryo Works
