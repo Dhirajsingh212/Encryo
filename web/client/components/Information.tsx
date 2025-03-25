@@ -9,13 +9,13 @@ const Information = () => {
     >
       <div className='container mx-auto px-6'>
         <h2 className='mb-12 text-center text-4xl font-bold text-gray-800 dark:text-white'>
-          See Encyro in Action
+          See Encryo in Action
         </h2>
         <div className='flex flex-col items-center lg:flex-row-reverse lg:items-stretch lg:gap-12'>
           <div className='mb-8 w-full lg:mb-0 lg:w-3/5'>
             <div className='relative h-[200px] w-full overflow-hidden rounded-lg transition-transform duration-300 lg:h-[600px] lg:-rotate-2 lg:transform lg:hover:rotate-0'>
               <Safari
-                url='Encyro.com'
+                url='Encryo.com'
                 className='absolute inset-0 h-full w-full shadow-2xl'
                 src='https://i.pinimg.com/originals/df/39/2f/df392fb90619818047bf4f09e0adbc36.gif'
               />

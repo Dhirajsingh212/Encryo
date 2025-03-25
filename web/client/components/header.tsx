@@ -26,7 +26,7 @@ const Header = () => {
           href='/'
           className='bg-gradient-to-r from-teal-500 to-cyan-600 bg-clip-text text-3xl font-extrabold text-transparent dark:from-teal-200 dark:to-cyan-400'
         >
-          Encyro
+          Encryo
         </Link>
         <div className='hidden space-x-6 md:flex'>
           <NavLink href='#features'>Features</NavLink>

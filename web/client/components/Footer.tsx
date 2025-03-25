@@ -6,7 +6,7 @@ const Footer = () => {
       <div className='container mx-auto px-6'>
         <div className='flex flex-col items-center justify-between md:flex-row'>
           <div className='mb-4 md:mb-0'>
-            © {new Date().getFullYear()} Encyro. All rights reserved.
+            © {new Date().getFullYear()} Encryo. All rights reserved.
           </div>
           <div className='flex space-x-6'>
             <Link

@@ -55,7 +55,7 @@ export default async function AppSidebar() {
                   <Command className='size-4' />
                 </div>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>Encyro</span>
+                  <span className='truncate font-semibold'>Encryo</span>
                   <span className='truncate text-xs'>Enterprise</span>
                 </div>
               </Link>
